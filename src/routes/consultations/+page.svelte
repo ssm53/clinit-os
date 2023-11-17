@@ -102,7 +102,7 @@
 		});
 
 		if (resp.status == 200) {
-			goto('/appointments');
+			console.log('success');
 		} else {
 			// do some error handling here
 			console.log('oh nooo');
@@ -157,6 +157,63 @@
 			console.log('success');
 		} else {
 			console.log('fail');
+		}
+	}
+
+	export async function endConsultation() {
+		// here we want to update end consult time, cahnge status to dispensary and get waiting time calculated
+		let appointmentID;
+
+		// Subscribe to the currentPatientIC store to get its value
+		currentAppointmentID.subscribe((value) => (appointmentID = value));
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/end-consultation/${appointmentID}`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const res = await resp.json();
+
+		if (resp.status == 200) {
+			queue.set(true);
+			console.log('success');
+		} else {
+			console.log('fail');
+		}
+	}
+
+	export async function addTreatmentPlan(evt) {
+		let appointmentID;
+
+		// Subscribe to the currentPatientIC store to get its value
+		currentAppointmentID.subscribe((value) => (appointmentID = value));
+
+		const treatmentPlan = {
+			meds1: evt.target['meds1'].value,
+			quantity1: parseInt(evt.target['quantity1'].value),
+			notes1: evt.target['notes1'].value,
+			meds2: evt.target['meds2'].value,
+			quantity2: parseInt(evt.target['quantity2'].value),
+			notes2: evt.target['notes2'].value
+		};
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-treatment-plan/${appointmentID}`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(treatmentPlan)
+		});
+
+		if (resp.status == 200) {
+			console.log('success');
+		} else {
+			// do some error handling here
+			console.log('oh nooo');
 		}
 	}
 </script>
@@ -224,7 +281,86 @@
 					</form>
 				</div>
 				<div class="treatment-plan">
-					<p>treatment plan</p>
+					<p>Treatment Plan</p>
+					<form
+						on:submit|preventDefault={addTreatmentPlan}
+						class="w-1/2 bg-white shadow-md rounded-lg p-8"
+					>
+						<div class="mb-6 flex justify-between">
+							<div class="w-1/3">
+								<label for="meds1" class="block text-gray-700 text-sm font-bold mb-2"
+									>Medicine</label
+								>
+								<input
+									type="text"
+									name="meds1"
+									placeholder="Enter medicine"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+							<div class="w-1/3">
+								<label for="quantity1" class="block text-gray-700 text-sm font-bold mb-2"
+									>Quantity</label
+								>
+								<input
+									type="number"
+									name="quantity1"
+									placeholder="Enter quantity"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+							<div class="w-1/3">
+								<label for="notes1" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
+								<input
+									type="text"
+									name="notes1"
+									placeholder="Enter notes"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+						</div>
+						<div class="mb-6 flex justify-between">
+							<div class="w-1/3">
+								<label for="meds2" class="block text-gray-700 text-sm font-bold mb-2"
+									>Medicine</label
+								>
+								<input
+									type="text"
+									name="meds2"
+									placeholder="Enter medicine"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+							<div class="w-1/3">
+								<label for="quantity2" class="block text-gray-700 text-sm font-bold mb-2"
+									>Quantity</label
+								>
+								<input
+									type="number"
+									name="quantity2"
+									placeholder="Enter quantity"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+							<div class="w-1/3">
+								<label for="notes2" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
+								<input
+									type="text"
+									name="notes2"
+									placeholder="Enter notes"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+						</div>
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Add Treatment Plan
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div class=" patient-history right-container">
@@ -239,6 +375,7 @@
 				{/each}
 			</div>
 			<button on:click={startConsultation}>Call Patient In</button>
+			<button on:click={endConsultation}>End consultation</button>
 		</div>
 	{/if}
 </div>

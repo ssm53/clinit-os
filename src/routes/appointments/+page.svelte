@@ -101,7 +101,7 @@
 				</div>
 			{/each}
 		</div>
-	{:else}
+	{:else if $dispensaryAppts}
 		<div>
 			{#each data.dispensaryAppointments as dispensary}
 				<div class="flex flex-row">
