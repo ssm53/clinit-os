@@ -5,6 +5,7 @@ export async function load({ fetch }) {
 
 	const res = await resp.json();
 	if (resp.status == 200) {
+
 		return {
 			waitingAppointments: res.appointmentsWaiting,
 		};

@@ -16,9 +16,14 @@ export async function load({ fetch }) {
 }
 
 // ASPECTS TO DO
-// in consultation page, by default it is the queue (this is in a modal)
-// once click one of the patients, a new modal opens which shows the profile of patient, history of patient, notepad, and diagnosis (follow clinicOS here)
+//In notepad page, need a button to say ‘start consultation’. - done
+//This then starts timer for consultation, and updates the start_consult_time and waiting time in the appointment table.
+//This will also change the status of this appointment to serving.
+//Then we will also need a end consultation button,
+//and this will update consult_end_time in appointment table
+//and also change status of appointment to dispensary
 
 // STEPS
-// in consultation page, by default it is the queue (this is in a modal)
-// create stores for it, create modal, and do hidden or not hidden buttons
+//This then starts timer for consultation, and updates the start_consult_time and waiting time in the appointment table.
+// need to add waiting time field in appointments - done
+// do start consultation function - update consult_start_time and waiting time = consultstarttime - arrival time. the status also should be changed to serving
