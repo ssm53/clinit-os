@@ -56,7 +56,8 @@
 	export async function setAppointment(evt) {
 		const appointmentDetails = {
 			reason: evt.target['reason'].value,
-			patientIC: patientIC
+			patientIC: patientIC,
+			doctor: evt.target['doctor'].value
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/set-appointment`, {
 			method: 'POST',
@@ -137,6 +138,14 @@
 					type="text"
 					name="reason"
 					placeholder="Enter reason"
+					class="block w-full rounded-md py-2 px-3 border border-gray-300"
+				/>
+
+				<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
+				<input
+					type="text"
+					name="doctor"
+					placeholder="Enter doctor in charge"
 					class="block w-full rounded-md py-2 px-3 border border-gray-300"
 				/>
 

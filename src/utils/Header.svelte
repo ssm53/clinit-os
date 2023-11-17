@@ -25,6 +25,14 @@
 	function clickPatientRegistration() {
 		goto('/registration');
 	}
+
+	function clickAppointments() {
+		goto('/appointments');
+	}
+
+	function clickConsultations() {
+		goto('/consultations');
+	}
 </script>
 
 <main>
@@ -47,6 +55,18 @@
 						on:click={clickPatientRegistration}
 					>
 						Registration
+					</button>
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickAppointments}
+					>
+						Appointments
+					</button>
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickConsultations}
+					>
+						Consultations
 					</button>
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={userLogOut}>
 						Log Out

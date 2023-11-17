@@ -16,3 +16,9 @@ export async function load({ fetch }) {
 }
 
 // ASPECTS TO DO
+// in consultation page, by default it is the queue (this is in a modal)
+// once click one of the patients, a new modal opens which shows the profile of patient, history of patient, notepad, and diagnosis (follow clinicOS here)
+
+// STEPS
+// in consultation page, by default it is the queue (this is in a modal)
+// create stores for it, create modal, and do hidden or not hidden buttons
