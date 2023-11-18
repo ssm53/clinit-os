@@ -16,14 +16,12 @@ export async function load({ fetch }) {
 }
 
 // ASPECTS TO DO
-//	Need to do treatment plan section
+// first, add more medicines to our medicine table - done
+// -	Next, we tackle inventory shits. Once doctor submits treatment plan, we deduct those meds from the medicine table. - done
+// If there is not enough medicine, create alert saying eh cannot! Im guessing this has to be done during consultation. - done
+// user should be able to add to quantity of existing medicine, not just add new medicine - done
 
 // STEPS
-// - think about how you want to do treatment plan
-// so we do a special type of form where for each meds given, there are 3 categories - name of meds, quantity, and notes - done
-// add 2 medicine fields (medName1, quantity1, notes1), medName 2 etc. - done
-// so do special form where for each meds given and when submitted, info from form is added to appointment table.
-// once consultation ends in end-consultation endpoint, it automatically goes back to see the queue and that patient should be gone
 
 //ISSUES NOT SOLVED
 // 1) change default value of any date time to a better one. now() isnt too great.
@@ -32,6 +30,8 @@ export async function load({ fetch }) {
 // 4) in consultations page.svelte, when doing treatment plan, should do better with form. allow to only input one row, and can add rows. we also need to ensure there is enough fields for medicine in our appointment table. at the moment, we only have 2.
 // 5) when we do end consultation, it automatically goes back to queue for doctor to know who is the next patient.  but when it goes back, we hae to reload to see the updated queue. we need it to be autimatically updated.
 // 6) in appointment page, just like the above issue, when it reaches 12am, appointments refresh and there is none, and hence there will be an error! need to avoid this
+// 7) need to take into account panel patients - from registration to payment
+// 8) need to take into account card payments
 
 // ANALYTICS
 // 1) calculate waiting time when consulattion starts - (consultstarttme - arrivaltime)

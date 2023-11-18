@@ -211,6 +211,9 @@
 
 		if (resp.status == 200) {
 			console.log('success');
+		} else if (resp.status == 401) {
+			console.log('not enough meds');
+			// we do an alert that there is not enough medicine for treatment plan
 		} else {
 			// do some error handling here
 			console.log('oh nooo');

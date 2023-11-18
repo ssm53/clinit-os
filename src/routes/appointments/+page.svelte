@@ -5,10 +5,11 @@
 	// import Spinner from '../../spinner/spinner.svelte';
 	// import { loading } from '../../stores/store';
 	import { getUserTokenFromLocalStorage } from '../../utils/auth';
-	import { todayAppts, waitingAppts, dispensaryAppts } from '../../stores/store';
+	import { todayAppts, waitingAppts, dispensaryAppts, showInvoice } from '../../stores/store';
 	import { DateTime, Interval } from 'luxon';
 
 	export let data;
+	let invoiceDetails = [];
 
 	function calculateWaitingTime(arrivalTime) {
 		const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
@@ -43,6 +44,50 @@
 		waitingAppts.set(false);
 		dispensaryAppts.set(true);
 	}
+
+	export async function clickDispAndBilling(appointmentID) {
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/invoice-details/${appointmentID}`, {
+			method: 'GET',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const res = await resp.json();
+
+		if (resp.status == 200) {
+			invoiceDetails = res.invoiceDetails;
+			console.log(res.invoiceDetails);
+			console.log('success');
+			dispensaryAppts.set(false);
+			showInvoice.set(true);
+		} else {
+			invoiceDetails = [];
+		}
+	}
+
+	export async function clickGoBack() {
+		showInvoice.set(false);
+		dispensaryAppts.set(true);
+	}
+
+	export async function clickPaid(appointmentID) {
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/click-paid/${appointmentID}`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (resp.status == 200) {
+			console.log('success');
+		} else {
+			// do some error handling here
+			console.log('oh nooo');
+		}
+	}
 </script>
 
 <div
@@ -71,20 +116,24 @@
 </div>
 <div>
 	{#if $todayAppts}
-		<div>
-			{#each data.todayAppointments as today}
-				<div class="flex flex-row">
-					<p>{today.patientDetails.name}</p>
-					<p>{today.patientDetails.age}</p>
-					<p>{today.patientDetails.gender}</p>
-					<p>{today.patientIC}</p>
-					<p>{today.reason}</p>
-					<p>{today.doctor}</p>
-					<p>{today.arrivalTime}</p>
-					<p>{today.status}</p>
-				</div>
-			{/each}
-		</div>
+		{#if data.todayAppointments.length > 0}
+			<div>
+				{#each data.todayAppointments as today}
+					<div class="flex flex-row">
+						<p>{today.patientDetails.name}</p>
+						<p>{today.patientDetails.age}</p>
+						<p>{today.patientDetails.gender}</p>
+						<p>{today.patientIC}</p>
+						<p>{today.reason}</p>
+						<p>{today.doctor}</p>
+						<p>{today.arrivalTime}</p>
+						<p>{today.status}</p>
+					</div>
+				{/each}
+			</div>
+		{:else}
+			<p>nothing to show matey</p>
+		{/if}
 	{:else if $waitingAppts}
 		<div>
 			{#each data.waitingAppointments as waiting}
@@ -113,8 +162,29 @@
 					<p>{dispensary.doctor}</p>
 					<p>{dispensary.arrivalTime}</p>
 					<p>{dispensary.status}</p>
+					<button on:click={() => clickDispAndBilling(dispensary.id)}>DISPENSE AND BILLING</button>
 				</div>
 			{/each}
+		</div>
+	{:else}
+		<p>hello</p>
+		<div>
+			{#each invoiceDetails as details}
+				<div class="flex flex-row">
+					<p>{details.patientIC}</p>
+					<p>{details.date}</p>
+					<p>{details.reason}</p>
+					<p>{details.medName1}</p>
+					<p>{details.quantity1}</p>
+					<p>{details.notes1}</p>
+					<p>{details.medName2}</p>
+					<p>{details.quantity2}</p>
+					<p>{details.notes2}</p>
+					<p>{details.amount}</p>
+					<button on:click={() => clickPaid(details.id)}>PAID?</button>
+				</div>
+			{/each}
+			<button on:click={clickGoBack}>Go Back</button>
 		</div>
 	{/if}
 </div>

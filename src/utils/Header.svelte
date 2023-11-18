@@ -33,6 +33,10 @@
 	function clickConsultations() {
 		goto('/consultations');
 	}
+
+	function clickMedicine() {
+		goto('/medicine');
+	}
 </script>
 
 <main>
@@ -67,6 +71,12 @@
 						on:click={clickConsultations}
 					>
 						Consultations
+					</button>
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickMedicine}
+					>
+						Medicine
 					</button>
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={userLogOut}>
 						Log Out
