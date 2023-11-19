@@ -399,7 +399,7 @@
 								name="notes"
 								placeholder="Enter something"
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								value={apptInfo.notes}
+								value={apptInfo.length > 0 ? apptInfo[0].notes : ''}
 							/>
 
 							<div class="flex justify-end">
@@ -429,7 +429,7 @@
 									name="meds1"
 									placeholder="Enter medicine"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].medName1}
+									value={apptInfo.length > 0 ? apptInfo[0].medName1 : ''}
 								/>
 							</div>
 							<div class="w-1/3">
@@ -441,7 +441,7 @@
 									name="quantity1"
 									placeholder="Enter quantity"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].quantity1}
+									value={apptInfo.length > 0 ? apptInfo[0].quantity1 : ''}
 								/>
 							</div>
 							<div class="w-1/3">
@@ -451,7 +451,7 @@
 									name="notes1"
 									placeholder="Enter notes"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].notes1}
+									value={apptInfo.length > 0 ? apptInfo[0].notes1 : ''}
 								/>
 							</div>
 						</div>
@@ -465,7 +465,7 @@
 									name="meds2"
 									placeholder="Enter medicine"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].medName2}
+									value={apptInfo.length > 0 ? apptInfo[0].medName2 : ''}
 								/>
 							</div>
 							<div class="w-1/3">
@@ -477,7 +477,7 @@
 									name="quantity2"
 									placeholder="Enter quantity"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].quantity2}
+									value={apptInfo.length > 0 ? apptInfo[0].quantity2 : ''}
 								/>
 							</div>
 							<div class="w-1/3">
@@ -487,7 +487,7 @@
 									name="notes2"
 									placeholder="Enter notes"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo[0].notes2}
+									value={apptInfo.length > 0 ? apptInfo[0].notes2 : ''}
 								/>
 							</div>
 						</div>
