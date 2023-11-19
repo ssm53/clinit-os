@@ -16,12 +16,16 @@ export async function load({ fetch }) {
 }
 
 // ASPECTS TO DO
-// first, add more medicines to our medicine table - done
-// -	Next, we tackle inventory shits. Once doctor submits treatment plan, we deduct those meds from the medicine table. - done
-// If there is not enough medicine, create alert saying eh cannot! Im guessing this has to be done during consultation. - done
-// user should be able to add to quantity of existing medicine, not just add new medicine - done
+// Continue digitapgp – do edit patient details, and edit appointments
 
 // STEPS
+//edit appointments
+//in appointment paeg, do seperate tab for all appointments. here, do a get request to get all appointments and display it
+// next to each of them, you can have an EDIT APPOINTMENT button. - done
+// once that is clicked, it will open up modal with all appointement's info prepopulated (patient info is like consult page), notes(prepopulated), treatment plan (prepupulated). edit noets and treatment plan seperaetly.
+// patient info part done. now prepopulate notes.
+// once those are edited, it will update the prisma schema accordingly
+// and if respstatus 200, you will go back to all appontments tab
 
 //ISSUES NOT SOLVED
 // 1) change default value of any date time to a better one. now() isnt too great.

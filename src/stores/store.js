@@ -14,4 +14,6 @@ export const servingAppts = writable(false);
 
 export const dispensaryAppts = writable(false);
 
+export const allAppts = writable(false);
+
 export const showInvoice = writable(false);
