@@ -10,7 +10,8 @@
 		waitingAppts,
 		dispensaryAppts,
 		showInvoice,
-		allAppts
+		allAppts,
+		followUpAppts
 	} from '../../stores/store';
 	import { DateTime, Interval } from 'luxon';
 	import { writable } from 'svelte/store';
@@ -40,6 +41,7 @@
 
 	function clickToday() {
 		waitingAppts.set(false);
+		followUpAppts.set(false);
 		dispensaryAppts.set(false);
 		allAppts.set(false);
 		todayAppts.set(true);
@@ -47,6 +49,7 @@
 
 	function clickWaiting() {
 		dispensaryAppts.set(false);
+		followUpAppts.set(false);
 		todayAppts.set(false);
 		allAppts.set(false);
 		waitingAppts.set(true);
@@ -54,6 +57,7 @@
 
 	export async function clickDispensary() {
 		todayAppts.set(false);
+		followUpAppts.set(false);
 		waitingAppts.set(false);
 		allAppts.set(false);
 		dispensaryAppts.set(true);
@@ -61,9 +65,18 @@
 
 	export async function clickAll() {
 		todayAppts.set(false);
+		followUpAppts.set(false);
 		waitingAppts.set(false);
 		dispensaryAppts.set(false);
 		allAppts.set(true);
+	}
+
+	export async function clickFollowUp() {
+		todayAppts.set(false);
+		waitingAppts.set(false);
+		dispensaryAppts.set(false);
+		allAppts.set(false);
+		followUpAppts.set(true);
 	}
 
 	export async function clickDispAndBilling(appointmentID) {
@@ -297,6 +310,11 @@
 			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
 			>All</button
 		>
+		<button
+			on:click={clickFollowUp}
+			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			>Follow Up</button
+		>
 	</div>
 </div>
 <div>
@@ -502,6 +520,18 @@
 					</form>
 				</div>
 			</div>
+		</div>
+	{:else if $followUpAppts}
+		<div>
+			{#each data.followUpDetails as fDetails}
+				<div class="flex flex-row">
+					<p>{fDetails.patientName}</p>
+					<p>{fDetails.patientIC}</p>
+					<p>{fDetails.patientContact}</p>
+					<p>{fDetails.followUpReason}</p>
+					<p>{fDetails.followUpDate}</p>
+				</div>
+			{/each}
 		</div>
 	{:else}
 		<p>hello</p>

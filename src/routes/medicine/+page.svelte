@@ -8,8 +8,11 @@
 	import { writable } from 'svelte/store';
 
 	let formErrors = {};
+	export let data;
 	export const newMedicine = writable(false);
 	export const existingMedicine = writable(false);
+	export const deleteMedicine = writable(false);
+	export const needRestockMedicine = writable(false);
 
 	export function postAddMedicine() {
 		// uploadImageSuc();
@@ -104,12 +107,60 @@
 
 	export async function clickNewMedicine() {
 		existingMedicine.set(false);
+		deleteMedicine.set(false);
+		needRestockMedicine.set(false);
 		newMedicine.set(true);
 	}
 
 	export async function clickExistingMedicine() {
 		newMedicine.set(false);
+		deleteMedicine.set(false);
+		needRestockMedicine.set(false);
 		existingMedicine.set(true);
+	}
+
+	export async function clickDeleteMedicine() {
+		newMedicine.set(false);
+		existingMedicine.set(false);
+		needRestockMedicine.set(false);
+		deleteMedicine.set(true);
+	}
+
+	export async function clickNeedRestockMedicine() {
+		newMedicine.set(false);
+		existingMedicine.set(false);
+		deleteMedicine.set(false);
+		needRestockMedicine.set(true);
+	}
+
+	export async function deleteMeds(evt) {
+		const medicineToDel = evt.target['name'].value;
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/delete-medicine/${medicineToDel}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (resp.status === 204) {
+			// loading.set(false);
+			// loading.update((value) => {
+			// 	return false;
+			// });
+			// closeEditDetailsModal();
+			// console.log('formErrors:', formErrors);
+			console.log('success');
+		} else {
+			// loading.set(false);
+			// // loading.update((value) => {
+			// // 	return false;
+			// // });
+			// const res = await resp.json();
+			// formErrors = res.data;
+			// // showEditAlert();
+			console.log('something went wrong there matey');
+		}
 	}
 </script>
 
@@ -124,6 +175,8 @@
 		<!-- <Spinner /> -->
 		<button on:click={() => clickNewMedicine()}>Add new medicine</button>
 		<button on:click={() => clickExistingMedicine()}>Add stock to existing medicine</button>
+		<button on:click={() => clickDeleteMedicine()}>Delete Medicine</button>
+		<button on:click={() => clickNeedRestockMedicine()}>Need to restock</button>
 		{#if $newMedicine}
 			<div class="flex justify-center items-center">
 				<form
@@ -189,6 +242,43 @@
 					</div>
 				</form>
 			</div>
+		{:else if $deleteMedicine}
+			<div class="flex justify-center items-center">
+				<form on:submit|preventDefault={deleteMeds} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+					<div class="mb-6">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2">
+							Medicine Name
+						</label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter medicine name to delete"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						<!-- {#if 'name' in formErrors}
+          <p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
+        {/if} -->
+					</div>
+
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Delete Medicine
+						</button>
+					</div>
+				</form>
+			</div>
+		{:else if $needRestockMedicine}
+			<!-- show list of meds which needs to be restocked -->
+			{#each data.restockMeds as rMeds}
+				<div class=" flex flex-row">
+					<p class="mr-5">{rMeds.medicine}</p>
+					<p class="mr-5">{rMeds.quantity}</p>
+					<button on:click={() => clickExistingMedicine()}>RESTOCKED?</button>
+				</div>
+			{/each}
 		{:else}
 			<div class="flex justify-center items-center">
 				<form

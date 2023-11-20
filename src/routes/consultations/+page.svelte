@@ -219,6 +219,50 @@
 			console.log('oh nooo');
 		}
 	}
+
+	export async function addFollowUp(evt) {
+		let appointmentID;
+
+		// Subscribe to the currentPatientIC store to get its value
+		currentAppointmentID.subscribe((value) => (appointmentID = value));
+
+		const followUpData = {
+			followUpReason: evt.target['follow-up-reason'].value,
+			followUpDate: DateTime.fromISO(evt.target['follow-up-date'].value).toISO()
+		};
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-follow-up/${appointmentID}`, {
+			method: 'PATCH',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+				// Authorization: sellerToken
+				// need onre more which is authorisation - for that the value will be the token when youre signed in
+			},
+			body: JSON.stringify(followUpData)
+		});
+
+		const res = await resp.json();
+
+		if (resp.status === 200) {
+			// loading.set(false);
+			// loading.update((value) => {
+			// 	return false;
+			// });
+			// closeEditDetailsModal();
+			// console.log('formErrors:', formErrors);
+			console.log('success');
+		} else {
+			// loading.set(false);
+			// // loading.update((value) => {
+			// // 	return false;
+			// // });
+			// const res = await resp.json();
+			// formErrors = res.data;
+			// // showEditAlert();
+			console.log('something went wrong there matey');
+		}
+	}
 </script>
 
 <div>
@@ -361,6 +405,46 @@
 								type="submit"
 							>
 								Add Treatment Plan
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="follow-up">
+					<p>Follow Up</p>
+					<form
+						on:submit|preventDefault={addFollowUp}
+						class="w-1/2 bg-white shadow-md rounded-lg p-8"
+					>
+						<div class="mb-6 flex justify-between">
+							<div class="w-1/3">
+								<label for="follow-up-reason" class="block text-gray-700 text-sm font-bold mb-2"
+									>Follow Up Reason</label
+								>
+								<input
+									type="text"
+									name="follow-up-reason"
+									placeholder="Enter reason"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+							<div class="w-1/3">
+								<label for="follow-up-date" class="block text-gray-700 text-sm font-bold mb-2"
+									>Follow Up Date</label
+								>
+								<input
+									type="date"
+									name="follow-up-date"
+									placeholder="Enter date"
+									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								/>
+							</div>
+						</div>
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Add Follow Up
 							</button>
 						</div>
 					</form>

@@ -15,17 +15,22 @@ export async function load({ fetch }) {
 		const resp4 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-all');
 		const res4 = await resp4.json();
 
+		const resp5 = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-follow-up-details');
+		const res5 = await resp5.json();
+
 		return {
 			todayAppointments: res.appointmentsToday,
 			waitingAppointments: res2.appointmentsWaiting,
 			dispensaryAppointments: res3.appointmentsDispensary,
-			allAppointments: res4.appointmentsAll
+			allAppointments: res4.appointmentsAll,
+			followUpDetails: res5.followUpDetails
 		};
 	} else {
 		return {
 			todayAppointments: [],
 			waitingAppointments: [],
-			dispensaryAppointments: []
+			dispensaryAppointments: [],
+			followUpDetails: []
 		};
 	}
 }
