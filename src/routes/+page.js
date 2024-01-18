@@ -16,8 +16,14 @@ export async function load({ fetch }) {
 }
 
 // ASPECTS TO DO
+// analytic - sales
 
 // STEPS
+// first do analytics page
+// we do button and modal like how we did appointments
+// sales
+// create sales button
+// do modal which shows the sales figures for today, this week, and this month
 
 //ISSUES NOT SOLVED
 // 1) change default value of any date time to a better one. now() isnt too great.
@@ -34,3 +40,6 @@ export async function load({ fetch }) {
 
 // ANALYTICS
 // 1) calculate waiting time when consulattion starts - (consultstarttme - arrivaltime)
+
+// features
+// make invoicce and receipt
