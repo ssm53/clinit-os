@@ -88,12 +88,18 @@
 			}
 		});
 
-		const res = await resp.json();
+		// const res = await resp.json();
 
 		if (resp.status == 200) {
-			invoiceDetails = res.invoiceDetails;
-			console.log(res.invoiceDetails);
-			console.log('success');
+			// invoiceDetails = res.invoiceDetails;
+			// console.log(res.invoiceDetails);
+			// console.log('success');
+
+			const blob = await resp.blob();
+			const url = window.URL.createObjectURL(blob);
+
+			// Open the PDF in a new tab or window
+			window.open(url, '_blank');
 			dispensaryAppts.set(false);
 			showInvoice.set(true);
 		} else {
