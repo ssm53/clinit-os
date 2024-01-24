@@ -16,6 +16,7 @@
 
 	export const queue = writable(true);
 	export const notepad = writable(false);
+	export const writeMc = writable(false);
 	// Add patientIC to writable store
 	export const currentPatientIC = writable('');
 	export const currentAppointmentID = writable('');
@@ -42,6 +43,7 @@
 		currentAppointmentID.set(appointmentID);
 
 		queue.set(false);
+		writeMc.set(false);
 		notepad.set(true);
 
 		// Call the getPartPatientInfo function to fetch patient details
@@ -185,6 +187,57 @@
 		}
 	}
 
+	// generate MC
+
+	export function openMC() {
+		queue.set(false);
+		notepad.set(false);
+		writeMc.set(true);
+	}
+
+	export async function writeMC(evt) {
+		let appointmentID;
+
+		// Subscribe to the currentappiintmentID store to get its value
+		currentAppointmentID.subscribe((value) => (appointmentID = value));
+
+		const mcDetails = {
+			name: evt.target['name'].value,
+			reason: evt.target['reason'].value,
+			employer: evt.target['employer'].value,
+			mcStartDate: DateTime.fromISO(evt.target['mcStart'].value).toISO(),
+			mcEndDate: DateTime.fromISO(evt.target['mcEnd'].value).toISO()
+		};
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-mc-details/${appointmentID}`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(mcDetails)
+		});
+
+		if (resp.status == 200) {
+			console.log('success');
+			writeMc.set(false);
+			queue.set(false);
+			notepad.set(true);
+		} else if (resp.status == 401) {
+			console.log('cannot add mc details');
+			// we do an alert that there is not enough medicine for treatment plan
+		} else {
+			// do some error handling here
+			console.log('oh nooo');
+		}
+	}
+
+	export function closeMC() {
+		writeMc.set(false);
+		queue.set(false);
+		notepad.set(true);
+	}
+
 	export async function addTreatmentPlan(evt) {
 		let appointmentID;
 
@@ -286,6 +339,79 @@
 					>
 				</div>
 			{/each}
+		</div>
+	{:else if $writeMc}
+		<!-- Modal 3 -->
+		<div class="write-MC">
+			<p>Write MC</p>
+			<form on:submit|preventDefault={writeMC} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+				<div class="mb-6 flex justify-between">
+					<div class="w-1/3">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter name"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</div>
+					<div class="w-1/3">
+						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Reason</label>
+						<input
+							type="text"
+							name="reason"
+							placeholder="Enter reason"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</div>
+					<div class="w-1/3">
+						<label for="mcStart" class="block text-gray-700 text-sm font-bold mb-2"
+							>Start Date</label
+						>
+						<input
+							type="date"
+							name="mcStart"
+							placeholder="Enter start date of MC"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</div>
+				</div>
+				<div class="mb-6 flex justify-between">
+					<div class="w-1/3">
+						<label for="mcEnd" class="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+						<input
+							type="date"
+							name="mcEnd"
+							placeholder="Enter end date of MC"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</div>
+					<div class="w-1/3">
+						<label for="employer" class="block text-gray-700 text-sm font-bold mb-2">Employer</label
+						>
+						<input
+							type="text"
+							name="employer"
+							placeholder="Enter employer"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</div>
+				</div>
+				<div class="flex justify-end">
+					<button
+						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+						type="submit"
+					>
+						Add MC
+					</button>
+					<button
+						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+						on:click={closeMC}
+					>
+						Cancel
+					</button>
+				</div>
+			</form>
 		</div>
 	{:else}
 		<!-- MODAL 2 -->
@@ -463,6 +589,7 @@
 			</div>
 			<button on:click={startConsultation}>Call Patient In</button>
 			<button on:click={endConsultation}>End consultation</button>
+			<button on:click={openMC}>Write MC</button>
 		</div>
 	{/if}
 </div>

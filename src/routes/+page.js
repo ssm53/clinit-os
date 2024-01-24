@@ -15,12 +15,21 @@ export async function load({ fetch }) {
 	}
 }
 
+// CURRENTLY DOING
+// 7. Write referrals and MC's
+// - doctor able to type out referral letter and MC during consultation
+
+// 1. have a button that says generate MC in consultation page - done
+// 2a. create new field of MC in appointments table (should have appointment ID, IC, name, MCStart, MCEnd, employer, reason ) - done
+// 2. once that is clicked, new Modal pops up with a form (name, MCstart, MCEnd, employer, reason). that modal should have a cancel and submit button. if cancel, it closes the modal and returns to normal consultation page. if submit, it populates the MC table with those fields. - done
+// 3. then once that is done, in the appointpemts page, if there is an MC for that appointment field, we should have MC button next to dispense and billing. If it is clicked, MC is generated just like how we did with invoice. But here our MC must have pregenerated text e.g. employer: {details.employer} shows employer: 9loop.
+
 // THINGS TO DO
 
-// 1. Create invoice and receipt at appointments page
+// 1. Create invoice and receipt at appointments page - (ALMOST DONE)
 // - create invoice with details from the backend appointments table, together with styling and logo
 // - then be able to download/print invoice
-// - be able to save that invoice in database
+// - be able to save that invoice in database (NOT DONE)
 
 // 2. Send automated whatsapp messages
 // - send automated whatsapp messages to remind follow updated, various promos
@@ -42,6 +51,9 @@ export async function load({ fetch }) {
 // - get sales, purchase and other analytics data
 // - must display them properly in a systematic way where you can filter them out easily
 
+// 7. Write referrals and MC's
+// - doctor able to type out referral letter and MC during consultation
+
 // 7. Miscellaneous
 // 1) change default value of any date time to a better one. now() isnt too great.
 // 2) waitingTime field in appointment table - maybe need to change the type
@@ -52,3 +64,4 @@ export async function load({ fetch }) {
 // 9) need to ensure we can edit shits even when there are no inputs in those fields
 // 10) need to ensure reload auto for all shits (e.g. change status of appts)
 // 11) for all forms, we need to have drop down menu (e.g. when nurse want to add/delete medicine, it should have a pop up which filters based on nurse input)
+// 12) should delete MC table
