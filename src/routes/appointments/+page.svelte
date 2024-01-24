@@ -134,6 +134,28 @@
 		}
 	}
 
+	export async function generateLetter(appointmentID) {
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/letter-details/${appointmentID}`, {
+			method: 'GET',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (resp.status == 200) {
+			const blob = await resp.blob();
+			const url = window.URL.createObjectURL(blob);
+
+			// Open the PDF in a new tab or window
+			window.open(url, '_blank');
+			dispensaryAppts.set(false);
+			showInvoice.set(true);
+		} else {
+			invoiceDetails = [];
+		}
+	}
+
 	export async function clickPaid(appointmentID) {
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/click-paid/${appointmentID}`, {
 			method: 'POST',
@@ -396,6 +418,9 @@
 					<button on:click={() => clickDispAndBilling(dispensary.id)}>DISPENSE AND BILLING</button>
 					{#if dispensary.mcDetails != null}
 						<button on:click={() => generateMC(dispensary.id)}>Generate MC</button>
+					{/if}
+					{#if dispensary.letterDetails != null && dispensary.letterDetails !== 'null'}
+						<button on:click={() => generateLetter(dispensary.id)}>Generate Letter</button>
 					{/if}
 				</div>
 			{/each}

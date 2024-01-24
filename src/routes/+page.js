@@ -20,9 +20,11 @@ export async function load({ fetch }) {
 // - doctor able to type out referral letter and MC during consultation
 
 // 1. have a button that says generate MC in consultation page - done
-// 2a. create new field of MC in appointments table (should have appointment ID, IC, name, MCStart, MCEnd, employer, reason ) - done
+
 // 2. once that is clicked, new Modal pops up with a form (name, MCstart, MCEnd, employer, reason). that modal should have a cancel and submit button. if cancel, it closes the modal and returns to normal consultation page. if submit, it populates the MC table with those fields. - done
-// 3. then once that is done, in the appointpemts page, if there is an MC for that appointment field, we should have MC button next to dispense and billing. If it is clicked, MC is generated just like how we did with invoice. But here our MC must have pregenerated text e.g. employer: {details.employer} shows employer: 9loop.
+// 3. then once that is done, in the appointpemts page, if there is an MC for that appointment field, we should have MC button next to dispense and billing. If it is clicked, MC is generated just like how we did with invoice. But here our MC must have pregenerated text e.g. employer: {details.employer} shows employer: 9loop. - done
+
+// now do the same for referral letters but when modal opens up it should be just a textarea
 
 // THINGS TO DO
 
@@ -65,3 +67,4 @@ export async function load({ fetch }) {
 // 10) need to ensure reload auto for all shits (e.g. change status of appts)
 // 11) for all forms, we need to have drop down menu (e.g. when nurse want to add/delete medicine, it should have a pop up which filters based on nurse input)
 // 12) should delete MC table
+// 13) style invoice and MC.
