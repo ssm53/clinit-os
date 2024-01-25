@@ -51,9 +51,17 @@ export async function load({ fetch }) {
 // - figure out what needs to be known for panel patients
 // - might need to alter database here
 
-// 6. analytics
+// 5. analytics
 // - get sales, purchase and other analytics data
 // - must display them properly in a systematic way where you can filter them out easily
+
+// 6. Create records
+// not like analytics, but just pure tables for sales and purchases.
+
+// Inventory
+// better way of doing inventory
+
+// timetable
 
 // 7. Miscellaneous
 // 1) change default value of any date time to a better one. now() isnt too great.
@@ -69,20 +77,21 @@ export async function load({ fetch }) {
 // 13) style invoice and MC.
 // 14) just general styling evreywhere.. icons and shit!
 // 15) how can we allow doctors and nurses all to be using it all at once
-// 16) allow nurses to see all patients - currently in junk1
+// 16) allow nurses to see all patients - currently in junk1 so that they can find patients easily for wtv reason.. sort it by most recently added (by id la)
 // 17) do alers, spinners and shit correctly!
+// 18) since now, we dont just do walkin appts, maybe dont need to put doctor field when we craete appts.. also, then we dont need analytics per dr.
+// 19) delete appointmments page and change the header, as appts is in the home page now.
+// 20) need to change the way time is shown on browser.
+// 210 ensure auth for doctors and nurses. they can only access diff sections. have to change database for this. make sure do redirect if not login etc.
 
 // GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
 
-// Nurses
+// in appointent page
+// nurses need to have a way to edit/cancel appointments
+// atm, as soon as we create the appointment, all appts will be waiting, but that's not true. need to find a way to differentiate
+// waiting appts and today appts
 
-// registrations of patients
-
-// if old patient, click on Existing patient, and form will come out to make a new appointment - for this we update appt table only. we search using IC number preferable, and also can do by full name. Here none of it is mandatory, and in the backend, we tell the backend that one of it might not be filled, and based on that, we need to search for that specific user to make appt table.
-// once patient is found, patient details will show on the page, and here, we do create appointment endpoint, and then it'll show up in appointments page. Here, we must have date and shit, but by default it is TODAY!
-
-// once patient is found, if at any point the details change, we should have an edit button to change patient details
-
-// steps
-// 1. on frontend, in registration page, we need to make request which connects registration anf set appointment
-// on backend, we need to combine registration and set appointment
+// in consultations
+// need to see any 'stupid' things doctor might do and take care of it. e.g. if forgot to end cosulatiton etc.
+// might need to add consultation status, if we dont have yet.
+// docs need a good way to filter and edit their appointments - we did in appointmentsAll, but it doesnt work and shit

@@ -23,6 +23,26 @@
 	export let apptInfo = [];
 	export let loading = false; // Add a loading state
 
+	//Table search
+	let nameSearch = ''; // This variable will store the user's input for name search
+	let patientICSearch = '';
+	let filteredTodayAppointments = [];
+
+	function handleNameSearch() {
+		// Filter the appointments based on the user's input
+		filteredTodayAppointments = data.todayAppointments.filter((appointment) =>
+			appointment.patientDetails.name.toLowerCase().includes(nameSearch.toLowerCase())
+		);
+	}
+
+	// New function to handle Patient IC search
+	function handlePatientICSearch() {
+		// Filter the appointments based on the user's input for Patient IC
+		filteredTodayAppointments = data.todayAppointments.filter((appointment) =>
+			appointment.patientIC.toLowerCase().includes(patientICSearch.toLowerCase())
+		);
+	}
+
 	function calculateWaitingTime(arrivalTime) {
 		const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
 		const arrivalDateTime = DateTime.fromISO(arrivalTime);
@@ -371,223 +391,243 @@
 	{#if $todayAppts}
 		{#if data.todayAppointments.length > 0}
 			<div>
-				{#each data.todayAppointments as today}
-					<div class="flex flex-row">
-						<p>{today.patientDetails.name}</p>
-						<p>{today.patientDetails.age}</p>
-						<p>{today.patientDetails.gender}</p>
-						<p>{today.patientIC}</p>
-						<p>{today.reason}</p>
-						<p>{today.doctor}</p>
-						<p>{today.arrivalTime}</p>
-						<p>{today.status}</p>
-					</div>
-				{/each}
+				<table class="border-collapse w-full">
+					<thead>
+						<tr>
+							<th class="border border-gray-400 px-4 py-2">Name</th>
+							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
+							<th class="border border-gray-400 px-4 py-2">Age</th>
+							<th class="border border-gray-400 px-4 py-2">Gender</th>
+							<th class="border border-gray-400 px-4 py-2">Reason</th>
+							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+							<th class="border border-gray-400 px-4 py-2">Status</th>
+						</tr>
+						<th class="border border-gray-400 px-4 py-2">
+							<input
+								type="text"
+								placeholder="Search by Name"
+								bind:value={nameSearch}
+								on:input={handleNameSearch}
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							/>
+						</th>
+						<th class="border border-gray-400 px-4 py-2">
+							<input
+								type="text"
+								placeholder="Search by Patient IC"
+								bind:value={patientICSearch}
+								on:input={handlePatientICSearch}
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							/>
+						</th>
+					</thead>
+					<tbody>
+						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : data.todayAppointments as today}
+							<tr class="hover:bg-gray-100">
+								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.name}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.patientIC}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.age}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.gender}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.reason}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.doctor}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.arrivalTime}</td>
+								<td class="border border-gray-400 px-4 py-2">{today.status}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 			</div>
 		{:else}
 			<p>nothing to show matey</p>
 		{/if}
 	{:else if $waitingAppts}
 		<div>
-			{#each data.waitingAppointments as waiting}
-				<div class="flex flex-row">
-					<p>{waiting.patientDetails.name}</p>
-					<p>{waiting.patientDetails.age}</p>
-					<p>{waiting.patientDetails.gender}</p>
-					<p>{waiting.patientIC}</p>
-					<p>{waiting.reason}</p>
-					<p>{waiting.doctor}</p>
-					<p>{waiting.arrivalTime}</p>
-					<p>{calculateWaitingTime(waiting.arrivalTime)}</p>
-					<p>{waiting.status}</p>
-				</div>
-			{/each}
+			<table class="border-collapse w-full">
+				<thead>
+					<tr>
+						<th class="border border-gray-400 px-4 py-2">Name</th>
+						<th class="border border-gray-400 px-4 py-2">Patient IC</th>
+						<th class="border border-gray-400 px-4 py-2">Age</th>
+						<th class="border border-gray-400 px-4 py-2">Gender</th>
+						<th class="border border-gray-400 px-4 py-2">Reason</th>
+						<th class="border border-gray-400 px-4 py-2">Doctor</th>
+						<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+						<th class="border border-gray-400 px-4 py-2">Waiting Time</th>
+						<th class="border border-gray-400 px-4 py-2">Status</th>
+					</tr>
+					<th class="border border-gray-400 px-4 py-2">
+						<input
+							type="text"
+							placeholder="Search by Name"
+							bind:value={nameSearch}
+							on:input={handleNameSearch}
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</th>
+					<th class="border border-gray-400 px-4 py-2">
+						<input
+							type="text"
+							placeholder="Search by Patient IC"
+							bind:value={patientICSearch}
+							on:input={handlePatientICSearch}
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</th>
+				</thead>
+				<tbody>
+					{#each data.waitingAppointments.filter((waiting) => waiting.patientDetails.name
+								.toLowerCase()
+								.includes(nameSearch.toLowerCase()) && waiting.patientIC
+								.toLowerCase()
+								.includes(patientICSearch.toLowerCase())) as waiting}
+						<tr class="hover:bg-gray-100">
+							<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.name}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.patientIC}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.age}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.gender}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.reason}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.doctor}</td>
+							<td class="border border-gray-400 px-4 py-2">{waiting.arrivalTime}</td>
+							<td class="border border-gray-400 px-4 py-2"
+								>{calculateWaitingTime(waiting.arrivalTime)}</td
+							>
+							<td class="border border-gray-400 px-4 py-2">{waiting.status}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	{:else if $dispensaryAppts}
 		<div>
-			{#each data.dispensaryAppointments as dispensary}
-				<div class="flex flex-row">
-					<p>{dispensary.patientDetails.name}</p>
-					<p>{dispensary.patientDetails.age}</p>
-					<p>{dispensary.patientDetails.gender}</p>
-					<p>{dispensary.patientIC}</p>
-					<p>{dispensary.reason}</p>
-					<p>{dispensary.doctor}</p>
-					<p>{dispensary.arrivalTime}</p>
-					<p>{dispensary.status}</p>
-					<button on:click={() => clickDispAndBilling(dispensary.id)}>DISPENSE AND BILLING</button>
-					{#if dispensary.mcDetails != null}
-						<button on:click={() => generateMC(dispensary.id)}>Generate MC</button>
-					{/if}
-					{#if dispensary.letterDetails != null && dispensary.letterDetails !== 'null'}
-						<button on:click={() => generateLetter(dispensary.id)}>Generate Letter</button>
-					{/if}
-				</div>
-			{/each}
+			<table class="border-collapse w-full">
+				<thead>
+					<tr>
+						<th class="border border-gray-400 px-4 py-2">Name</th>
+						<th class="border border-gray-400 px-4 py-2">Patient IC</th>
+						<th class="border border-gray-400 px-4 py-2">Age</th>
+						<th class="border border-gray-400 px-4 py-2">Gender</th>
+						<th class="border border-gray-400 px-4 py-2">Reason</th>
+						<th class="border border-gray-400 px-4 py-2">Doctor</th>
+						<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+						<th class="border border-gray-400 px-4 py-2">Status</th>
+						<th class="border border-gray-400 px-4 py-2">Actions</th>
+					</tr>
+					<th class="border border-gray-400 px-4 py-2">
+						<input
+							type="text"
+							placeholder="Search by Name"
+							bind:value={nameSearch}
+							on:input={handleNameSearch}
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</th>
+					<th class="border border-gray-400 px-4 py-2">
+						<input
+							type="text"
+							placeholder="Search by Patient IC"
+							bind:value={patientICSearch}
+							on:input={handlePatientICSearch}
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+					</th>
+				</thead>
+				<tbody>
+					{#each data.dispensaryAppointments.filter((dispensary) => dispensary.patientDetails.name
+								.toLowerCase()
+								.includes(nameSearch.toLowerCase()) && dispensary.patientIC
+								.toLowerCase()
+								.includes(patientICSearch.toLowerCase())) as dispensary}
+						<tr class="hover:bg-gray-100">
+							<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.name}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.patientIC}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.age}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.gender}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.reason}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.doctor}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.arrivalTime}</td>
+							<td class="border border-gray-400 px-4 py-2">{dispensary.status}</td>
+							<td class="border border-gray-400 px-4 py-2">
+								<button class=" bg-blue-200" on:click={() => clickDispAndBilling(dispensary.id)}
+									>DISPENSE AND BILLING</button
+								>
+								{#if dispensary.mcDetails != null}
+									<button class="bg-green-200" on:click={() => generateMC(dispensary.id)}
+										>Generate MC</button
+									>
+								{/if}
+								{#if dispensary.letterDetails != null && dispensary.letterDetails !== 'null'}
+									<button class="bg-purple-200" on:click={() => generateLetter(dispensary.id)}
+										>Generate Letter</button
+									>
+								{/if}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	{:else if $allAppts}
 		<div>
-			{#each data.allAppointments as all}
-				<div class="flex flex-row">
-					<p>{all.patientDetails.name}</p>
-					<p>{all.patientDetails.age}</p>
-					<p>{all.patientDetails.gender}</p>
-					<p>{all.patientIC}</p>
-					<p>{all.reason}</p>
-					<p>{all.doctor}</p>
-					<p>{all.arrivalTime}</p>
-					<p>{all.status}</p>
-					<button on:click={() => clickEditAppt(all.id, all.patientDetails.IC)}
-						>Edit Appointment</button
-					>
-				</div>
-			{/each}
-			<!-- MODAL 3 -->
-			<div class=" w-screen flex-col hidden filter-box bg-white">
-				<button on:click={closeEditModal()}>Close</button>
-				<!-- in here, we put all the appt details -->
-				<div class=" left-container flex flex-col">
-					<div class=" patient-info border-2">
-						<p>Patient Info</p>
-						{#if patientInfo.length > 0}
-							<div class="flex flex-row">
-								<p>{patientInfo[0].name}</p>
-								<p>{patientInfo[0].IC}</p>
-								<p>{patientInfo[0].gender}</p>
-								<p>{patientInfo[0].age}</p>
-							</div>
-						{:else}
-							<p>Loading...</p>
-						{/if}
-					</div>
-				</div>
-				<div class="notepad">
-					<form
-						on:submit|preventDefault={editNotes}
-						class="w-1/2 bg-white shadow-md rounded-lg p-8"
-					>
-						<div class="mb-6">
-							<label for="notes" class="block text-gray-700 text-sm font-bold mb-2"> Notes </label>
-							<input
-								type="text"
-								name="notes"
-								placeholder="Enter something"
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								value={apptInfo.length > 0 ? apptInfo[0].notes : ''}
-							/>
-
-							<div class="flex justify-end">
-								<button
-									class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-									type="submit"
+			<table class="border-collapse w-full">
+				<thead>
+					<tr>
+						<th class="border border-gray-400 px-4 py-2">Name</th>
+						<th class="border border-gray-400 px-4 py-2">Age</th>
+						<th class="border border-gray-400 px-4 py-2">Gender</th>
+						<th class="border border-gray-400 px-4 py-2">Patient IC</th>
+						<th class="border border-gray-400 px-4 py-2">Reason</th>
+						<th class="border border-gray-400 px-4 py-2">Doctor</th>
+						<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+						<th class="border border-gray-400 px-4 py-2">Status</th>
+						<th class="border border-gray-400 px-4 py-2">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.allAppointments as all}
+						<tr class="hover:bg-gray-100">
+							<td class="border border-gray-400 px-4 py-2">{all.patientDetails.name}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.patientDetails.age}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.patientDetails.gender}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.patientIC}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.reason}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.doctor}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.arrivalTime}</td>
+							<td class="border border-gray-400 px-4 py-2">{all.status}</td>
+							<td class="border border-gray-400 px-4 py-2">
+								<button on:click={() => clickEditAppt(all.id, all.patientDetails.IC)}
+									>Edit Appointment</button
 								>
-									Edit Notes
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="treatment-plan">
-					<p>Treatment Plan</p>
-					<form
-						on:submit|preventDefault={editTreatmentPlan}
-						class="w-1/2 bg-white shadow-md rounded-lg p-8"
-					>
-						<div class="mb-6 flex justify-between">
-							<div class="w-1/3">
-								<label for="meds1" class="block text-gray-700 text-sm font-bold mb-2"
-									>Medicine</label
-								>
-								<input
-									type="text"
-									name="meds1"
-									placeholder="Enter medicine"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].medName1 : ''}
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="quantity1" class="block text-gray-700 text-sm font-bold mb-2"
-									>Quantity</label
-								>
-								<input
-									type="number"
-									name="quantity1"
-									placeholder="Enter quantity"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].quantity1 : ''}
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="notes1" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
-								<input
-									type="text"
-									name="notes1"
-									placeholder="Enter notes"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].notes1 : ''}
-								/>
-							</div>
-						</div>
-						<div class="mb-6 flex justify-between">
-							<div class="w-1/3">
-								<label for="meds2" class="block text-gray-700 text-sm font-bold mb-2"
-									>Medicine</label
-								>
-								<input
-									type="text"
-									name="meds2"
-									placeholder="Enter medicine"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].medName2 : ''}
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="quantity2" class="block text-gray-700 text-sm font-bold mb-2"
-									>Quantity</label
-								>
-								<input
-									type="number"
-									name="quantity2"
-									placeholder="Enter quantity"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].quantity2 : ''}
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="notes2" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
-								<input
-									type="text"
-									name="notes2"
-									placeholder="Enter notes"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-									value={apptInfo.length > 0 ? apptInfo[0].notes2 : ''}
-								/>
-							</div>
-						</div>
-						<div class="flex justify-end">
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								type="submit"
-							>
-								Edit Treatment Plan
-							</button>
-						</div>
-					</form>
-				</div>
-			</div>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	{:else if $followUpAppts}
 		<div>
-			{#each data.followUpDetails as fDetails}
-				<div class="flex flex-row">
-					<p>{fDetails.patientName}</p>
-					<p>{fDetails.patientIC}</p>
-					<p>{fDetails.patientContact}</p>
-					<p>{fDetails.followUpReason}</p>
-					<p>{fDetails.followUpDate}</p>
-				</div>
-			{/each}
+			<table class="border-collapse w-full">
+				<thead>
+					<tr>
+						<th class="border border-gray-400 px-4 py-2">Patient Name</th>
+						<th class="border border-gray-400 px-4 py-2">Patient IC</th>
+						<th class="border border-gray-400 px-4 py-2">Patient Contact</th>
+						<th class="border border-gray-400 px-4 py-2">Follow-Up Reason</th>
+						<th class="border border-gray-400 px-4 py-2">Follow-Up Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.followUpDetails as fDetails}
+						<tr class="hover:bg-gray-100">
+							<td class="border border-gray-400 px-4 py-2">{fDetails.patientName}</td>
+							<td class="border border-gray-400 px-4 py-2">{fDetails.patientIC}</td>
+							<td class="border border-gray-400 px-4 py-2">{fDetails.patientContact}</td>
+							<td class="border border-gray-400 px-4 py-2">{fDetails.followUpReason}</td>
+							<td class="border border-gray-400 px-4 py-2">{fDetails.followUpDate}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	{:else}
 		<p>hello</p>
