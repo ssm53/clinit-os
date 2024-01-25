@@ -198,6 +198,10 @@
 			closeEditDetailsModal();
 		} else {
 			console.log('something went wrong there matey');
+			if (res.error) {
+				formErrors = res.error;
+				console.log(formErrors);
+			}
 		}
 	}
 </script>
@@ -475,9 +479,9 @@
 						class="block w-full rounded-md py-2 px-3 border border-gray-300"
 						value={patientDetails.IC}
 					/>
-					<!-- {#if 'IC' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['IC']}</p>
-					{/if} -->
+					{#if 'IC' in formErrors}
+						<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+					{/if}
 				</div>
 
 				<div class="mb-6">
