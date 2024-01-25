@@ -3,12 +3,14 @@
 	import { goto } from '$app/navigation';
 	import { getUserTokenFromLocalStorage } from '../../utils/auth';
 	import { writable } from 'svelte/store';
+	import { DateTime } from 'luxon';
 
 	let formErrors = {};
 	export const filteredPatients = writable([]);
 	export const tempPatientIC = writable('');
 	export let patientIC;
 	export let patientDetails = [];
+	let today = DateTime.local().toISODate();
 
 	export function postRegisterPatient() {
 		goto('/');
@@ -101,7 +103,7 @@
 		modalToHide.classList.add('hidden');
 	}
 
-	async function newPatient(evt) {
+	export async function newPatient(evt) {
 		const newPatientData = {
 			name: evt.target['name'].value.toLowerCase(),
 			IC: evt.target['IC'].value,
@@ -110,6 +112,7 @@
 			email: evt.target['email'].value,
 			contact: evt.target['contact'].value,
 			race: evt.target['race'].value.toLowerCase(),
+			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value.toLowerCase(),
 			doctor: evt.target['doctor'].value.toLowerCase()
 		};
@@ -139,6 +142,7 @@
 
 	export async function existingPatient(evt) {
 		const appointmentDetails = {
+			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value,
 			patientIC: patientIC,
 			doctor: evt.target['doctor'].value
@@ -325,6 +329,23 @@
 				</div>
 
 				<div class="mb-6">
+					<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+						Appointment Date
+					</label>
+					<input
+						type="date"
+						name="date"
+						placeholder="Enter date"
+						class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						required
+						value={today}
+					/>
+					{#if 'date' in formErrors}
+						<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
+					{/if}
+				</div>
+
+				<div class="mb-6">
 					<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
 						Reason of Visit
 					</label>
@@ -364,9 +385,6 @@
 				</div>
 			</form>
 		</div>
-		<!-- here we're gonna have a small search box at the top  to find for the patient, then once found, the patent details will
-		show in the middle of the page, and a create apppointment button at the right. if appointment created, we go to appointment page. should have a button to say go back, which
-		will go back to new patient tab.  -->
 		<!-- MODAL 1 -->
 		<div class=" w-screen flex-col hidden bg-white existing-patient">
 			<button
@@ -418,6 +436,17 @@
 				class="w-1/2 bg-white shadow-md rounded-lg p-8"
 			>
 				<div class="mb-6">
+					<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+						Appointment Date
+					</label>
+					<input
+						type="date"
+						name="date"
+						placeholder="Enter date"
+						class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						value={today}
+					/>
+
 					<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
 						Reason for visit
 					</label>
