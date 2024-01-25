@@ -1,60 +1,59 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 
 export async function load({ fetch }) {
-	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/all-patients');
+	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-today');
 
 	const res = await resp.json();
 	if (resp.status == 200) {
+		const resp2 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-waiting');
+
+		const res2 = await resp2.json();
+
+		const resp3 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-dispensary');
+		const res3 = await resp3.json();
+
+		const resp4 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-all');
+		const res4 = await resp4.json();
+
+		const resp5 = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-follow-up-details');
+		const res5 = await resp5.json();
+
 		return {
-			patients: res.allPatients
+			todayAppointments: res.appointmentsToday,
+			waitingAppointments: res2.appointmentsWaiting,
+			dispensaryAppointments: res3.appointmentsDispensary,
+			allAppointments: res4.appointmentsAll,
+			followUpDetails: res5.followUpDetails
 		};
 	} else {
 		return {
-			patients: []
+			todayAppointments: [],
+			waitingAppointments: [],
+			dispensaryAppointments: [],
+			followUpDetails: []
 		};
 	}
 }
 
-// CURRENTLY DOING
-// 7. Write referrals and MC's
-// - doctor able to type out referral letter and MC during consultation
+// FEATURES TO DO
 
-// 1. have a button that says generate MC in consultation page - done
-
-// 2. once that is clicked, new Modal pops up with a form (name, MCstart, MCEnd, employer, reason). that modal should have a cancel and submit button. if cancel, it closes the modal and returns to normal consultation page. if submit, it populates the MC table with those fields. - done
-// 3. then once that is done, in the appointpemts page, if there is an MC for that appointment field, we should have MC button next to dispense and billing. If it is clicked, MC is generated just like how we did with invoice. But here our MC must have pregenerated text e.g. employer: {details.employer} shows employer: 9loop. - done
-
-// now do the same for referral letters but when modal opens up it should be just a textarea
-
-// THINGS TO DO
-
-// 1. Create invoice and receipt at appointments page - (ALMOST DONE)
-// - create invoice with details from the backend appointments table, together with styling and logo
-// - then be able to download/print invoice
-// - be able to save that invoice in database (NOT DONE)
+// 1. Upload and store PDF/images/docs
+// - be able to save that invoice in database
+// - upload and store pdf and images for patient history (same way as recepits and invoices la)
 
 // 2. Send automated whatsapp messages
 // - send automated whatsapp messages to remind follow updated, various promos
 // - send automated whatsapp message to get them to google review
 
-// 3. Payments
-// - cash can be done with our current way
-// - how to link up card payment, e-wallet
-// - must automatically link up to our database as paid
+// 3, Payments
 
 // 4. Panel patients
 // - figure out what needs to be known for panel patients
 // - might need to alter database here
 
-// 5. Patient history
-// - upload and store pdf and images for patient history (same way as recepits and invoices la)
-
 // 6. analytics
 // - get sales, purchase and other analytics data
 // - must display them properly in a systematic way where you can filter them out easily
-
-// 7. Write referrals and MC's
-// - doctor able to type out referral letter and MC during consultation
 
 // 7. Miscellaneous
 // 1) change default value of any date time to a better one. now() isnt too great.
@@ -68,3 +67,22 @@ export async function load({ fetch }) {
 // 11) for all forms, we need to have drop down menu (e.g. when nurse want to add/delete medicine, it should have a pop up which filters based on nurse input)
 // 12) should delete MC table
 // 13) style invoice and MC.
+// 14) just general styling evreywhere.. icons and shit!
+// 15) how can we allow doctors and nurses all to be using it all at once
+// 16) allow nurses to see all patients - currently in junk1
+// 17) do alers, spinners and shit correctly!
+
+// GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
+
+// Nurses
+
+// registrations of patients
+
+// if old patient, click on Existing patient, and form will come out to make a new appointment - for this we update appt table only. we search using IC number preferable, and also can do by full name. Here none of it is mandatory, and in the backend, we tell the backend that one of it might not be filled, and based on that, we need to search for that specific user to make appt table.
+// once patient is found, patient details will show on the page, and here, we do create appointment endpoint, and then it'll show up in appointments page. Here, we must have date and shit, but by default it is TODAY!
+
+// once patient is found, if at any point the details change, we should have an edit button to change patient details
+
+// steps
+// 1. on frontend, in registration page, we need to make request which connects registration anf set appointment
+// on backend, we need to combine registration and set appointment
