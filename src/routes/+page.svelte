@@ -30,7 +30,7 @@
 
 	function handleNameSearch() {
 		// Filter the appointments based on the user's input
-		filteredTodayAppointments = data.todayAppointments.filter((appointment) =>
+		filteredTodayAppointments = data.todayBookingAppointments.filter((appointment) =>
 			appointment.patientDetails.name.toLowerCase().includes(nameSearch.toLowerCase())
 		);
 	}
@@ -38,7 +38,7 @@
 	// New function to handle Patient IC search
 	function handlePatientICSearch() {
 		// Filter the appointments based on the user's input for Patient IC
-		filteredTodayAppointments = data.todayAppointments.filter((appointment) =>
+		filteredTodayAppointments = data.todayBookingAppointments.filter((appointment) =>
 			appointment.patientIC.toLowerCase().includes(patientICSearch.toLowerCase())
 		);
 	}
@@ -389,7 +389,7 @@
 </div>
 <div>
 	{#if $todayAppts}
-		{#if data.todayAppointments.length > 0}
+		{#if data.todayBookingAppointments.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
@@ -423,7 +423,7 @@
 						</th>
 					</thead>
 					<tbody>
-						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : data.todayAppointments as today}
+						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : data.todayBookingAppointments as today}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.patientIC}</td>

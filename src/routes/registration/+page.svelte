@@ -6,11 +6,23 @@
 	import { DateTime } from 'luxon';
 
 	let formErrors = {};
+	export const walkIn = writable(true);
+	export const booking = writable(false);
 	export const filteredPatients = writable([]);
 	export const tempPatientIC = writable('');
 	export let patientIC;
 	export let patientDetails = [];
 	let today = DateTime.local().toISODate();
+
+	export function clickWalkIn() {
+		booking.set(false);
+		walkIn.set(true);
+	}
+
+	export function clickBooking() {
+		walkIn.set(false);
+		booking.set(true);
+	}
 
 	export function postRegisterPatient() {
 		goto('/');
@@ -142,12 +154,37 @@
 
 	export async function existingPatient(evt) {
 		const appointmentDetails = {
-			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value,
 			patientIC: patientIC,
 			doctor: evt.target['doctor'].value
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment`, {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(appointmentDetails)
+		});
+
+		const res = await resp.json();
+		if (resp.status == 200) {
+			let modalToHide = document.querySelector('.create-existing-appointment');
+			modalToHide.classList.add('hidden');
+			goto('/');
+		} else {
+			console.log('hello2');
+		}
+	}
+
+	export async function existingPatientBooking(evt) {
+		const appointmentDetails = {
+			date: DateTime.fromISO(evt.target['date'].value).toISO(),
+			reason: evt.target['reason'].value,
+			patientIC: patientIC,
+			doctor: evt.target['doctor'].value
+		};
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment-booking`, {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
@@ -210,395 +247,785 @@
 	}
 </script>
 
-<div class="bg-white min-h-screen">
-	<header class="bg-gray-100 shadow">
-		<div class="container mx-auto py-4">
-			<h1 class="text-2xl font-semibold text-gray-900">Register Patient and Create Appointment</h1>
-		</div>
-	</header>
+<div
+	class="top-container flex flex-col justify-center items-center border-b-2 border-black bg-white h-44"
+>
+	<div>
+		<span class="font-bold text-3xl text-pink-700">Register Patient and Create Appointment</span>
+	</div>
+	<div class="flex flex-row justify-between mt-5">
+		<button
+			on:click={clickWalkIn}
+			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			>Walk-In</button
+		>
+		<button
+			on:click={clickBooking}
+			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			>Bookings</button
+		>
+	</div>
+</div>
 
-	<button
-		class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-		on:click={openExistingPatient}
-	>
-		Existing Patient
-	</button>
-
-	<main class="container mx-auto py-8">
-		<!-- <Spinner /> -->
-		<div class="flex justify-center items-center new-patient">
-			<form on:submit|preventDefault={newPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
-				<div class="mb-6">
-					<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
-					<input
-						type="text"
-						name="name"
-						placeholder="Enter name"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'name' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.name}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
-					<input
-						type="text"
-						name="IC"
-						placeholder="Enter IC number"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'IC' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
-					<input
-						type="number"
-						name="age"
-						placeholder="Enter age"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'age' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-					<input
-						type="text"
-						name="gender"
-						placeholder="Enter gender"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'gender' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
-					<input
-						type="text"
-						name="email"
-						placeholder="Enter email"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'email' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-						Contact Number
-					</label>
-					<input
-						type="text"
-						name="contact"
-						placeholder="Enter contact number"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'contact' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.contact}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
-					<input
-						type="text"
-						name="race"
-						placeholder="Enter race"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'race' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-						Appointment Date
-					</label>
-					<input
-						type="date"
-						name="date"
-						placeholder="Enter date"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-						value={today}
-					/>
-					{#if 'date' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-						Reason of Visit
-					</label>
-					<input
-						type="text"
-						name="reason"
-						placeholder="Enter reason"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'reason' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
-					{/if}
-				</div>
-
-				<div class="mb-6">
-					<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2">Doctor</label>
-					<input
-						type="text"
-						name="doctor"
-						placeholder="Enter consultation doctor"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						required
-					/>
-					{#if 'doctor' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
-					{/if}
-				</div>
-
-				<div class="flex justify-end">
-					<button
-						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-						type="submit"
-					>
-						Complete Registration
-					</button>
-				</div>
-			</form>
-		</div>
-		<!-- MODAL 1 -->
-		<div class=" w-screen flex-col hidden bg-white existing-patient">
-			<button
-				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-				on:click={closeExistingPatient}
-			>
-				Go Back
-			</button>
-			<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
-				<div class="mb-6">
-					<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC </label>
-					<input
-						type="text"
-						name="IC"
-						placeholder="Enter IC"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					/>
-
-					<div class="flex justify-end">
-						<button
-							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-							type="submit"
-						>
-							Find Patient
-						</button>
-					</div>
-				</div>
-			</form>
-			<div>
-				{#each $filteredPatients as fPatient}
-					<div class=" flex flex-row">
-						<p class="mr-5">{fPatient.name}</p>
-						<p class="mr-5">{fPatient.IC}</p>
-						<p class="mr-5">{fPatient.age}</p>
-						<p class="mr-5">{fPatient.gender}</p>
-						<p class="mr-5">{fPatient.email}</p>
-						<p class="mr-5">{fPatient.contact}</p>
-						<p>{fPatient.race}</p>
-						<button on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
-						<button class="bg-pink-700" on:click={openAppointmentModal}>Create Appointment</button>
-					</div>
-				{/each}
+{#if $walkIn}
+	<div class="bg-white min-h-screen">
+		<header class="bg-gray-100 shadow">
+			<div class="container mx-auto py-4">
+				<h1 class="text-2xl font-semibold text-gray-900">
+					Register Patient and Create Appointment
+				</h1>
 			</div>
-		</div>
-		<!-- Appointment Modal -->
-		<div class=" w-screen flex-col hidden create-existing-appointment bg-white">
-			<form
-				on:submit|preventDefault={existingPatient}
-				class="w-1/2 bg-white shadow-md rounded-lg p-8"
-			>
-				<div class="mb-6">
-					<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-						Appointment Date
-					</label>
-					<input
-						type="date"
-						name="date"
-						placeholder="Enter date"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={today}
-					/>
+		</header>
 
-					<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-						Reason for visit
-					</label>
-					<input
-						type="text"
-						name="reason"
-						placeholder="Enter reason"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					/>
+		<button
+			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+			on:click={openExistingPatient}
+		>
+			Existing Patient
+		</button>
 
-					<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
-					<input
-						type="text"
-						name="doctor"
-						placeholder="Enter doctor in charge"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					/>
+		<main class="container mx-auto py-8">
+			<!-- <Spinner /> -->
+			<div class="flex justify-center items-center new-patient">
+				<form on:submit|preventDefault={newPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+					<div class="mb-6">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter name"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'name' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.name}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
+							Contact Number
+						</label>
+						<input
+							type="text"
+							name="contact"
+							placeholder="Enter contact number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'contact' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.contact}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'race' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
+						{/if}
+					</div>
+					<div class="mb-6">
+						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
+							Reason of Visit
+						</label>
+						<input
+							type="text"
+							name="reason"
+							placeholder="Enter reason"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'reason' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2">Doctor</label>
+						<input
+							type="text"
+							name="doctor"
+							placeholder="Enter consultation doctor"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'doctor' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
+						{/if}
+					</div>
 
 					<div class="flex justify-end">
 						<button
 							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 							type="submit"
 						>
-							Set Appointment
+							Complete Registration
 						</button>
-						<button on:click={closeAppointmentModal}> Cancel </button>
 					</div>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+			<!-- MODAL 1 -->
+			<div class=" w-screen flex-col hidden bg-white existing-patient">
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					on:click={closeExistingPatient}
+				>
+					Go Back
+				</button>
+				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
 
-		<!-- MODAL 3 -->
-		<div class=" w-screen flex-col hidden edit-details bg-white">
-			<button on:click={closeEditDetailsModal}>Close Modal</button>
-			<form
-				on:submit|preventDefault={editPatientDetails}
-				class="w-1/2 bg-white shadow-md rounded-lg p-8"
-			>
-				<div class="mb-6">
-					<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
-					<input
-						type="text"
-						name="name"
-						placeholder="Enter name"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.name}
-					/>
-					<!-- {#if 'name' in formErrors}
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Find Patient
+							</button>
+						</div>
+					</div>
+				</form>
+				<div>
+					{#each $filteredPatients as fPatient}
+						<div class=" flex flex-row">
+							<p class="mr-5">{fPatient.name}</p>
+							<p class="mr-5">{fPatient.IC}</p>
+							<p class="mr-5">{fPatient.age}</p>
+							<p class="mr-5">{fPatient.gender}</p>
+							<p class="mr-5">{fPatient.email}</p>
+							<p class="mr-5">{fPatient.contact}</p>
+							<p>{fPatient.race}</p>
+							<button on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
+							<button class="bg-pink-700" on:click={openAppointmentModal}>Create Appointment</button
+							>
+						</div>
+					{/each}
+				</div>
+			</div>
+			<!-- Appointment Modal -->
+			<div class=" w-screen flex-col hidden create-existing-appointment bg-white">
+				<form
+					on:submit|preventDefault={existingPatient}
+					class="w-1/2 bg-white shadow-md rounded-lg p-8"
+				>
+					<div class="mb-6">
+						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
+							Reason for visit
+						</label>
+						<input
+							type="text"
+							name="reason"
+							placeholder="Enter reason"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
+						<input
+							type="text"
+							name="doctor"
+							placeholder="Enter doctor in charge"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Set Appointment
+							</button>
+							<button on:click={closeAppointmentModal}> Cancel </button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<!-- MODAL 3 -->
+			<div class=" w-screen flex-col hidden edit-details bg-white">
+				<button on:click={closeEditDetailsModal}>Close Modal</button>
+				<form
+					on:submit|preventDefault={editPatientDetails}
+					class="w-1/2 bg-white shadow-md rounded-lg p-8"
+				>
+					<div class="mb-6">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter name"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.name}
+						/>
+						<!-- {#if 'name' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="mb-6">
-					<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
-					<input
-						type="text"
-						name="IC"
-						placeholder="Enter IC number"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.IC}
-					/>
-					{#if 'IC' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
-					{/if}
-				</div>
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.IC}
+						/>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
 
-				<div class="mb-6">
-					<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
-					<input
-						type="number"
-						name="age"
-						placeholder="Enter age"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.age}
-						required
-					/>
-					<!-- {#if 'age' in formErrors}
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.age}
+							required
+						/>
+						<!-- {#if 'age' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['age']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="mb-6">
-					<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-					<input
-						type="text"
-						name="gender"
-						placeholder="Enter gender"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.gender}
-						required
-					/>
-					<!-- {#if 'gender' in formErrors}
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.gender}
+							required
+						/>
+						<!-- {#if 'gender' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['gender']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="mb-6">
-					<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
-					<input
-						type="text"
-						name="email"
-						placeholder="Enter email"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.email}
-						required
-					/>
-					<!-- {#if 'email' in formErrors}
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.email}
+							required
+						/>
+						<!-- {#if 'email' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['email']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="mb-6">
-					<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-						Contact Number
-					</label>
-					<input
-						type="text"
-						name="contact"
-						placeholder="Enter contact number"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.contact}
-						required
-					/>
-					<!-- {#if 'contact' in formErrors}
+					<div class="mb-6">
+						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
+							Contact Number
+						</label>
+						<input
+							type="text"
+							name="contact"
+							placeholder="Enter contact number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.contact}
+							required
+						/>
+						<!-- {#if 'contact' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['contact']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="mb-6">
-					<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
-					<input
-						type="text"
-						name="race"
-						placeholder="Enter race"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						value={patientDetails.race}
-						required
-					/>
-					<!-- {#if 'race' in formErrors}
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.race}
+							required
+						/>
+						<!-- {#if 'race' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['race']}</p>
 					{/if} -->
-				</div>
+					</div>
 
-				<div class="flex justify-end">
-					<button
-						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-						type="submit"
-					>
-						Complete Edit Details
-					</button>
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Complete Edit Details
+						</button>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+{:else}
+	<div class="bg-gray-700 min-h-screen">
+		<header class="bg-gray-100 shadow">
+			<div class="container mx-auto py-4">
+				<h1 class="text-2xl font-semibold text-gray-900">
+					Register Patient and Create Appointment
+				</h1>
+			</div>
+		</header>
+
+		<button
+			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+			on:click={openExistingPatient}
+		>
+			Existing Patient
+		</button>
+
+		<main class="container mx-auto py-8">
+			<!-- <Spinner /> -->
+			<div class="flex justify-center items-center new-patient">
+				<form on:submit|preventDefault={newPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+					<div class="mb-6">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter name"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'name' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.name}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
+							Contact Number
+						</label>
+						<input
+							type="text"
+							name="contact"
+							placeholder="Enter contact number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'contact' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.contact}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'race' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+							Appointment Date
+						</label>
+						<input
+							type="date"
+							name="date"
+							placeholder="Enter date"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'date' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
+							Reason of Visit
+						</label>
+						<input
+							type="text"
+							name="reason"
+							placeholder="Enter reason"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'reason' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2">Doctor</label>
+						<input
+							type="text"
+							name="doctor"
+							placeholder="Enter consultation doctor"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
+						/>
+						{#if 'doctor' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
+						{/if}
+					</div>
+
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Complete Registration
+						</button>
+					</div>
+				</form>
+			</div>
+			<!-- MODAL 1 -->
+			<div class=" w-screen flex-col hidden bg-white existing-patient">
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					on:click={closeExistingPatient}
+				>
+					Go Back
+				</button>
+				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Find Patient
+							</button>
+						</div>
+					</div>
+				</form>
+				<div>
+					{#each $filteredPatients as fPatient}
+						<div class=" flex flex-row">
+							<p class="mr-5">{fPatient.name}</p>
+							<p class="mr-5">{fPatient.IC}</p>
+							<p class="mr-5">{fPatient.age}</p>
+							<p class="mr-5">{fPatient.gender}</p>
+							<p class="mr-5">{fPatient.email}</p>
+							<p class="mr-5">{fPatient.contact}</p>
+							<p>{fPatient.race}</p>
+							<button on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
+							<button class="bg-pink-700" on:click={openAppointmentModal}>Create Appointment</button
+							>
+						</div>
+					{/each}
 				</div>
-			</form>
-		</div>
-	</main>
-</div>
+			</div>
+			<!-- Appointment Modal -->
+			<div class=" w-screen flex-col hidden create-existing-appointment bg-white">
+				<form
+					on:submit|preventDefault={existingPatientBooking}
+					class="w-1/2 bg-white shadow-md rounded-lg p-8"
+				>
+					<div class="mb-6">
+						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+							Appointment Date
+						</label>
+						<input
+							type="date"
+							name="date"
+							placeholder="Enter date"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
+							Reason for visit
+						</label>
+						<input
+							type="text"
+							name="reason"
+							placeholder="Enter reason"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
+						<input
+							type="text"
+							name="doctor"
+							placeholder="Enter doctor in charge"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Set Appointment
+							</button>
+							<button on:click={closeAppointmentModal}> Cancel </button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<!-- MODAL 3 -->
+			<div class=" w-screen flex-col hidden edit-details bg-white">
+				<button on:click={closeEditDetailsModal}>Close Modal</button>
+				<form
+					on:submit|preventDefault={editPatientDetails}
+					class="w-1/2 bg-white shadow-md rounded-lg p-8"
+				>
+					<div class="mb-6">
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<input
+							type="text"
+							name="name"
+							placeholder="Enter name"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.name}
+						/>
+						<!-- {#if 'name' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
+				{/if} -->
+					</div>
+
+					<div class="mb-6">
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<input
+							type="text"
+							name="IC"
+							placeholder="Enter IC number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.IC}
+						/>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.age}
+							required
+						/>
+						<!-- {#if 'age' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['age']}</p>
+				{/if} -->
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.gender}
+							required
+						/>
+						<!-- {#if 'gender' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['gender']}</p>
+				{/if} -->
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.email}
+							required
+						/>
+						<!-- {#if 'email' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['email']}</p>
+				{/if} -->
+					</div>
+
+					<div class="mb-6">
+						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
+							Contact Number
+						</label>
+						<input
+							type="text"
+							name="contact"
+							placeholder="Enter contact number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.contact}
+							required
+						/>
+						<!-- {#if 'contact' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['contact']}</p>
+				{/if} -->
+					</div>
+
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.race}
+							required
+						/>
+						<!-- {#if 'race' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['race']}</p>
+				{/if} -->
+					</div>
+
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Complete Edit Details
+						</button>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+{/if}

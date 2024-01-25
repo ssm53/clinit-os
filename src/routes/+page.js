@@ -1,7 +1,7 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 
 export async function load({ fetch }) {
-	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-today');
+	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-booking-today');
 
 	const res = await resp.json();
 	if (resp.status == 200) {
@@ -19,7 +19,7 @@ export async function load({ fetch }) {
 		const res5 = await resp5.json();
 
 		return {
-			todayAppointments: res.appointmentsToday,
+			todayBookingAppointments: res.appointmentsBookingToday,
 			waitingAppointments: res2.appointmentsWaiting,
 			dispensaryAppointments: res3.appointmentsDispensary,
 			allAppointments: res4.appointmentsAll,
@@ -27,7 +27,7 @@ export async function load({ fetch }) {
 		};
 	} else {
 		return {
-			todayAppointments: [],
+			todayBookingAppointments: [],
 			waitingAppointments: [],
 			dispensaryAppointments: [],
 			followUpDetails: []
@@ -86,12 +86,21 @@ export async function load({ fetch }) {
 
 // GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
 
-// in appointent page
-// nurses need to have a way to edit/cancel appointments
+// in home page
+// nurses need to have a way to edit/cancel appointments which are in waiting or today
 // atm, as soon as we create the appointment, all appts will be waiting, but that's not true. need to find a way to differentiate
 // waiting appts and today appts
+// automatically alert them if a booking happenes, and there was a no show. delete/text?
 
 // in consultations
 // need to see any 'stupid' things doctor might do and take care of it. e.g. if forgot to end cosulatiton etc.
 // might need to add consultation status, if we dont have yet.
 // docs need a good way to filter and edit their appointments - we did in appointmentsAll, but it doesnt work and shit
+
+// DOING
+// to seperate between waiting and today, there's no point hacing a waiting tab..
+// instead, in registration page, we do walk in and booking tab. if do in booking tab, status becomes booking. done till here.
+// there will be a tab for that, we replace today When the day comes, it will get shown in the Today Bookings tab. so on the backend, we show in the today bookings tab where it is upcoming + its the same day. done till here
+
+// there will be a button arrived? and then will change status to waiting.
+// if appt made in walk in tab, it auto becomes waiting.
