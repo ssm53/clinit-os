@@ -22,6 +22,15 @@
 	export const currentPatientIC = writable('');
 	export const currentAppointmentID = writable('');
 
+	let nameFilter = '';
+	let icFilter = '';
+
+	$: filteredAppointments = data.waitingAppointments.filter(
+		(appointment) =>
+			appointment.patientDetails.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+			appointment.patientIC.toLowerCase().includes(icFilter.toLowerCase())
+	);
+
 	function calculateWaitingTime(arrivalTime) {
 		const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
 		const arrivalDateTime = DateTime.fromISO(arrivalTime);
@@ -356,23 +365,46 @@
 	{#if $queue}
 		<p>Queue</p>
 		<!-- MODAL 1 -->
-		<div class=" w-screen flex-col filter-box bg-white">
-			{#each data.waitingAppointments as waiting}
-				<div class="flex flex-row">
-					<p>{waiting.patientDetails.name}</p>
-					<p>{waiting.patientDetails.age}</p>
-					<p>{waiting.patientDetails.gender}</p>
-					<p>{waiting.patientIC}</p>
-					<p>{waiting.reason}</p>
-					<p>{waiting.doctor}</p>
-					<p>{waiting.arrivalTime}</p>
-					<p>{calculateWaitingTime(waiting.arrivalTime)}</p>
-					<p>{waiting.status}</p>
-					<button on:click={() => viewAppointment(waiting.patientIC, waiting.id)}
-						>View Appointment</button
-					>
-				</div>
-			{/each}
+		<div class="w-screen filter-box bg-white">
+			<input type="text" bind:value={nameFilter} placeholder="Filter by Name" />
+			<input type="text" bind:value={icFilter} placeholder="Filter by IC" />
+
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Age</th>
+						<th>Gender</th>
+						<th>IC</th>
+						<th>Reason</th>
+						<th>Doctor</th>
+						<th>Arrival Time</th>
+						<th>Waiting Time</th>
+						<th>Status</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each filteredAppointments as appointment}
+						<tr>
+							<td>{appointment.patientDetails.name}</td>
+							<td>{appointment.patientDetails.age}</td>
+							<td>{appointment.patientDetails.gender}</td>
+							<td>{appointment.patientIC}</td>
+							<td>{appointment.reason}</td>
+							<td>{appointment.doctor}</td>
+							<td>{appointment.arrivalTime}</td>
+							<td>{calculateWaitingTime(appointment.arrivalTime)}</td>
+							<td>{appointment.status}</td>
+							<td>
+								<button on:click={() => viewAppointment(appointment.patientIC, appointment.id)}>
+									View Appointment
+								</button>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	{:else if $writeMc}
 		<!-- Modal 3 -->

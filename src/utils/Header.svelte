@@ -26,8 +26,8 @@
 		goto('/registration');
 	}
 
-	function clickAppointments() {
-		goto('/appointments');
+	function clickEdit() {
+		goto('/edit');
 	}
 
 	function clickConsultations() {
@@ -60,11 +60,8 @@
 					>
 						Registration
 					</button>
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickAppointments}
-					>
-						Appointments
+					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
+						Edit
 					</button>
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"

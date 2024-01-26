@@ -64,8 +64,8 @@ export async function load({ fetch }) {
 // timetable
 
 // 7. Miscellaneous
+// - followup appts cant be found
 // 1) change default value of any date time to a better one. now() isnt too great.
-// 2) waitingTime field in appointment table - maybe need to change the type
 // 3) for appointmensts page, make sure to ensure that even when there is zero data for each waiting, today, dispensary and serving, it doesnt become error.. that means in html, need to ifdispenasryappts && dispeanryappinet. length > 0
 // 4) in consultations page.svelte, when doing treatment plan, should do better with form. allow to only input one row, and can add rows. we also need to ensure there is enough fields for medicine in our appointment table. at the moment, we only have 2.
 // 5) when we do end consultation, it automatically goes back to queue for doctor to know who is the next patient.  but when it goes back, we hae to reload to see the updated queue. we need it to be autimatically updated. we also need to see if doc starts consultation and hasnt ended it yet, it is still in the queue but in a diff part of queue.
@@ -82,25 +82,32 @@ export async function load({ fetch }) {
 // 18) since now, we dont just do walkin appts, maybe dont need to put doctor field when we craete appts.. also, then we dont need analytics per dr.
 // 19) delete appointmments page and change the header, as appts is in the home page now.
 // 20) need to change the way time is shown on browser.
-// 210 ensure auth for doctors and nurses. they can only access diff sections. have to change database for this. make sure do redirect if not login etc.
+// 21) ensure auth for doctors and nurses. they can only access diff sections. have to change database for this. make sure do redirect if not login etc.
+//22) // automatically alert them if a booking happenes, and there was a no show. delete/text?
+// 23) need to make everything reactive - no need to reload page!
+// 24) find a way to delete all database so can start from scratch
+// 25) at the moment, we use Malaysian time. make sure that we cater to every time possible if needed.
+// - need to show special error if IC/email already taken!
+// - for edit page, the rows must be of constant size, and if got overflow, users can click see more button. basically make rows constant no matter what. stylist can do.
 
 // GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
 
-// in home page
-// nurses need to have a way to edit/cancel appointments which are in waiting or today
-// atm, as soon as we create the appointment, all appts will be waiting, but that's not true. need to find a way to differentiate
-// waiting appts and today appts
-// automatically alert them if a booking happenes, and there was a no show. delete/text?
-
 // in consultations
-// need to see any 'stupid' things doctor might do and take care of it. e.g. if forgot to end cosulatiton etc.
-// might need to add consultation status, if we dont have yet.
-// docs need a good way to filter and edit their appointments - we did in appointmentsAll, but it doesnt work and shit
+// docs need a good way to filter and edit their appointments after consultation ended - we did in appointmentsAll, but it doesnt work and shit
+// need a way to add more and more medicines, and not just limit it to two medicines
+// here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
+// when there is a follow up, there needs to be a new appointment made and status is booking - when there is the form, we just do reason and date, as other things are the same as previous appointment.
 
 // DOING
-// to seperate between waiting and today, there's no point hacing a waiting tab..
-// instead, in registration page, we do walk in and booking tab. if do in booking tab, status becomes booking. done till here.
-// there will be a tab for that, we replace today When the day comes, it will get shown in the Today Bookings tab. so on the backend, we show in the today bookings tab where it is upcoming + its the same day. done till here
+// docs need a good way to filter and edit their appointments after consultation ended - we did in appointmentsAll, but it doesnt work and shit
+// steps
+// alter header to have edit tab - there will be all the appointments for docs to edit.. once clciekd it goes to /edit - done
+// in edit, we do page.js to get all appointments where status is completed. in page selte, we list all appointments in table format, and make sure it can be filtred by name, IC.
+// the size od columns and rows must be constant, and if there is more things to see, there should be see more button and once clicked, opens up modal which shows it in full page format. in full page format, should aso have a edit button. have close button to go back to where doc left off.
+// always have an edit button for each appt. once clciked, opens up modal with prepopulated form. once doc edits that, there will be a patch request to that appointment.  and once clicked, opens up modal which shows it in full page format. go back to where doc left off. - done except for populatinf form and doing patch/post request.
 
-// there will be a button arrived? and then will change status to waiting.
-// if appt made in walk in tab, it auto becomes waiting.
+// should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week.
+// for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
+
+// SOLVED
+// 1) change default value of any date time to a better one. now() isnt too great. - DONE

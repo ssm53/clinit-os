@@ -152,6 +152,43 @@
 		}
 	}
 
+	export async function newPatientBooking(evt) {
+		const newPatientData = {
+			name: evt.target['name'].value.toLowerCase(),
+			IC: evt.target['IC'].value,
+			age: parseInt(evt.target['age'].value),
+			gender: evt.target['gender'].value.toLowerCase(),
+			email: evt.target['email'].value,
+			contact: evt.target['contact'].value,
+			race: evt.target['race'].value.toLowerCase(),
+			date: DateTime.fromISO(evt.target['date'].value).toISO(),
+			reason: evt.target['reason'].value.toLowerCase(),
+			doctor: evt.target['doctor'].value.toLowerCase()
+		};
+
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/new-patient-appointment-booking', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+				// Authorization: getUserTokenFromLocalStorage()
+			},
+			body: JSON.stringify(newPatientData)
+		});
+
+		const res = await resp.json();
+		console.log(res);
+
+		if (resp.status == 200) {
+			postRegisterPatient();
+		} else {
+			if (res.error) {
+				formErrors = res.error;
+				console.log(formErrors);
+			}
+		}
+	}
+
 	export async function existingPatient(evt) {
 		const appointmentDetails = {
 			reason: evt.target['reason'].value,
@@ -654,7 +691,10 @@
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
 			<div class="flex justify-center items-center new-patient">
-				<form on:submit|preventDefault={newPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+				<form
+					on:submit|preventDefault={newPatientBooking}
+					class="w-1/2 bg-white shadow-md rounded-lg p-8"
+				>
 					<div class="mb-6">
 						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
 						<input
