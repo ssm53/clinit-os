@@ -90,27 +90,14 @@ export async function load({ fetch }) {
 // 25) at the moment, we use Malaysian time. make sure that we cater to every time possible if needed.
 // - need to show special error if IC/email already taken!
 // - for edit page, the rows must be of constant size, and if got overflow, users can click see more button. basically make rows constant no matter what. stylist can do.
+// when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document. should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week. for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
+// refactor forms and make it into a component to be imported.. // here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
+// put required on all forms inputs
 
 // GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
 
 // in consultations
-// docs need a good way to filter and edit their appointments after consultation ended - we did in appointmentsAll, but it doesnt work and shit
-// need a way to add more and more medicines, and not just limit it to two medicines
-// here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
 // when there is a follow up, there needs to be a new appointment made and status is booking - when there is the form, we just do reason and date, as other things are the same as previous appointment.
-// when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document.
-// refactor forms and make it into a component to be imported
-
-// DOING
-// docs need a good way to filter and edit their appointments after consultation ended - we did in appointmentsAll, but it doesnt work and shit
-// steps
-// alter header to have edit tab - there will be all the appointments for docs to edit.. once clciekd it goes to /edit - done
-// in edit, we do page.js to get all appointments where status is completed. in page selte, we list all appointments in table format, and make sure it can be filtred by name, IC.
-// the size od columns and rows must be constant, and if there is more things to see, there should be see more button and once clicked, opens up modal which shows it in full page format. in full page format, should aso have a edit button. have close button to go back to where doc left off.
-// always have an edit button for each appt. once clciked, opens up modal with prepopulated form. once doc edits that, there will be a patch request to that appointment.  and once clicked, opens up modal which shows it in full page format. go back to where doc left off. - done except for populatinf form and doing patch/post request.
-
-// should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week.
-// for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
 
 // SOLVED
 // 1) change default value of any date time to a better one. now() isnt too great. - DONE

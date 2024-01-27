@@ -31,6 +31,40 @@
 			appointment.patientIC.toLowerCase().includes(icFilter.toLowerCase())
 	);
 
+	// ADDING MORE MEDICINES
+	// START
+	// Maximum number of medicine rows
+	const maxRows = 7;
+
+	// Initial medicine data
+	const initialMedicine = [{ meds: '', quantity: '', notes: '' }];
+
+	// Reactive store for medicine data
+	const medicineData = writable(initialMedicine);
+
+	// Function to add a new row
+	function addMedicineRow() {
+		medicineData.update((data) => {
+			if (data.length < maxRows) {
+				return [...data, { meds: '', quantity: '', notes: '' }];
+			}
+			return data;
+		});
+	}
+
+	// Function to delete the most recent row
+	function deleteMedicineRow() {
+		medicineData.update((data) => {
+			if (data.length > 1) {
+				// Remove the last element (most recent row)
+				data.pop();
+			}
+			return data;
+		});
+	}
+
+	//END
+
 	function calculateWaitingTime(arrivalTime) {
 		const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
 		const arrivalDateTime = DateTime.fromISO(arrivalTime);
@@ -300,14 +334,17 @@
 		// Subscribe to the currentPatientIC store to get its value
 		currentAppointmentID.subscribe((value) => (appointmentID = value));
 
-		const treatmentPlan = {
-			meds1: evt.target['meds1'].value,
-			quantity1: parseInt(evt.target['quantity1'].value),
-			notes1: evt.target['notes1'].value,
-			meds2: evt.target['meds2'].value,
-			quantity2: parseInt(evt.target['quantity2'].value),
-			notes2: evt.target['notes2'].value
-		};
+		const formData = $medicineData;
+		console.log(formData);
+
+		// const treatmentPlan = {
+		// 	meds1: evt.target['meds1'].value,
+		// 	quantity1: parseInt(evt.target['quantity1'].value),
+		// 	notes1: evt.target['notes1'].value,
+		// 	meds2: evt.target['meds2'].value,
+		// 	quantity2: parseInt(evt.target['quantity2'].value),
+		// 	notes2: evt.target['notes2'].value
+		// };
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-treatment-plan/${appointmentID}`, {
 			method: 'POST',
@@ -315,7 +352,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(treatmentPlan)
+			body: JSON.stringify(formData)
 		});
 
 		if (resp.status == 200) {
@@ -341,7 +378,7 @@
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-follow-up/${appointmentID}`, {
-			method: 'PATCH',
+			method: 'POST',
 			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json'
@@ -570,72 +607,68 @@
 						on:submit|preventDefault={addTreatmentPlan}
 						class="w-1/2 bg-white shadow-md rounded-lg p-8"
 					>
-						<div class="mb-6 flex justify-between">
-							<div class="w-1/3">
-								<label for="meds1" class="block text-gray-700 text-sm font-bold mb-2"
-									>Medicine</label
+						{#each $medicineData as { meds, quantity, notes }, index (index)}
+							<div class="mb-6 flex justify-between">
+								<div class="w-1/3">
+									<label for={`meds${index + 1}`} class="block text-gray-700 text-sm font-bold mb-2"
+										>Medicine</label
+									>
+									<input
+										type="text"
+										bind:value={meds}
+										name={`meds${index + 1}`}
+										placeholder="Enter medicine"
+										class="block w-full rounded-md py-2 px-3 border border-gray-300"
+									/>
+								</div>
+								<div class="w-1/3">
+									<label
+										for={`quantity${index + 1}`}
+										class="block text-gray-700 text-sm font-bold mb-2">Quantity</label
+									>
+									<input
+										type="number"
+										bind:value={quantity}
+										name={`quantity${index + 1}`}
+										placeholder="Enter quantity"
+										class="block w-full rounded-md py-2 px-3 border border-gray-300"
+									/>
+								</div>
+								<div class="w-1/3">
+									<label
+										for={`notes${index + 1}`}
+										class="block text-gray-700 text-sm font-bold mb-2">Notes</label
+									>
+									<input
+										type="text"
+										bind:value={notes}
+										name={`notes${index + 1}`}
+										placeholder="Enter notes"
+										class="block w-full rounded-md py-2 px-3 border border-gray-300"
+									/>
+								</div>
+								{#if index === $medicineData.length - 1}
+									<button
+										type="button"
+										class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
+										on:click={deleteMedicineRow}
+									>
+										Delete Row
+									</button>
+								{/if}
+							</div>
+						{/each}
+						{#if $medicineData.length < maxRows}
+							<div class="flex justify-end">
+								<button
+									class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+									type="button"
+									on:click={addMedicineRow}
 								>
-								<input
-									type="text"
-									name="meds1"
-									placeholder="Enter medicine"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
+									Add More Meds
+								</button>
 							</div>
-							<div class="w-1/3">
-								<label for="quantity1" class="block text-gray-700 text-sm font-bold mb-2"
-									>Quantity</label
-								>
-								<input
-									type="number"
-									name="quantity1"
-									placeholder="Enter quantity"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="notes1" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
-								<input
-									type="text"
-									name="notes1"
-									placeholder="Enter notes"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-							</div>
-						</div>
-						<div class="mb-6 flex justify-between">
-							<div class="w-1/3">
-								<label for="meds2" class="block text-gray-700 text-sm font-bold mb-2"
-									>Medicine</label
-								>
-								<input
-									type="text"
-									name="meds2"
-									placeholder="Enter medicine"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="quantity2" class="block text-gray-700 text-sm font-bold mb-2"
-									>Quantity</label
-								>
-								<input
-									type="number"
-									name="quantity2"
-									placeholder="Enter quantity"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-							</div>
-							<div class="w-1/3">
-								<label for="notes2" class="block text-gray-700 text-sm font-bold mb-2">Notes</label>
-								<input
-									type="text"
-									name="notes2"
-									placeholder="Enter notes"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-							</div>
-						</div>
+						{/if}
 						<div class="flex justify-end">
 							<button
 								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
