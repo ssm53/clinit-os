@@ -1,16 +1,19 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 
 export async function load({ fetch }) {
-	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-need-restock-medicine');
+	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-all-medicine');
 
 	const res = await resp.json();
 	if (resp.status == 200) {
-		console.log(res.resotckMeds);
+		const resp2 = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-need-restock-medicine');
+		const res2 = await resp2.json();
 		return {
-			restockMeds: res.restockMeds
+			allMeds: res.allMeds,
+			restockMeds: res2.restockMeds
 		};
 	} else {
 		return {
+			allMeds: [],
 			restockMeds: []
 		};
 	}

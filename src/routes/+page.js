@@ -60,7 +60,7 @@ export async function load({ fetch }) {
 // not like analytics, but just pure tables for sales and purchases.
 
 // Inventory
-// better way of doing inventory
+// better way of doing inventory  sorta done
 
 // timetable
 
@@ -93,11 +93,11 @@ export async function load({ fetch }) {
 // when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document. should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week. for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
 // refactor forms and make it into a component to be imported.. // here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
 // put required on all forms inputs
+// need to arrange consultations page and show patient history properly!
+// make a table for meds
 
 // GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
-
-// in consultations
-// when there is a follow up, there needs to be a new appointment made and status is booking - when there is the form, we just do reason and date, as other things are the same as previous appointment.
+// next up create records
 
 // SOLVED
 // 1) change default value of any date time to a better one. now() isnt too great. - DONE
