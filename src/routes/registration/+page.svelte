@@ -124,7 +124,6 @@
 			email: evt.target['email'].value,
 			contact: evt.target['contact'].value,
 			race: evt.target['race'].value.toLowerCase(),
-			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value.toLowerCase(),
 			doctor: evt.target['doctor'].value.toLowerCase()
 		};

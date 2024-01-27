@@ -30,6 +30,7 @@ export async function load({ fetch }) {
 			todayBookingAppointments: [],
 			waitingAppointments: [],
 			dispensaryAppointments: [],
+			allAppointments: [],
 			followUpDetails: []
 		};
 	}
@@ -97,6 +98,8 @@ export async function load({ fetch }) {
 // need a way to add more and more medicines, and not just limit it to two medicines
 // here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
 // when there is a follow up, there needs to be a new appointment made and status is booking - when there is the form, we just do reason and date, as other things are the same as previous appointment.
+// when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document.
+// refactor forms and make it into a component to be imported
 
 // DOING
 // docs need a good way to filter and edit their appointments after consultation ended - we did in appointmentsAll, but it doesnt work and shit
