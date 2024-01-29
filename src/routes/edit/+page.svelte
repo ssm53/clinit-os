@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { writable } from 'svelte/store';
+	import { formatDateTime } from '../../utils/date.js';
 
 	let seeAllModal = writable(true);
 	let seeMoreModal = writable(false);
@@ -114,8 +115,8 @@
 									<td>{completed.patientDetails.age}</td>
 									<td>{completed.patientDetails.gender}</td>
 									<td>{completed.patientIC}</td>
-									<td>{completed.date}</td>
-									<td>{completed.consultStartTime}</td>
+									<td>{formatDateTime(completed.date)}</td>
+									<td>{formatDateTime(completed.consultStartTime)}</td>
 									<td>{completed.reason}</td>
 									<td>{completed.doctor}</td>
 									<td>{completed.notes}</td>
@@ -152,8 +153,8 @@
 				<p>Age: {seeMore.patientDetails.age}</p>
 				<p>Gender: {seeMore.patientDetails.gender}</p>
 				<p>IC: {seeMore.patientIC}</p>
-				<p>Date: {seeMore.date}</p>
-				<p>Consult Start Time: {seeMore.consultStartTime}</p>
+				<p>Date: {formatDateTime(seeMore.date)}</p>
+				<p>Consult Start Time: {formatDateTime(seeMore.consultStartTime)}</p>
 				<p>Reason: {seeMore.reason}</p>
 				<p>Doctor: {seeMore.doctor}</p>
 				<p>Notes: {seeMore.notes}</p>

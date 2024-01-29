@@ -796,12 +796,11 @@
 
 					<div class="mb-6">
 						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-							Appointment Date
+							Appointment Date and Time
 						</label>
 						<input
-							type="date"
+							type="datetime-local"
 							name="date"
-							placeholder="Enter date"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
@@ -903,14 +902,17 @@
 				>
 					<div class="mb-6">
 						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-							Appointment Date
+							Appointment Date and Time
 						</label>
 						<input
-							type="date"
+							type="datetime-local"
 							name="date"
-							placeholder="Enter date"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
+						{#if 'date' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
+						{/if}
 
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
 							Reason for visit

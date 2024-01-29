@@ -7,6 +7,7 @@
 	import { getUserTokenFromLocalStorage } from '../../utils/auth';
 	import { DateTime, Interval } from 'luxon';
 	import { writable } from 'svelte/store';
+	import { formatDateTime } from '../../utils/date';
 
 	export let data;
 
@@ -430,7 +431,7 @@
 							<td>{appointment.patientIC}</td>
 							<td>{appointment.reason}</td>
 							<td>{appointment.doctor}</td>
-							<td>{appointment.arrivalTime}</td>
+							<td>{formatDateTime(appointment.arrivalTime)}</td>
 							<td>{calculateWaitingTime(appointment.arrivalTime)}</td>
 							<td>{appointment.status}</td>
 							<td>
@@ -698,14 +699,14 @@
 								/>
 							</div>
 							<div class="w-1/3">
-								<label for="follow-up-date" class="block text-gray-700 text-sm font-bold mb-2"
-									>Follow Up Date</label
-								>
+								<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+									Follow Up Date and Time
+								</label>
 								<input
-									type="date"
-									name="follow-up-date"
-									placeholder="Enter date"
+									type="datetime-local"
+									name="date"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+									required
 								/>
 							</div>
 						</div>

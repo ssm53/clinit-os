@@ -5,6 +5,7 @@
 	// import Spinner from '../../spinner/spinner.svelte';
 	// import { loading } from '../../stores/store';
 	// import { getUserTokenFromLocalStorage } from '../../utils/auth';
+	import { formatDateTime } from '../utils/date';
 	import {
 		todayAppts,
 		waitingAppts,
@@ -13,7 +14,6 @@
 		allAppts,
 		followUpAppts
 	} from '../stores/store';
-	import { DateTime, Interval } from 'luxon';
 	import { writable } from 'svelte/store';
 
 	export let data;
@@ -454,7 +454,9 @@
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.reason}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.doctor}</td>
-								<td class="border border-gray-400 px-4 py-2">{waiting.arrivalTime}</td>
+								<td class="border border-gray-400 px-4 py-2"
+									>{formatDateTime(waiting.arrivalTime)}</td
+								>
 								<!-- <td class="border border-gray-400 px-4 py-2"
 								>{calculateWaitingTime(waiting.arrivalTime)}</td
 							> -->
@@ -515,7 +517,9 @@
 								<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.reason}</td>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.doctor}</td>
-								<td class="border border-gray-400 px-4 py-2">{dispensary.arrivalTime}</td>
+								<td class="border border-gray-400 px-4 py-2"
+									>{formatDateTime(dispensary.arrivalTime)}</td
+								>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
 									<button class=" bg-blue-200" on:click={() => clickDispAndBilling(dispensary.id)}
@@ -552,7 +556,7 @@
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
 							<th class="border border-gray-400 px-4 py-2">Doctor</th>
-							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+							<th class="border border-gray-400 px-4 py-2">Date</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
@@ -566,7 +570,7 @@
 								<td class="border border-gray-400 px-4 py-2">{all.patientIC}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.reason}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.doctor}</td>
-								<td class="border border-gray-400 px-4 py-2">{all.arrivalTime}</td>
+								<td class="border border-gray-400 px-4 py-2">{formatDateTime(all.arrivalTime)}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
 									<button on:click={() => clickEditAppt(all.id, all.patientDetails.IC)}
@@ -625,7 +629,8 @@
 								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.reason}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.doctor}</td>
-								<td class="border border-gray-400 px-4 py-2">{today.arrivalTime}</td>
+								<td class="border border-gray-400 px-4 py-2">{formatDateTime(today.arrivalTime)}</td
+								>
 								<td class="border border-gray-400 px-4 py-2">{today.status}</td>
 								<td class="border border-gray-400 px-4 py-2"
 									><button class=" bg-blue-200" on:click={() => clickArrived(today.id)}
