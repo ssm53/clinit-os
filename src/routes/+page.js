@@ -81,13 +81,8 @@ export async function load({ fetch }) {
 // need to arrange consultations page and show patient history properly!
 // design consultations page
 // in apps page, no need today and follow up
-
-// GO THROUGH EVERY PAGE WORKFLOW AND POTENTIAL BUGS AND HOW TO IMPROVE
-
-// storing images - fix backend! why is the no credentials thingy showing continously? - ask KK
-// ensure styling of invoice and MC to be as like what we want
+// same ic and email cannot - do for newpatientbooking and editpatientdetails in registration page
+// style consultation page, and ensure when doc link is clicked, it brings us to a new page w that document. also instead of showing whole link, just put an icon or something!
+// in queue consultation page, fix the waitingTime as some are NaN
 
 //now doing
-// accurate error handling
-// important for all IC's!
-// important that email cannot be the same

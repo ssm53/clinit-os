@@ -37,6 +37,7 @@
 	}
 
 	export async function closeExistingPatient() {
+		filteredPatients.set([]);
 		let modalToHide = document.querySelector('.existing-patient');
 		modalToHide.classList.add('hidden');
 
@@ -523,7 +524,11 @@
 							name="reason"
 							placeholder="Enter reason"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
+						{#if 'reason' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
+						{/if}
 
 						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
 						<input
@@ -531,7 +536,11 @@
 							name="doctor"
 							placeholder="Enter doctor in charge"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
+						{#if 'doctor' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
+						{/if}
 
 						<div class="flex justify-end">
 							<button
@@ -561,10 +570,11 @@
 							placeholder="Enter name"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.name}
+							required
 						/>
-						<!-- {#if 'name' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
-					{/if} -->
+						{#if 'name' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.name}</p>
+						{/if}
 					</div>
 
 					<div class="mb-6">
@@ -575,6 +585,7 @@
 							placeholder="Enter IC number"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.IC}
+							required
 						/>
 						{#if 'IC' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
@@ -591,9 +602,9 @@
 							value={patientDetails.age}
 							required
 						/>
-						<!-- {#if 'age' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['age']}</p>
-					{/if} -->
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
 					</div>
 
 					<div class="mb-6">
@@ -606,9 +617,9 @@
 							value={patientDetails.gender}
 							required
 						/>
-						<!-- {#if 'gender' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['gender']}</p>
-					{/if} -->
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
 					</div>
 
 					<div class="mb-6">
@@ -621,9 +632,9 @@
 							value={patientDetails.email}
 							required
 						/>
-						<!-- {#if 'email' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['email']}</p>
-					{/if} -->
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
 					</div>
 
 					<div class="mb-6">
@@ -638,9 +649,9 @@
 							value={patientDetails.contact}
 							required
 						/>
-						<!-- {#if 'contact' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['contact']}</p>
-					{/if} -->
+						{#if 'contact' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.contact}</p>
+						{/if}
 					</div>
 
 					<div class="mb-6">
@@ -653,9 +664,9 @@
 							value={patientDetails.race}
 							required
 						/>
-						<!-- {#if 'race' in formErrors}
-						<p class="text-red-500 text-xs mt-1">{formErrors['race']}</p>
-					{/if} -->
+						{#if 'race' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
+						{/if}
 					</div>
 
 					<div class="flex justify-end">
@@ -922,6 +933,7 @@
 							name="reason"
 							placeholder="Enter reason"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
 
 						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
@@ -930,6 +942,7 @@
 							name="doctor"
 							placeholder="Enter doctor in charge"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
 
 						<div class="flex justify-end">

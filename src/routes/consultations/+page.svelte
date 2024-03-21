@@ -12,6 +12,7 @@
 	export let data;
 
 	export let partPatientInfo = [];
+	let patientDocuments = [];
 	let patientHistory = [];
 	export let loading = false; // Add a loading state
 
@@ -94,6 +95,7 @@
 		// Call the getPartPatientInfo function to fetch patient details
 		await getPartPatientInfo(patientIC);
 		await getPatientHistory(patientIC);
+		await getPatientDocuments(patientIC);
 	}
 
 	export async function getPartPatientInfo() {
@@ -119,6 +121,30 @@
 			loading = false;
 		} else {
 			partPatientInfo = [];
+			// Set loading back to false after fetching completes
+			loading = false;
+		}
+	}
+
+	export async function getPatientDocuments() {
+		let patientIC;
+		currentPatientIC.subscribe((value) => (patientIC = value));
+		loading = true;
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/get-documents/${patientIC}`, {
+			method: 'GET',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		const res = await resp.json();
+		if (resp.status == 200) {
+			patientDocuments = res.patientDocuments;
+			// Set loading back to false after fetching completes
+			loading = false;
+		} else {
+			patientDocuments = [];
 			// Set loading back to false after fetching completes
 			loading = false;
 		}
@@ -397,6 +423,42 @@
 			console.log('something went wrong there matey');
 		}
 	}
+
+	// upload documents
+	export async function addDocuments(evt) {
+		// here need to go a get request for all appointments where patientIC = patientIC
+		let patientIC;
+
+		// Subscribe to the currentPatientIC store to get its value
+		currentPatientIC.subscribe((value) => (patientIC = value));
+
+		let appointmentID;
+
+		// Subscribe to the currentPatientIC store to get its value
+		currentAppointmentID.subscribe((value) => (appointmentID = value));
+
+		const fileInput = evt.target.querySelector('input[type="file"]');
+		const file = fileInput.files[0];
+		const caption = evt.target['caption'].value;
+		const IC = patientIC;
+
+		if (file) {
+			const formData = new FormData();
+			formData.append('file-upload', file);
+			formData.append('caption', caption);
+			formData.append('IC', IC);
+			evt.target.value = null;
+			console.log('ok working abit');
+			try {
+				const addDocs = await fetch(PUBLIC_BACKEND_BASE_URL + `/upload/${appointmentID}`, {
+					method: 'POST',
+					body: formData
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	}
 </script>
 
 <div>
@@ -569,13 +631,29 @@
 			<div class=" left-container flex flex-col">
 				<div class=" patient-info border-2">
 					<p>Patient Info</p>
-					{#if partPatientInfo.length > 0}
+					{#if partPatientInfo.length > 0 && patientDocuments.length > 0}
 						<div class="flex flex-row">
 							<p>{partPatientInfo[0].name}</p>
 							<p>{partPatientInfo[0].IC}</p>
 							<p>{partPatientInfo[0].gender}</p>
 							<p>{partPatientInfo[0].age}</p>
+							{#each patientDocuments as docs}
+								<p>{docs.caption}</p>
+								<p>{docs.dateAdded}</p>
+								<p>{docs.imageURL}</p>
+							{/each}
 						</div>
+					{:else if patientDocuments.length > 0 && partPatientInfo.length <= 0}
+						{#each patientDocuments as docs}
+							<p>{docs.caption}</p>
+							<p>{docs.dateAdded}</p>
+							<p>{docs.imageURL}</p>
+						{/each}
+					{:else if patientDocuments.length <= 0 && partPatientInfo.length > 0}
+						<p>{partPatientInfo[0].name}</p>
+						<p>{partPatientInfo[0].IC}</p>
+						<p>{partPatientInfo[0].gender}</p>
+						<p>{partPatientInfo[0].age}</p>
 					{:else}
 						<p>Loading...</p>
 					{/if}
@@ -736,6 +814,14 @@
 			<button on:click={endConsultation}>End consultation</button>
 			<button on:click={openMC}>Write MC</button>
 			<button on:click={openLetter}>Write Referral Letter</button>
+			<div class="addDocsForm">
+				<form on:submit|preventDefault={addDocuments}>
+					<label for="file-upload">Select a file:</label>
+					<input type="file" id="file-upload" name="file-upload" />
+					<input type="text" id="caption" name="caption" required />
+					<button type="submit">Upload</button>
+				</form>
+			</div>
 		</div>
 	{/if}
 </div>

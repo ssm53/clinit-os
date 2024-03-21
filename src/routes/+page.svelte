@@ -419,7 +419,6 @@
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
 							<th class="border border-gray-400 px-4 py-2">Doctor</th>
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
-							<th class="border border-gray-400 px-4 py-2">Waiting Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 						</tr>
 						<th class="border border-gray-400 px-4 py-2">
