@@ -68,19 +68,34 @@
 	//END
 
 	function calculateWaitingTime(arrivalTime) {
-		const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
-		const arrivalDateTime = DateTime.fromISO(arrivalTime);
+		try {
+			// Check if arrivalTime is a valid ISO string
+			if (!DateTime.fromISO(arrivalTime).isValid) {
+				throw new Error('Invalid arrival time format');
+			}
 
-		// Calculate the waiting time
-		const waitingInterval = Interval.fromDateTimes(arrivalDateTime, malaysiaTime);
-		const waitingDuration = waitingInterval.toDuration(['hours', 'minutes', 'seconds']);
+			// Get current time in Malaysia timezone
+			const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
+			const arrivalDateTime = DateTime.fromISO(arrivalTime);
 
-		// Format the waiting time
-		const hours = Math.floor(waitingDuration.as('hours'));
-		const minutes = Math.floor(waitingDuration.as('minutes')) % 60;
-		const seconds = Math.floor(waitingDuration.as('seconds')) % 60;
+			console.log('Malaysia Time:', malaysiaTime.toString());
+			console.log('Arrival Time:', arrivalDateTime.toString());
 
-		return `${hours}h ${minutes}m ${seconds}s`;
+			// Calculate the waiting time
+			const waitingInterval = Interval.fromDateTimes(arrivalDateTime, malaysiaTime);
+			const waitingDuration = waitingInterval.toDuration(['hours', 'minutes', 'seconds']);
+			console.log(waitingDuration);
+
+			// Format the waiting time
+			const hours = Math.floor(waitingDuration.as('hours'));
+			const minutes = Math.floor(waitingDuration.as('minutes')) % 60;
+			const seconds = Math.floor(waitingDuration.as('seconds')) % 60;
+
+			return `${hours}h ${minutes}m ${seconds}s`;
+		} catch (error) {
+			console.error('Error calculating waiting time:', error.message);
+			return 'Error';
+		}
 	}
 
 	export async function viewAppointment(patientIC, appointmentID) {
@@ -640,14 +655,14 @@
 							{#each patientDocuments as docs}
 								<p>{docs.caption}</p>
 								<p>{docs.dateAdded}</p>
-								<p>{docs.imageURL}</p>
+								<a href={docs.imageURL} target="_blank" rel="document">View</a>
 							{/each}
 						</div>
 					{:else if patientDocuments.length > 0 && partPatientInfo.length <= 0}
 						{#each patientDocuments as docs}
 							<p>{docs.caption}</p>
 							<p>{docs.dateAdded}</p>
-							<p>{docs.imageURL}</p>
+							<a href={docs.imageURL} target="_blank" rel="document">View</a>
 						{/each}
 					{:else if patientDocuments.length <= 0 && partPatientInfo.length > 0}
 						<p>{partPatientInfo[0].name}</p>

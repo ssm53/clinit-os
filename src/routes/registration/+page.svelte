@@ -447,7 +447,6 @@
 							name="doctor"
 							placeholder="Enter consultation doctor"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
 						/>
 						{#if 'doctor' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
@@ -843,7 +842,6 @@
 							name="doctor"
 							placeholder="Enter consultation doctor"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
 						/>
 						{#if 'doctor' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
@@ -942,7 +940,6 @@
 							name="doctor"
 							placeholder="Enter doctor in charge"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
 						/>
 
 						<div class="flex justify-end">

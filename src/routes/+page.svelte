@@ -12,7 +12,7 @@
 		dispensaryAppts,
 		showInvoice,
 		allAppts,
-		followUpAppts
+		bookingAppts
 	} from '../stores/store';
 	import { writable } from 'svelte/store';
 
@@ -61,7 +61,7 @@
 
 	function clickToday() {
 		waitingAppts.set(false);
-		followUpAppts.set(false);
+		bookingAppts.set(false);
 		dispensaryAppts.set(false);
 		allAppts.set(false);
 		todayAppts.set(true);
@@ -69,7 +69,7 @@
 
 	function clickWaiting() {
 		dispensaryAppts.set(false);
-		followUpAppts.set(false);
+		bookingAppts.set(false);
 		todayAppts.set(false);
 		allAppts.set(false);
 		waitingAppts.set(true);
@@ -77,7 +77,7 @@
 
 	export async function clickDispensary() {
 		todayAppts.set(false);
-		followUpAppts.set(false);
+		bookingAppts.set(false);
 		waitingAppts.set(false);
 		allAppts.set(false);
 		dispensaryAppts.set(true);
@@ -85,18 +85,18 @@
 
 	export async function clickAll() {
 		todayAppts.set(false);
-		followUpAppts.set(false);
+		bookingAppts.set(false);
 		waitingAppts.set(false);
 		dispensaryAppts.set(false);
 		allAppts.set(true);
 	}
 
-	export async function clickFollowUp() {
+	export async function clickBooking() {
 		todayAppts.set(false);
 		waitingAppts.set(false);
 		dispensaryAppts.set(false);
 		allAppts.set(false);
-		followUpAppts.set(true);
+		bookingAppts.set(true);
 	}
 
 	export async function clickDispAndBilling(appointmentID) {
@@ -124,6 +124,21 @@
 			showInvoice.set(true);
 		} else {
 			invoiceDetails = [];
+		}
+	}
+
+	export async function clickCancel(appointmentID) {
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/cancel-appointment/${appointmentID}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+
+		if (resp.status === 204) {
+			console.log('successfully deleted appt');
+		} else {
+			console.log('did not delete appt');
 		}
 	}
 
@@ -193,15 +208,6 @@
 		}
 	}
 
-	export async function clickEditAppt(id, ic) {
-		tempAppointmentID.set(id);
-		await getPatientInfo(ic);
-		await getApptInfo(id);
-		let hiddenModal = document.querySelector('.filter-box');
-		hiddenModal.classList.remove('hidden');
-		// need to await get function, which we will then show in the modal (in there must have (id))
-	}
-
 	export async function getPatientInfo(ic) {
 		// Set loading to true while fetching data
 		loading = true;
@@ -246,11 +252,6 @@
 			// Set loading back to false after fetching completes
 			loading = false;
 		}
-	}
-
-	export async function closeEditModal() {
-		let hiddenModal = document.querySelector('.filter-box');
-		hiddenModal.classList.add('hidden');
 	}
 
 	export async function editNotes(evt) {
@@ -399,9 +400,9 @@
 			>Today</button
 		>
 		<button
-			on:click={clickFollowUp}
+			on:click={clickBooking}
 			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
-			>Follow Up</button
+			>Booking</button
 		>
 	</div>
 </div>
@@ -460,6 +461,11 @@
 								>{calculateWaitingTime(waiting.arrivalTime)}</td
 							> -->
 								<td class="border border-gray-400 px-4 py-2">{waiting.status}</td>
+								<td class="border border-gray-400 px-4 py-2">
+									<button class=" bg-blue-200" on:click={() => clickCancel(waiting.id)}
+										>CANCEL</button
+									>
+								</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -524,6 +530,9 @@
 									<button class=" bg-blue-200" on:click={() => clickDispAndBilling(dispensary.id)}
 										>DISPENSE AND BILLING</button
 									>
+									<button class=" bg-pink-200" on:click={() => clickCancel(dispensary.id)}
+										>CANCEL</button
+									>
 									{#if dispensary.mcDetails != null}
 										<button class="bg-green-200" on:click={() => generateMC(dispensary.id)}
 											>Generate MC</button
@@ -557,11 +566,23 @@
 							<th class="border border-gray-400 px-4 py-2">Doctor</th>
 							<th class="border border-gray-400 px-4 py-2">Date</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
-							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
+						<th class="border border-gray-400 px-4 py-2">
+							<input
+								type="text"
+								placeholder="Search by Name or Patient IC"
+								bind:value={nameSearch}
+								on:input={handleNameSearch}
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							/>
+						</th>
 					</thead>
 					<tbody>
-						{#each data.allAppointments as all}
+						{#each data.allAppointments.filter((all) => all.patientDetails.name
+									.toLowerCase()
+									.includes(nameSearch.toLowerCase()) && all.patientIC
+									.toLowerCase()
+									.includes(patientICSearch.toLowerCase())) as all}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{all.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.patientDetails.age}</td>
@@ -571,11 +592,6 @@
 								<td class="border border-gray-400 px-4 py-2">{all.doctor}</td>
 								<td class="border border-gray-400 px-4 py-2">{formatDateTime(all.arrivalTime)}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.status}</td>
-								<td class="border border-gray-400 px-4 py-2">
-									<button on:click={() => clickEditAppt(all.id, all.patientDetails.IC)}
-										>Edit Appointment</button
-									>
-								</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -598,7 +614,7 @@
 							<th class="border border-gray-400 px-4 py-2">Doctor</th>
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
-							<th class="border border-gray-400 px-4 py-2">Action</th>
+							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
 						<th class="border border-gray-400 px-4 py-2">
 							<input
@@ -634,6 +650,9 @@
 								<td class="border border-gray-400 px-4 py-2"
 									><button class=" bg-blue-200" on:click={() => clickArrived(today.id)}
 										>Arrived</button
+									>
+									<button class=" bg-green-200" on:click={() => clickCancel(today.id)}
+										>CANCEL</button
 									></td
 								>
 							</tr>
@@ -644,34 +663,44 @@
 		{:else}
 			<p>No pre-booked appointments today!</p>
 		{/if}
-	{:else if $followUpAppts}
-		{#if data.followUpDetails.length > 0}
+	{:else if $bookingAppts}
+		{#if data.bookingAppointments.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
 						<tr>
 							<th class="border border-gray-400 px-4 py-2">Patient Name</th>
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
-							<th class="border border-gray-400 px-4 py-2">Patient Contact</th>
-							<th class="border border-gray-400 px-4 py-2">Follow-Up Reason</th>
 							<th class="border border-gray-400 px-4 py-2">Follow-Up Date</th>
+							<th class="border border-gray-400 px-4 py-2">Patient Age</th>
+							<th class="border border-gray-400 px-4 py-2">Patient Gender</th>
+							<th class="border border-gray-400 px-4 py-2">Reason</th>
+							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
-						{#each data.followUpDetails as fDetails}
+						{#each data.bookingAppointments as booking}
 							<tr class="hover:bg-gray-100">
-								<td class="border border-gray-400 px-4 py-2">{fDetails.patientName}</td>
-								<td class="border border-gray-400 px-4 py-2">{fDetails.patientIC}</td>
-								<td class="border border-gray-400 px-4 py-2">{fDetails.patientContact}</td>
-								<td class="border border-gray-400 px-4 py-2">{fDetails.followUpReason}</td>
-								<td class="border border-gray-400 px-4 py-2">{fDetails.followUpDate}</td>
-							</tr>
+								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.name}</td>
+								<td class="border border-gray-400 px-4 py-2">{booking.patientIC}</td>
+								<td class="border border-gray-400 px-4 py-2">{formatDateTime(booking.date)}</td>
+								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.age}</td>
+								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.gender}</td>
+								<td class="border border-gray-400 px-4 py-2">{booking.reason}</td>
+								<td class="border border-gray-400 px-4 py-2">{booking.doctor}</td>
+								<td class="border border-gray-400 px-4 py-2">
+									<button class=" bg-blue-200" on:click={() => clickCancel(booking.id)}
+										>CANCEL</button
+									>
+								</td></tr
+							>
 						{/each}
 					</tbody>
 				</table>
 			</div>
 		{:else}
-			<p>No follow up appointments</p>
+			<p>No booking appointments</p>
 		{/if}
 	{:else if invoiceDetails.length > 0}
 		<div>

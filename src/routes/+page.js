@@ -15,7 +15,7 @@ export async function load({ fetch }) {
 		const resp4 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-all');
 		const res4 = await resp4.json();
 
-		const resp5 = await fetch(PUBLIC_BACKEND_BASE_URL + '/get-follow-up-details');
+		const resp5 = await fetch(PUBLIC_BACKEND_BASE_URL + '/appointment-booking');
 		const res5 = await resp5.json();
 
 		return {
@@ -23,7 +23,7 @@ export async function load({ fetch }) {
 			waitingAppointments: res2.appointmentsWaiting,
 			dispensaryAppointments: res3.appointmentsDispensary,
 			allAppointments: res4.appointmentsAll,
-			followUpDetails: res5.followUpDetails
+			bookingAppointments: res5.appointmentsBooking
 		};
 	} else {
 		return {
@@ -31,7 +31,7 @@ export async function load({ fetch }) {
 			waitingAppointments: [],
 			dispensaryAppointments: [],
 			allAppointments: [],
-			followUpDetails: []
+			bookingAppointments: []
 		};
 	}
 }
@@ -71,8 +71,6 @@ export async function load({ fetch }) {
 // 12) should delete MC table
 // 13) style invoice and MC. and general styling, layout, icons, dropdown menu etc
 // 17) do accurate error handling! - then show correct alerts
-// 18) since now, we dont just do walkin appts, maybe dont need to put doctor field when we craete appts.. also, then we dont need analytics per dr.
-// 20) need to change the way time is shown on browser.
 // 21) ensure auth for doctors and nurses. they can only access diff sections. have to change database for this. make sure do redirect if not login etc.
 //22) forecast where things can go wrong, and send warning! e.g. automatically alert them if a booking happenes, and there was a no show. delete/text?
 // - for edit page, the rows must be of constant size, and if got overflow, users can click see more button. basically make rows constant no matter what. stylist can do.
@@ -84,5 +82,6 @@ export async function load({ fetch }) {
 // same ic and email cannot - do for newpatientbooking and editpatientdetails in registration page
 // style consultation page, and ensure when doc link is clicked, it brings us to a new page w that document. also instead of showing whole link, just put an icon or something!
 // in queue consultation page, fix the waitingTime as some are NaN
+// ensure to store receipt in aws as well in a receipts database
 
-//now doing
+// SECTION YET TO DO
