@@ -12,7 +12,11 @@
 		dispensaryAppts,
 		showInvoice,
 		allAppts,
-		bookingAppts
+		bookingAppts,
+		appointmentsWaiting,
+		appointmentsDispensary,
+		appointmentsToday,
+		appointmentsBooking
 	} from '../stores/store';
 	import { writable } from 'svelte/store';
 
@@ -23,41 +27,36 @@
 	export let apptInfo = [];
 	export let loading = false; // Add a loading state
 
+	appointmentsWaiting.set(data.waitingAppointments);
+	appointmentsDispensary.set(data.dispensaryAppointments);
+	appointmentsToday.set(data.todayBookingAppointments);
+	appointmentsBooking.set(data.bookingAppointments);
+
 	//Table search
-	let nameSearch = ''; // This variable will store the user's input for name search
-	let patientICSearch = '';
+	let nameSearchWaiting = ''; // This variable will store the user's input for name search
+	let patientICSearchWaiting = '';
+	let nameSearchDispensary = ''; // This variable will store the user's input for name search
+	let patientICSearchDispensary = '';
+	let nameSearchAll = ''; // This variable will store the user's input for name search
+	let nameSearchToday = ''; // This variable will store the user's input for name search
+	let patientICSearchToday = '';
+
 	let filteredTodayAppointments = [];
 
-	function handleNameSearch() {
+	function handleNameSearchToday() {
 		// Filter the appointments based on the user's input
-		filteredTodayAppointments = data.todayBookingAppointments.filter((appointment) =>
+		filteredTodayAppointments = appointmentsToday.filter((appointment) =>
 			appointment.patientDetails.name.toLowerCase().includes(nameSearch.toLowerCase())
 		);
 	}
 
 	// New function to handle Patient IC search
-	function handlePatientICSearch() {
+	function handlePatientICSearchToday() {
 		// Filter the appointments based on the user's input for Patient IC
-		filteredTodayAppointments = data.todayBookingAppointments.filter((appointment) =>
+		filteredTodayAppointments = appointmentsToday.filter((appointment) =>
 			appointment.patientIC.toLowerCase().includes(patientICSearch.toLowerCase())
 		);
 	}
-
-	// function calculateWaitingTime(arrivalTime) {
-	// 	const malaysiaTime = DateTime.local().setZone('Asia/Kuala_Lumpur');
-	// 	const arrivalDateTime = DateTime.fromISO(arrivalTime);
-
-	// 	// Calculate the waiting time
-	// 	const waitingInterval = Interval.fromDateTimes(arrivalDateTime, malaysiaTime);
-	// 	const waitingDuration = waitingInterval.toDuration(['hours', 'minutes', 'seconds']);
-
-	// 	// Format the waiting time
-	// 	const hours = Math.floor(waitingDuration.as('hours'));
-	// 	const minutes = Math.floor(waitingDuration.as('minutes')) % 60;
-	// 	const seconds = Math.floor(waitingDuration.as('seconds')) % 60;
-
-	// 	return `${hours}h ${minutes}m ${seconds}s`;
-	// }
 
 	function clickToday() {
 		waitingAppts.set(false);
@@ -127,7 +126,7 @@
 		}
 	}
 
-	export async function clickCancel(appointmentID) {
+	export async function clickCancel(appointmentID, type) {
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/cancel-appointment/${appointmentID}`, {
 			method: 'DELETE',
 			headers: {
@@ -136,7 +135,27 @@
 		});
 
 		if (resp.status === 204) {
-			console.log('successfully deleted appt');
+			if (type == 'waiting') {
+				// Remove the canceled appointment from the waitingAppointments store
+				appointmentsWaiting.update((appointments) =>
+					appointments.filter((appointment) => appointment.id !== appointmentID)
+				);
+				console.log('successfully deleted appt');
+			} else if (type == 'dispensary') {
+				// Remove the canceled appointment from the waitingAppointments store
+				appointmentsDispensary.update((appointments) =>
+					appointments.filter((appointment) => appointment.id !== appointmentID)
+				);
+			} else if (type == 'today') {
+				// Remove the canceled appointment from the waitingAppointments store
+				appointmentsToday.update((appointments) =>
+					appointments.filter((appointment) => appointment.id !== appointmentID)
+				);
+			} else {
+				appointmentsBooking.update((appointments) =>
+					appointments.filter((appointment) => appointment.id !== appointmentID)
+				);
+			}
 		} else {
 			console.log('did not delete appt');
 		}
@@ -303,10 +322,6 @@
 	}
 
 	export async function editTreatmentPlan(evt) {
-		// loading.set(true);
-		// // loading.update((value) => {
-		// //   return true
-		// // })
 		let id;
 
 		tempAppointmentID.subscribe((value) => (id = value));
@@ -408,7 +423,7 @@
 </div>
 <div>
 	{#if $waitingAppts}
-		{#if data.waitingAppointments.length > 0}
+		{#if $appointmentsWaiting.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
@@ -426,8 +441,7 @@
 							<input
 								type="text"
 								placeholder="Search by Name"
-								bind:value={nameSearch}
-								on:input={handleNameSearch}
+								bind:value={nameSearchWaiting}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
@@ -435,18 +449,17 @@
 							<input
 								type="text"
 								placeholder="Search by Patient IC"
-								bind:value={patientICSearch}
-								on:input={handlePatientICSearch}
+								bind:value={patientICSearchWaiting}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
 					</thead>
 					<tbody>
-						{#each data.waitingAppointments.filter((waiting) => waiting.patientDetails.name
+						{#each $appointmentsWaiting.filter((waiting) => waiting.patientDetails.name
 									.toLowerCase()
-									.includes(nameSearch.toLowerCase()) && waiting.patientIC
+									.includes(nameSearchWaiting.toLowerCase()) && waiting.patientIC
 									.toLowerCase()
-									.includes(patientICSearch.toLowerCase())) as waiting}
+									.includes(patientICSearchWaiting.toLowerCase())) as waiting}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientIC}</td>
@@ -462,7 +475,7 @@
 							> -->
 								<td class="border border-gray-400 px-4 py-2">{waiting.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
-									<button class=" bg-blue-200" on:click={() => clickCancel(waiting.id)}
+									<button class=" bg-blue-200" on:click={() => clickCancel(waiting.id, 'waiting')}
 										>CANCEL</button
 									>
 								</td>
@@ -475,7 +488,7 @@
 			<p>No Appointments which are waiting</p>
 		{/if}
 	{:else if $dispensaryAppts}
-		{#if data.dispensaryAppointments.length > 0}
+		{#if $appointmentsDispensary.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
@@ -494,8 +507,7 @@
 							<input
 								type="text"
 								placeholder="Search by Name"
-								bind:value={nameSearch}
-								on:input={handleNameSearch}
+								bind:value={nameSearchDispensary}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
@@ -503,18 +515,17 @@
 							<input
 								type="text"
 								placeholder="Search by Patient IC"
-								bind:value={patientICSearch}
-								on:input={handlePatientICSearch}
+								bind:value={patientICSearchDispensary}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
 					</thead>
 					<tbody>
-						{#each data.dispensaryAppointments.filter((dispensary) => dispensary.patientDetails.name
+						{#each $appointmentsDispensary.filter((dispensary) => dispensary.patientDetails.name
 									.toLowerCase()
-									.includes(nameSearch.toLowerCase()) && dispensary.patientIC
+									.includes(nameSearchDispensary.toLowerCase()) && dispensary.patientIC
 									.toLowerCase()
-									.includes(patientICSearch.toLowerCase())) as dispensary}
+									.includes(patientICSearchDispensary.toLowerCase())) as dispensary}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.patientIC}</td>
@@ -530,8 +541,9 @@
 									<button class=" bg-blue-200" on:click={() => clickDispAndBilling(dispensary.id)}
 										>DISPENSE AND BILLING</button
 									>
-									<button class=" bg-pink-200" on:click={() => clickCancel(dispensary.id)}
-										>CANCEL</button
+									<button
+										class=" bg-pink-200"
+										on:click={() => clickCancel(dispensary.id, 'dispensary')}>CANCEL</button
 									>
 									{#if dispensary.mcDetails != null}
 										<button class="bg-green-200" on:click={() => generateMC(dispensary.id)}
@@ -571,18 +583,15 @@
 							<input
 								type="text"
 								placeholder="Search by Name or Patient IC"
-								bind:value={nameSearch}
-								on:input={handleNameSearch}
+								bind:value={nameSearchAll}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
 					</thead>
 					<tbody>
 						{#each data.allAppointments.filter((all) => all.patientDetails.name
-									.toLowerCase()
-									.includes(nameSearch.toLowerCase()) && all.patientIC
-									.toLowerCase()
-									.includes(patientICSearch.toLowerCase())) as all}
+								.toLowerCase()
+								.includes(nameSearchAll.toLowerCase())) as all}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{all.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.patientDetails.age}</td>
@@ -601,7 +610,7 @@
 			<p>There are no appointments at all!</p>
 		{/if}
 	{:else if $todayAppts}
-		{#if data.todayBookingAppointments.length > 0}
+		{#if $appointmentsToday.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
@@ -620,8 +629,8 @@
 							<input
 								type="text"
 								placeholder="Search by Name"
-								bind:value={nameSearch}
-								on:input={handleNameSearch}
+								bind:value={nameSearchToday}
+								on:input={handleNameSearchToday}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
@@ -629,14 +638,14 @@
 							<input
 								type="text"
 								placeholder="Search by Patient IC"
-								bind:value={patientICSearch}
-								on:input={handlePatientICSearch}
+								bind:value={patientICSearchToday}
+								on:input={handlePatientICSearchToday}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
 						</th>
 					</thead>
 					<tbody>
-						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : data.todayBookingAppointments as today}
+						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : $appointmentsToday as today}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.patientIC}</td>
@@ -651,7 +660,7 @@
 									><button class=" bg-blue-200" on:click={() => clickArrived(today.id)}
 										>Arrived</button
 									>
-									<button class=" bg-green-200" on:click={() => clickCancel(today.id)}
+									<button class=" bg-green-200" on:click={() => clickCancel(today.id, 'today')}
 										>CANCEL</button
 									></td
 								>
@@ -664,7 +673,7 @@
 			<p>No pre-booked appointments today!</p>
 		{/if}
 	{:else if $bookingAppts}
-		{#if data.bookingAppointments.length > 0}
+		{#if $appointmentsBooking.length > 0}
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
@@ -680,7 +689,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each data.bookingAppointments as booking}
+						{#each $appointmentsBooking as booking}
 							<tr class="hover:bg-gray-100">
 								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{booking.patientIC}</td>
@@ -690,7 +699,7 @@
 								<td class="border border-gray-400 px-4 py-2">{booking.reason}</td>
 								<td class="border border-gray-400 px-4 py-2">{booking.doctor}</td>
 								<td class="border border-gray-400 px-4 py-2">
-									<button class=" bg-blue-200" on:click={() => clickCancel(booking.id)}
+									<button class=" bg-blue-200" on:click={() => clickCancel(booking.id, 'booking')}
 										>CANCEL</button
 									>
 								</td></tr

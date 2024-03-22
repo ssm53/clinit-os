@@ -63,12 +63,13 @@
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
 						Edit
 					</button>
-					<button
+					<a href="/consultations" target="_blank">Consultations</a>
+					<!-- <button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickConsultations}
 					>
 						Consultations
-					</button>
+					</button> -->
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}

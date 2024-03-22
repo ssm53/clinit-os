@@ -83,5 +83,10 @@ export async function load({ fetch }) {
 // style consultation page, and ensure when doc link is clicked, it brings us to a new page w that document. also instead of showing whole link, just put an icon or something!
 // in queue consultation page, fix the waitingTime as some are NaN
 // ensure to store receipt in aws as well in a receipts database
+// able to right click and open in new tab for some shits
 
-// SECTION YET TO DO
+// REACTIVITY
+
+// managed to show appoitments deleted,
+// BUT UNABLE TO REACTIVELY SHOW changes between components
+// e.g. register patient reactively shows as waitingAppointments in /+page.svelte

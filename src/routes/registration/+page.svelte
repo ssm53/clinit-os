@@ -4,6 +4,7 @@
 	import { getUserTokenFromLocalStorage } from '../../utils/auth';
 	import { writable } from 'svelte/store';
 	import { DateTime } from 'luxon';
+	import { appointmentsWaiting } from '../../stores/store';
 
 	let formErrors = {};
 	export const walkIn = writable(true);
@@ -143,6 +144,7 @@
 		console.log(res);
 
 		if (resp.status == 200) {
+			appointmentsWaiting.update((waitingAppointments) => [...waitingAppointments, newPatientData]);
 			postRegisterPatient();
 		} else {
 			if (res.error) {
