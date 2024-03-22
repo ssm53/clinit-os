@@ -44,13 +44,8 @@ export async function load({ fetch }) {
 
 // FEATURES TO DO
 
-// 1. Upload and store PDF/images/docs
-// - be able to save that invoice in database
-// - upload and store pdf and images for patient history (same way as recepits and invoices la)
-
-// 2. Send automated whatsapp messages
-// - send automated whatsapp messages to remind follow updated, various promos
-// - send automated whatsapp message to get them to google review
+// 2. Send automated normal message
+// inside the message, is link to google review
 
 // 3, Payments
 
@@ -77,6 +72,8 @@ export async function load({ fetch }) {
 // in queue consultation page, fix the waitingTime as some are NaN
 // go through consulattions page
 // show correct alerts
+// why cant I add treatment plan for panadol, but others can
+// why cant i choose file in consulattions page
 
 // NOW DOING
 //

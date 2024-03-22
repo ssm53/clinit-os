@@ -416,7 +416,7 @@
 
 		const followUpData = {
 			followUpReason: evt.target['follow-up-reason'].value,
-			followUpDate: DateTime.fromISO(evt.target['follow-up-date'].value).toISO()
+			followUpDate: DateTime.fromISO(evt.target['date'].value).toISO()
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/add-follow-up/${appointmentID}`, {
@@ -452,7 +452,7 @@
 		// Subscribe to the currentPatientIC store to get its value
 		currentAppointmentID.subscribe((value) => (appointmentID = value));
 
-		const fileInput = evt.target.querySelector('input[type="file"]');
+		const fileInput = document.getElementById('file-upload');
 		const file = fileInput.files[0];
 		const caption = evt.target['caption'].value;
 		const IC = patientIC;
@@ -835,7 +835,7 @@
 			<div class="addDocsForm">
 				<form on:submit|preventDefault={addDocuments}>
 					<label for="file-upload">Select a file:</label>
-					<input type="file" id="file-upload" name="file-upload" />
+					<input type="file" id="file-upload" name="file-upload" accept="*" />
 					<input type="text" id="caption" name="caption" required />
 					<button type="submit">Upload</button>
 				</form>
