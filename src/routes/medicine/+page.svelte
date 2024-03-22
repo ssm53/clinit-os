@@ -51,19 +51,18 @@
 
 		let editMedsData = {
 			medicine: evt.target['medicine'].value,
-			quantity: parseInt(evt.target['quantity'].value),
-			price: parseInt(evt.target['price'].value)
+			quantity: parseInt(evt.target['quantity'].value)
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/edit-medicine/${medicineID}`, {
-			method: 'POST',
+			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(editMedsData)
 		});
 
-		if (resp.status === 204) {
+		if (resp.status === 200) {
 			console.log('success');
 			edit.set(false);
 			showAll.set(true);
@@ -75,8 +74,7 @@
 	async function addNewMedicine(evt) {
 		const medicineData = {
 			name: evt.target['name'].value,
-			quantity: parseInt(evt.target['quantity'].value),
-			price: parseInt(evt.target['price'].value)
+			quantity: parseInt(evt.target['quantity'].value)
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/add-medicine', {
@@ -108,8 +106,7 @@
 	async function addExistingMedicine(evt) {
 		const medicineData = {
 			name: evt.target['name'].value,
-			quantity: parseInt(evt.target['quantity'].value),
-			price: parseInt(evt.target['price'].value)
+			quantity: parseInt(evt.target['quantity'].value)
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/add-existing-medicine', {
@@ -159,8 +156,7 @@
 		{#each data.allMeds as all}
 			<p>{all.medicine}</p>
 			<p>{all.quantity}</p>
-			<p>{all.price}</p>
-			<button on:click={() => openEdit(all)}>Edit</button>
+			<button on:click={() => openEdit(all)}>Add</button>
 			<button on:click={() => deleteMeds(all.id)}>Delete</button>
 		{/each}
 	</div>
@@ -168,7 +164,9 @@
 	<div class="edit">
 		<form on:submit|preventDefault={editMeds} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 			<div class="mb-6">
-				<label for="medicine" class="block text-gray-700 text-sm font-bold mb-2"> Medicine </label>
+				<label for="medicine" class="block text-gray-700 text-sm font-bold mb-2">
+					Medicine *
+				</label>
 				<input
 					type="text"
 					name="medicine"
@@ -178,7 +176,9 @@
 					required
 				/>
 
-				<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2"> Quantity </label>
+				<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
+					Quantity *
+				</label>
 				<input
 					type="number"
 					name="quantity"
@@ -187,22 +187,13 @@
 					bind:value={tempMedToDel.quantity}
 					required
 				/>
-				<label for="price" class="block text-gray-700 text-sm font-bold mb-2"> Price </label>
-				<input
-					type="number"
-					name="price"
-					placeholder="Enter price per unit"
-					class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					bind:value={tempMedToDel.price}
-					required
-				/>
 
 				<div class="flex justify-end">
 					<button
 						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 						type="submit"
 					>
-						Edit Meds
+						Add Meds
 					</button>
 					<button
 						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
@@ -222,57 +213,46 @@
 		<form on:submit|preventDefault={addNewMedicine} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 			<div class="mb-6">
 				<label for="name" class="block text-gray-700 text-sm font-bold mb-2">
-					New Medicine Name
+					New Medicine Name *
 				</label>
 				<input
 					type="text"
 					name="name"
 					placeholder="Enter medicine name"
 					class="block w-full rounded-md py-2 px-3 border border-gray-300"
+					required
 				/>
+			</div>
 
-				<div class="mb-6">
-					<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
-						Quantity added
-					</label>
-					<input
-						type="number"
-						name="quantity"
-						placeholder="Enter quantity added"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					/>
+			<div class="mb-6">
+				<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
+					Quantity added *
+				</label>
+				<input
+					type="number"
+					name="quantity"
+					placeholder="Enter quantity added"
+					class="block w-full rounded-md py-2 px-3 border border-gray-300"
+					required
+				/>
+			</div>
 
-					<div class="mb-6">
-						<label for="price" class="block text-gray-700 text-sm font-bold mb-2">
-							Unit price
-						</label>
-						<input
-							type="number"
-							name="price"
-							placeholder="Enter price per unit"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-
-						<div class="flex justify-end">
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								type="submit"
-							>
-								Add New Medicine
-							</button>
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								on:click={() => {
-									addNew.set(false);
-									showAll.set(true);
-								}}
-							>
-								Add New Medicine
-							</button>
-						</div>
-					</div>
-				</div>
+			<div class="flex justify-end">
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					type="submit"
+				>
+					Add New Medicine
+				</button>
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					on:click={() => {
+						addNew.set(false);
+						showAll.set(true);
+					}}
+				>
+					Cancel
+				</button>
 			</div>
 		</form>
 	</div>
@@ -281,9 +261,14 @@
 		{#each data.restockMeds as low}
 			<p>{low.medicine}</p>
 			<p>{low.quantity}</p>
-			<p>{low.price}</p>
 			<button on:click={() => clickRestocked(low)}>Already Restocked?</button>
 		{/each}
+		<button
+			on:click={() => {
+				lowStock.set(false);
+				showAll.set(true);
+			}}>Go Back</button
+		>
 	</div>
 {:else}
 	<div class="flex justify-center items-center">
@@ -292,57 +277,48 @@
 			class="w-1/2 bg-white shadow-md rounded-lg p-8"
 		>
 			<div class="mb-6">
-				<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Medicine Name </label>
+				<label for="name" class="block text-gray-700 text-sm font-bold mb-2">
+					Medicine Name *
+				</label>
 				<input
 					type="text"
 					name="name"
 					placeholder="Enter medicine name"
 					class="block w-full rounded-md py-2 px-3 border border-gray-300"
 					bind:value={tempMedToDel.medicine}
+					required
 				/>
+			</div>
 
-				<div class="mb-6">
-					<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
-						Quantity added
-					</label>
-					<input
-						type="number"
-						name="quantity"
-						placeholder="Enter quantity added"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					/>
+			<div class="mb-6">
+				<label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">
+					Quantity added *
+				</label>
+				<input
+					type="number"
+					name="quantity"
+					placeholder="Enter quantity added"
+					class="block w-full rounded-md py-2 px-3 border border-gray-300"
+					required
+				/>
+			</div>
 
-					<div class="mb-6">
-						<label for="price" class="block text-gray-700 text-sm font-bold mb-2">
-							Unit price
-						</label>
-						<input
-							type="number"
-							name="price"
-							placeholder="Enter price per unit"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-
-						<div class="flex justify-end">
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								type="submit"
-							>
-								Add Medicine
-							</button>
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								on:click={() => {
-									restock.set(false);
-									lowStock.set(true);
-								}}
-							>
-								Cancel
-							</button>
-						</div>
-					</div>
-				</div>
+			<div class="flex justify-end">
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					type="submit"
+				>
+					Add Medicine
+				</button>
+				<button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					on:click={() => {
+						restock.set(false);
+						lowStock.set(true);
+					}}
+				>
+					Cancel
+				</button>
 			</div>
 		</form>
 	</div>

@@ -1,5 +1,6 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 import { getDoctorTokenFromLocalStorage, getUserTokenFromLocalStorage } from '../utils/auth.js';
+import { redirect } from '@sveltejs/kit';
 
 export async function load({ fetch }) {
 	// here if there is no doctor token, then redirect to home page
@@ -71,28 +72,25 @@ export async function load({ fetch }) {
 
 // 7. Miscellaneous
 
-// 17) do accurate error handling! - then show correct alerts
-// 21) ensure auth for doctors and nurses. they can only access diff sections. have to change database for this. make sure do redirect if not login etc. - DONE
 // when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document. should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week. for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
 // refactor forms and make it into a component to be imported.. // here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
-// need to arrange consultations page and show patient history properly!
-// design consultations page
-// in apps page, no need today and follow up
-// same ic and email cannot - do for newpatientbooking and editpatientdetails in registration page
-// style consultation page, and ensure when doc link is clicked, it brings us to a new page w that document. also instead of showing whole link, just put an icon or something!
 // in queue consultation page, fix the waitingTime as some are NaN
-// ensure to store receipt in aws as well in a receipts database
-// able to right click and open in new tab for some shits
+// go through consulattions page
+// show correct alerts
 
 // NOW DOING
-// ensure auth for doctors and nurses
+//
 
 // STYLING
 // 1. style invoice and MC. and general styling, layout, icons, dropdown menu etc
 // 2. - for edit page, the rows must be of constant size, and if got overflow, users can click see more button. basically make rows constant no matter what. stylist can do.
+// 3. // need to arrange consultations page and show patient history properly!
 
 // BIG PROBLEMS
 // 1. reactivity
 // UNABLE TO REACTIVELY SHOW changes between components
 // register and show in appointments in /+page.svelte, and register then show in queue
 // once doctor calls in, should be removed from waiting, and once doctor ends, it should be in dispensary startight away
+// when booking appointment arrives, needs to show in waiting
+// when you delete medicine, it should show that its deleted immideately
+// when doctor clicks end consultation and sees queueu, queue should be auto updated

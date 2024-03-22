@@ -705,7 +705,7 @@
 							<div class="mb-6 flex justify-between">
 								<div class="w-1/3">
 									<label for={`meds${index + 1}`} class="block text-gray-700 text-sm font-bold mb-2"
-										>Medicine</label
+										>Medicine *</label
 									>
 									<input
 										type="text"
@@ -713,12 +713,13 @@
 										name={`meds${index + 1}`}
 										placeholder="Enter medicine"
 										class="block w-full rounded-md py-2 px-3 border border-gray-300"
+										required
 									/>
 								</div>
 								<div class="w-1/3">
 									<label
 										for={`quantity${index + 1}`}
-										class="block text-gray-700 text-sm font-bold mb-2">Quantity</label
+										class="block text-gray-700 text-sm font-bold mb-2">Quantity *</label
 									>
 									<input
 										type="number"
@@ -726,6 +727,7 @@
 										name={`quantity${index + 1}`}
 										placeholder="Enter quantity"
 										class="block w-full rounded-md py-2 px-3 border border-gray-300"
+										required
 									/>
 								</div>
 								<div class="w-1/3">
@@ -782,18 +784,19 @@
 						<div class="mb-6 flex justify-between">
 							<div class="w-1/3">
 								<label for="follow-up-reason" class="block text-gray-700 text-sm font-bold mb-2"
-									>Follow Up Reason</label
+									>Follow Up Reason *</label
 								>
 								<input
 									type="text"
 									name="follow-up-reason"
 									placeholder="Enter reason"
 									class="block w-full rounded-md py-2 px-3 border border-gray-300"
+									required
 								/>
 							</div>
 							<div class="w-1/3">
 								<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-									Follow Up Date and Time
+									Follow Up Date and Time *
 								</label>
 								<input
 									type="datetime-local"

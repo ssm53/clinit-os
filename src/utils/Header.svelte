@@ -1,7 +1,7 @@
 <script>
 	// point to note - shaun to do logout function
 
-	import { userLoggedIn } from '../stores/store';
+	import { doctorLoggedIn, userLoggedIn } from '../stores/store';
 	import {
 		userLogOut,
 		doctorLogOut,
@@ -13,6 +13,11 @@
 	let logIO;
 	userLoggedIn.subscribe((value) => {
 		logIO = value;
+	});
+
+	let logDoctorIO;
+	doctorLoggedIn.subscribe((value) => {
+		logDoctorIO = value;
 	});
 
 	async function clickLogin() {
@@ -79,13 +84,34 @@
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
 						Edit
 					</button>
-					<a href="/consultations" target="_blank">Consultations</a>
-					<!-- <button
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickMedicine}
+					>
+						Medicine
+					</button>
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickLogOut}
+					>
+						Log Out
+					</button>
+				{:else if logDoctorIO == true}
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickPatientRegistration}
+					>
+						Registration
+					</button>
+					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
+						Edit
+					</button>
+					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickConsultations}
 					>
 						Consultations
-					</button> -->
+					</button>
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}

@@ -62,8 +62,10 @@
 		if (resp.status == 200) {
 			filteredPatients.set(res.filteredPatients);
 		} else {
-			console.log(res);
-			filteredPatients.set([]);
+			if (res.error) {
+				formErrors = res.error;
+				console.log(formErrors);
+			}
 		}
 	}
 
@@ -118,16 +120,47 @@
 	}
 
 	export async function newPatient(evt) {
+		let age;
+		if (parseInt(evt.target['age'].value) !== typeof Number) {
+			age = 0;
+		} else {
+			age = parseInt(evt.target['age'].value);
+		}
+		let gender;
+		if (evt.target['gender'].value == '') {
+			gender = 'null';
+		} else {
+			gender = evt.target['gender'].value;
+		}
+		let email;
+		if (evt.target['email'].value == '') {
+			email = 'null';
+		} else {
+			email = evt.target['email'].value;
+		}
+		let race;
+		if (evt.target['race'].value == '') {
+			race = 'null';
+		} else {
+			race = evt.target['race'].value;
+		}
+		let doctor;
+		if (evt.target['doctor'].value == '') {
+			doctor = 'null';
+		} else {
+			doctor = evt.target['doctor'].value;
+		}
+
 		const newPatientData = {
 			name: evt.target['name'].value.toLowerCase(),
 			IC: evt.target['IC'].value,
-			age: parseInt(evt.target['age'].value),
-			gender: evt.target['gender'].value.toLowerCase(),
-			email: evt.target['email'].value,
+			age: age,
+			gender: gender,
+			email: email,
 			contact: evt.target['contact'].value,
-			race: evt.target['race'].value.toLowerCase(),
+			race: race,
 			reason: evt.target['reason'].value.toLowerCase(),
-			doctor: evt.target['doctor'].value.toLowerCase()
+			doctor: doctor
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/new-patient-appointment', {
@@ -156,17 +189,47 @@
 	}
 
 	export async function newPatientBooking(evt) {
+		let age;
+		if (parseInt(evt.target['age'].value) !== typeof Number) {
+			age = 0;
+		} else {
+			age = parseInt(evt.target['age'].value);
+		}
+		let gender;
+		if (evt.target['gender'].value == '') {
+			gender = 'null';
+		} else {
+			gender = evt.target['gender'].value;
+		}
+		let email;
+		if (evt.target['email'].value == '') {
+			email = 'null';
+		} else {
+			email = evt.target['email'].value;
+		}
+		let race;
+		if (evt.target['race'].value == '') {
+			race = 'null';
+		} else {
+			race = evt.target['race'].value;
+		}
+		let doctor;
+		if (evt.target['doctor'].value == '') {
+			doctor = 'null';
+		} else {
+			doctor = evt.target['doctor'].value;
+		}
 		const newPatientData = {
 			name: evt.target['name'].value.toLowerCase(),
 			IC: evt.target['IC'].value,
-			age: parseInt(evt.target['age'].value),
-			gender: evt.target['gender'].value.toLowerCase(),
-			email: evt.target['email'].value,
-			contact: evt.target['contact'].value,
-			race: evt.target['race'].value.toLowerCase(),
 			date: DateTime.fromISO(evt.target['date'].value).toISO(),
+			contact: evt.target['contact'].value,
 			reason: evt.target['reason'].value.toLowerCase(),
-			doctor: evt.target['doctor'].value.toLowerCase()
+			age: age,
+			gender: gender,
+			email: email,
+			race: race,
+			doctor: doctor
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/new-patient-appointment-booking', {
@@ -193,10 +256,17 @@
 	}
 
 	export async function existingPatient(evt) {
+		let doctor;
+		if (evt.target['doctor'].value == '') {
+			doctor = 'null';
+		} else {
+			doctor = evt.target['doctor'].value;
+		}
+
 		const appointmentDetails = {
 			reason: evt.target['reason'].value,
 			patientIC: patientIC,
-			doctor: evt.target['doctor'].value
+			doctor: doctor
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment`, {
 			method: 'POST',
@@ -218,11 +288,18 @@
 	}
 
 	export async function existingPatientBooking(evt) {
+		let doctor;
+		if (evt.target['doctor'].value == '') {
+			doctor = 'null';
+		} else {
+			doctor = evt.target['doctor'].value;
+		}
+
 		const appointmentDetails = {
 			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value,
 			patientIC: patientIC,
-			doctor: evt.target['doctor'].value
+			doctor: doctor
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment-booking`, {
 			method: 'POST',
@@ -244,18 +321,42 @@
 	}
 
 	export async function editPatientDetails(evt) {
-		let ic;
+		let age;
+		if (parseInt(evt.target['age'].value) !== typeof Number) {
+			age = 0;
+		} else {
+			age = parseInt(evt.target['age'].value);
+		}
+		let gender;
+		if (evt.target['gender'].value == '') {
+			gender = 'null';
+		} else {
+			gender = evt.target['gender'].value;
+		}
+		let email;
+		if (evt.target['email'].value == '') {
+			email = 'null';
+		} else {
+			email = evt.target['email'].value;
+		}
+		let race;
+		if (evt.target['race'].value == '') {
+			race = 'null';
+		} else {
+			race = evt.target['race'].value;
+		}
 
+		let ic;
 		tempPatientIC.subscribe((value) => (ic = value));
 
 		const editPatientData = {
 			name: evt.target['name'].value,
 			IC: evt.target['IC'].value,
-			age: parseInt(evt.target['age'].value),
-			gender: evt.target['gender'].value,
-			email: evt.target['email'].value,
 			contact: evt.target['contact'].value,
-			race: evt.target['race'].value
+			age: age,
+			gender: gender,
+			email: email,
+			race: race
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/update-patient-details/${ic}`, {
@@ -329,7 +430,7 @@
 			<div class="flex justify-center items-center new-patient">
 				<form on:submit|preventDefault={newPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 					<div class="mb-6">
-						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name * </label>
 						<input
 							type="text"
 							name="name"
@@ -343,7 +444,7 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number * </label>
 						<input
 							type="text"
 							name="IC"
@@ -357,50 +458,8 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
-						<input
-							type="number"
-							name="age"
-							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'age' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<input
-							type="text"
-							name="gender"
-							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'gender' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
-						<input
-							type="text"
-							name="email"
-							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'email' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
 						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-							Contact Number
+							Contact Number *
 						</label>
 						<input
 							type="text"
@@ -415,21 +474,8 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
-						<input
-							type="text"
-							name="race"
-							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'race' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
-						{/if}
-					</div>
-					<div class="mb-6">
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-							Reason of Visit
+							Reason of Visit *
 						</label>
 						<input
 							type="text"
@@ -440,6 +486,57 @@
 						/>
 						{#if 'reason' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+							<option value="">Select Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</select>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'race' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
 						{/if}
 					</div>
 
@@ -476,12 +573,13 @@
 				</button>
 				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
 						<input
 							type="text"
 							name="IC"
 							placeholder="Enter IC"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
 
 						<div class="flex justify-end">
@@ -519,7 +617,7 @@
 				>
 					<div class="mb-6">
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-							Reason for visit
+							Reason for visit *
 						</label>
 						<input
 							type="text"
@@ -538,7 +636,6 @@
 							name="doctor"
 							placeholder="Enter doctor in charge"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
 						/>
 						{#if 'doctor' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
@@ -565,7 +662,7 @@
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
 				>
 					<div class="mb-6">
-						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name * </label>
 						<input
 							type="text"
 							name="name"
@@ -580,7 +677,7 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number * </label>
 						<input
 							type="text"
 							name="IC"
@@ -595,53 +692,8 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
-						<input
-							type="number"
-							name="age"
-							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							value={patientDetails.age}
-							required
-						/>
-						{#if 'age' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<input
-							type="text"
-							name="gender"
-							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							value={patientDetails.gender}
-							required
-						/>
-						{#if 'gender' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
-						<input
-							type="text"
-							name="email"
-							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							value={patientDetails.email}
-							required
-						/>
-						{#if 'email' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
 						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-							Contact Number
+							Contact Number *
 						</label>
 						<input
 							type="text"
@@ -657,6 +709,48 @@
 					</div>
 
 					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.age}
+						/>
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.gender}
+						/>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.email}
+						/>
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
 						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
 						<input
 							type="text"
@@ -664,7 +758,6 @@
 							placeholder="Enter race"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.race}
-							required
 						/>
 						{#if 'race' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
@@ -708,7 +801,7 @@
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
 				>
 					<div class="mb-6">
-						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name * </label>
 						<input
 							type="text"
 							name="name"
@@ -722,7 +815,7 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number * </label>
 						<input
 							type="text"
 							name="IC"
@@ -736,50 +829,23 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
+							Appointment Date and Time *
+						</label>
 						<input
-							type="number"
-							name="age"
-							placeholder="Enter age"
+							type="datetime-local"
+							name="date"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
-						{#if 'age' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<input
-							type="text"
-							name="gender"
-							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'gender' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
-						<input
-							type="text"
-							name="email"
-							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'email' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{#if 'date' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
 						{/if}
 					</div>
 
 					<div class="mb-6">
 						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-							Contact Number
+							Contact Number *
 						</label>
 						<input
 							type="text"
@@ -794,37 +860,8 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
-						<input
-							type="text"
-							name="race"
-							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'race' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
-						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-							Appointment Date and Time
-						</label>
-						<input
-							type="datetime-local"
-							name="date"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'date' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.date}</p>
-						{/if}
-					</div>
-
-					<div class="mb-6">
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-							Reason of Visit
+							Reason of Visit *
 						</label>
 						<input
 							type="text"
@@ -835,6 +872,58 @@
 						/>
 						{#if 'reason' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="age" class="block text-gray-700 text-sm font-bold mb-2"> Age </label>
+						<input
+							type="number"
+							name="age"
+							placeholder="Enter age"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'age' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<input
+							type="text"
+							name="gender"
+							placeholder="Enter gender"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>
+						<input
+							type="text"
+							name="email"
+							placeholder="Enter email"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'email' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
+						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="race" class="block text-gray-700 text-sm font-bold mb-2"> Race </label>
+						<input
+							type="text"
+							name="race"
+							placeholder="Enter race"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						/>
+						{#if 'race' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
 						{/if}
 					</div>
 
@@ -871,22 +960,26 @@
 				</button>
 				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
 						<input
 							type="text"
 							name="IC"
 							placeholder="Enter IC"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							required
 						/>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
 
-						<div class="flex justify-end">
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								type="submit"
-							>
-								Find Patient
-							</button>
-						</div>
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Find Patient
+						</button>
 					</div>
 				</form>
 				<div>
@@ -914,7 +1007,7 @@
 				>
 					<div class="mb-6">
 						<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
-							Appointment Date and Time
+							Appointment Date and Time *
 						</label>
 						<input
 							type="datetime-local"
@@ -927,7 +1020,7 @@
 						{/if}
 
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">
-							Reason for visit
+							Reason for visit *
 						</label>
 						<input
 							type="text"
@@ -966,13 +1059,14 @@
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
 				>
 					<div class="mb-6">
-						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
+						<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name * </label>
 						<input
 							type="text"
 							name="name"
 							placeholder="Enter name"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.name}
+							required
 						/>
 						<!-- {#if 'name' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
@@ -980,17 +1074,35 @@
 					</div>
 
 					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number </label>
+						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC Number * </label>
 						<input
 							type="text"
 							name="IC"
 							placeholder="Enter IC number"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.IC}
+							required
 						/>
 						{#if 'IC' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
 						{/if}
+					</div>
+
+					<div class="mb-6">
+						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
+							Contact Number *
+						</label>
+						<input
+							type="number"
+							name="contact"
+							placeholder="Enter contact number"
+							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							value={patientDetails.contact}
+							required
+						/>
+						<!-- {#if 'contact' in formErrors}
+					<p class="text-red-500 text-xs mt-1">{formErrors['contact']}</p>
+				{/if} -->
 					</div>
 
 					<div class="mb-6">
@@ -1001,7 +1113,6 @@
 							placeholder="Enter age"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.age}
-							required
 						/>
 						<!-- {#if 'age' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['age']}</p>
@@ -1016,7 +1127,6 @@
 							placeholder="Enter gender"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.gender}
-							required
 						/>
 						<!-- {#if 'gender' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['gender']}</p>
@@ -1031,27 +1141,9 @@
 							placeholder="Enter email"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.email}
-							required
 						/>
 						<!-- {#if 'email' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['email']}</p>
-				{/if} -->
-					</div>
-
-					<div class="mb-6">
-						<label for="contact" class="block text-gray-700 text-sm font-bold mb-2">
-							Contact Number
-						</label>
-						<input
-							type="text"
-							name="contact"
-							placeholder="Enter contact number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							value={patientDetails.contact}
-							required
-						/>
-						<!-- {#if 'contact' in formErrors}
-					<p class="text-red-500 text-xs mt-1">{formErrors['contact']}</p>
 				{/if} -->
 					</div>
 
@@ -1063,7 +1155,6 @@
 							placeholder="Enter race"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.race}
-							required
 						/>
 						<!-- {#if 'race' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['race']}</p>

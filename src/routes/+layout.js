@@ -1,13 +1,18 @@
 export const ssr = false;
 
-import { userIsLoggedIn } from '../utils/auth';
+import { doctorLoggedIn } from '../stores/store';
+import { userIsLoggedIn, doctorIsLoggedIn } from '../utils/auth';
+import { getDoctorTokenFromLocalStorage, getUserTokenFromLocalStorage } from '../utils/auth';
 
-let hasCheckedLoggedIn = false; // Add this flag
+let hasCheckedUserLoggedIn = false; // Add this flag
+let hasCheckedDoctorLoggedIn = false;
 
 export async function load() {
-	if (!hasCheckedLoggedIn) {
+	if (!hasCheckedUserLoggedIn && !hasCheckedDoctorLoggedIn) {
 		// Check if isLoggedIn has been called before
 		await userIsLoggedIn();
-		hasCheckedLoggedIn = true; // Set the flag to true to prevent further calls
+		await doctorIsLoggedIn();
+		hasCheckedUserLoggedIn = true; // Set the flag to true to prevent further calls
+		hasCheckedDoctorLoggedIn = true;
 	}
 }
