@@ -1,5 +1,5 @@
 <script>
-	import { authenticateUser } from '../../utils/auth';
+	import { authenticateDoctor } from '../../utils/auth';
 	import { goto } from '$app/navigation';
 	// import { showLoginAlert, loginSucAlert } from '../../utils/alert';
 	// import Spinner from '../../spinner/spinner.svelte';
@@ -12,7 +12,7 @@
 	let email = '';
 	let password = '';
 
-	async function handleUserSubmit(event) {
+	async function handleDoctorSubmit(event) {
 		event.preventDefault();
 		// // spinner shit
 		// loading.update((value) => {
@@ -22,7 +22,7 @@
 		email = event.target.email.value;
 		password = event.target.password.value;
 
-		const res = await authenticateUser(email, password);
+		const res = await authenticateDoctor(email, password);
 
 		if (res.success) {
 			// // spinner shits
@@ -45,10 +45,6 @@
 			console.log(formErrors);
 		}
 	}
-
-	export function clickDoctor() {
-		goto('/sign-in-doctor');
-	}
 </script>
 
 <!-- <Header /> -->
@@ -64,10 +60,10 @@
 				alt="Logo"
 			/>
 			<h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-				Sign in to your User account
+				Sign in to your Owner account
 			</h2>
 		</div>
-		<form class="mt-8 space-y-6" on:submit={handleUserSubmit}>
+		<form class="mt-8 space-y-6" on:submit={handleDoctorSubmit}>
 			<input type="hidden" name="remember" value="true" />
 			<div class="rounded-md shadow-sm -space-y-px">
 				<div>
@@ -145,9 +141,5 @@
 				</button>
 			</div>
 		</form>
-		<button
-			class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-			on:click={clickDoctor}>You a Doctor?</button
-		>
 	</div>
 </div>

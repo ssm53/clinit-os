@@ -16,7 +16,7 @@
 		appointmentsWaiting,
 		appointmentsDispensary,
 		appointmentsToday,
-		appointmentsBooking
+		appointmentsBooking,
 	} from '../stores/store';
 	import { writable } from 'svelte/store';
 

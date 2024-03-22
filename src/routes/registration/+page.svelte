@@ -144,7 +144,8 @@
 		console.log(res);
 
 		if (resp.status == 200) {
-			appointmentsWaiting.update((waitingAppointments) => [...waitingAppointments, newPatientData]);
+			// appointmentsWaiting.update((waitingAppointments) => [...waitingAppointments, newPatientData]);
+			// appendAppointmentWaiting.set(newPatientData);
 			postRegisterPatient();
 		} else {
 			if (res.error) {

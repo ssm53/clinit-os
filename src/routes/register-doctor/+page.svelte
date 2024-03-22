@@ -9,10 +9,10 @@
 
 	export function postSignUp() {
 		// signUpAlert();
-		goto('/sign-in');
+		goto('/sign-in-doctor');
 	}
 
-	async function createUser(evt) {
+	async function createDoctor(evt) {
 		evt.preventDefault();
 
 		// // spinner shits
@@ -20,19 +20,19 @@
 		// 	return true;
 		// });
 
-		const userData = {
+		const doctorData = {
 			name: evt.target['name'].value,
 			email: evt.target['email'].value,
 			password: evt.target['password'].value
 		};
 
-		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/users', {
+		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/doctors', {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(userData)
+			body: JSON.stringify(doctorData)
 		});
 
 		if (resp.status == 200) {
@@ -46,7 +46,7 @@
 			loading.update((value) => {
 				return false;
 			});
-			signUpEmailTaken();
+			// signUpEmailTaken();
 		} else {
 			// // spinner shits
 			// loading.update((value) => {
@@ -65,14 +65,14 @@
 <div class="bg-white min-h-screen">
 	<header class="bg-gray-100 shadow">
 		<div class="container mx-auto py-4">
-			<h1 class="text-2xl font-semibold text-gray-900">Sign Up for an Account</h1>
+			<h1 class="text-2xl font-semibold text-gray-900">Owner Sign Up</h1>
 		</div>
 	</header>
 
 	<main class="container mx-auto py-8">
 		<!-- <Spinner /> -->
 		<div class="flex justify-center items-center">
-			<form on:submit={createUser} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+			<form on:submit={createDoctor} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 				<div class="mb-6">
 					<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
 					<input

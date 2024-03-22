@@ -2,7 +2,12 @@
 	// point to note - shaun to do logout function
 
 	import { userLoggedIn } from '../stores/store';
-	import { userLogOut } from './auth';
+	import {
+		userLogOut,
+		doctorLogOut,
+		getDoctorTokenFromLocalStorage,
+		getUserTokenFromLocalStorage
+	} from './auth';
 	import { goto } from '$app/navigation';
 
 	let logIO;
@@ -36,6 +41,17 @@
 
 	function clickMedicine() {
 		goto('/medicine');
+	}
+
+	function clickLogOut() {
+		if (getDoctorTokenFromLocalStorage() && !getUserTokenFromLocalStorage()) {
+			doctorLogOut();
+		} else if (getUserTokenFromLocalStorage() && !getDoctorTokenFromLocalStorage()) {
+			userLogOut();
+		} else if (getDoctorTokenFromLocalStorage() && getUserTokenFromLocalStorage()) {
+			doctorLogOut();
+			userLogOut();
+		}
 	}
 </script>
 
@@ -76,7 +92,10 @@
 					>
 						Medicine
 					</button>
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={userLogOut}>
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickLogOut}
+					>
 						Log Out
 					</button>
 				{:else}

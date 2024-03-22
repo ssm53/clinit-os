@@ -4,7 +4,7 @@
 	// import { delImageSuc, delImageFail } from '../../utils/alert.js';
 	// import Spinner from '../../spinner/spinner.svelte';
 	// import { loading } from '../../stores/store';
-	import { getUserTokenFromLocalStorage } from '../../utils/auth';
+	import { getDoctorTokenFromLocalStorage } from '../../utils/auth';
 	import { DateTime, Interval } from 'luxon';
 	import { writable } from 'svelte/store';
 	import { formatDateTime } from '../../utils/date';
