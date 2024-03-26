@@ -74,7 +74,8 @@
 	async function addNewMedicine(evt) {
 		const medicineData = {
 			name: evt.target['name'].value,
-			quantity: parseInt(evt.target['quantity'].value)
+			quantity: parseInt(evt.target['quantity'].value),
+			price: parseInt(evt.target['price'].value)
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/add-medicine', {
@@ -232,6 +233,19 @@
 					type="number"
 					name="quantity"
 					placeholder="Enter quantity added"
+					class="block w-full rounded-md py-2 px-3 border border-gray-300"
+					required
+				/>
+			</div>
+
+			<div class="mb-6">
+				<label for="price" class="block text-gray-700 text-sm font-bold mb-2">
+					Customer Price * (price that we charge customers)
+				</label>
+				<input
+					type="number"
+					name="price"
+					placeholder="Enter price we charge to customers"
 					class="block w-full rounded-md py-2 px-3 border border-gray-300"
 					required
 				/>

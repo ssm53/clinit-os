@@ -441,6 +441,7 @@
 
 	// upload documents
 	export async function addDocuments(evt) {
+		console.log('yellow');
 		// here need to go a get request for all appointments where patientIC = patientIC
 		let patientIC;
 
@@ -835,7 +836,7 @@
 			<div class="addDocsForm">
 				<form on:submit|preventDefault={addDocuments}>
 					<label for="file-upload">Select a file:</label>
-					<input type="file" id="file-upload" name="file-upload" accept="*" />
+					<input type="file" id="file-upload" name="file-upload" accept="*" required />
 					<input type="text" id="caption" name="caption" required />
 					<button type="submit">Upload</button>
 				</form>

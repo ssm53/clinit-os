@@ -48,6 +48,10 @@
 		goto('/medicine');
 	}
 
+	function clickAppointments() {
+		goto('/');
+	}
+
 	function clickLogOut() {
 		if (getDoctorTokenFromLocalStorage() && !getUserTokenFromLocalStorage()) {
 			doctorLogOut();
@@ -77,6 +81,13 @@
 				{#if logIO === true}
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickAppointments}
+					>
+						Appointments
+					</button>
+
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickPatientRegistration}
 					>
 						Registration
@@ -97,6 +108,12 @@
 						Log Out
 					</button>
 				{:else if logDoctorIO == true}
+					<button
+						class="text-white hover:text-indigo-600 focus:outline-none"
+						on:click={clickAppointments}
+					>
+						Appointments
+					</button>
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickPatientRegistration}

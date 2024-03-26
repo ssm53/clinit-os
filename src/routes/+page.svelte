@@ -16,7 +16,7 @@
 		appointmentsWaiting,
 		appointmentsDispensary,
 		appointmentsToday,
-		appointmentsBooking,
+		appointmentsBooking
 	} from '../stores/store';
 	import { writable } from 'svelte/store';
 
@@ -98,7 +98,7 @@
 		bookingAppts.set(true);
 	}
 
-	export async function clickDispAndBilling(appointmentID) {
+	export async function displayInvoice(appointmentID) {
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/invoice-details/${appointmentID}`, {
 			method: 'GET',
 			mode: 'cors',
@@ -181,8 +181,6 @@
 
 			// Open the PDF in a new tab or window
 			window.open(url, '_blank');
-			dispensaryAppts.set(false);
-			showInvoice.set(true);
 		} else {
 			invoiceDetails = [];
 		}
@@ -203,8 +201,6 @@
 
 			// Open the PDF in a new tab or window
 			window.open(url, '_blank');
-			dispensaryAppts.set(false);
-			showInvoice.set(true);
 		} else {
 			invoiceDetails = [];
 		}
@@ -221,6 +217,9 @@
 
 		if (resp.status == 200) {
 			console.log('success');
+			appointmentsDispensary.update((appointments) =>
+				appointments.filter((appointment) => appointment.id !== appointmentID)
+			);
 		} else {
 			// do some error handling here
 			console.log('oh nooo');
@@ -538,8 +537,11 @@
 								>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
-									<button class=" bg-blue-200" on:click={() => clickDispAndBilling(dispensary.id)}
+									<button class=" bg-blue-200" on:click={() => displayInvoice(dispensary.id)}
 										>DISPENSE AND BILLING</button
+									>
+									<button class=" bg-blue-200" on:click={() => clickPaid(dispensary.id)}
+										>PAID</button
 									>
 									<button
 										class=" bg-pink-200"
@@ -711,26 +713,5 @@
 		{:else}
 			<p>No booking appointments</p>
 		{/if}
-	{:else if invoiceDetails.length > 0}
-		<div>
-			{#each invoiceDetails as details}
-				<div class="flex flex-row">
-					<p>{details.patientIC}</p>
-					<p>{details.date}</p>
-					<p>{details.reason}</p>
-					<p>{details.medName1}</p>
-					<p>{details.quantity1}</p>
-					<p>{details.notes1}</p>
-					<p>{details.medName2}</p>
-					<p>{details.quantity2}</p>
-					<p>{details.notes2}</p>
-					<p>{details.amount}</p>
-					<button on:click={() => clickPaid(details.id)}>PAID?</button>
-				</div>
-			{/each}
-			<button on:click={clickGoBack}>Go Back</button>
-		</div>
-	{:else}
-		<p>No invoices to show</p>
 	{/if}
 </div>

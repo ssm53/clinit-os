@@ -60,23 +60,19 @@ export async function load({ fetch }) {
 // 6. Create records
 // not like analytics, but just pure tables for sales and purchases.
 
-// Inventory
-// better way of doing inventory  sorta done
-
-// timetable
+// 7. database expansion
 
 // 7. Miscellaneous
 
-// when editingcompleted appointments in edit tab, there is a normal form, but for them to edit documents, needs to be more detailed eg delete document/ add document. should be able to filter kaw2 for dates, e.g. appts this month, today, yesterday, this week. for mc and referral letter, we can have fields, but we also need to store it in documents field in appts
-// refactor forms and make it into a component to be imported.. // here, docs will upload any pdf's they want to be part of documents - also can be as many as they want.
+// fix edit-appointment in the edit section. cant seem to handle if we upload file! and also put everything into a table
 // in queue consultation page, fix the waitingTime as some are NaN
 // go through consulattions page
 // show correct alerts
 // why cant I add treatment plan for panadol, but others can
 // why cant i choose file in consulattions page
+// clean up all the null's showing on screen
 
 // NOW DOING
-//
 
 // STYLING
 // 1. style invoice and MC. and general styling, layout, icons, dropdown menu etc
