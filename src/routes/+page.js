@@ -62,17 +62,10 @@ export async function load({ fetch }) {
 
 // 7. database expansion
 
-// 7. Miscellaneous
-
-// fix edit-appointment in the edit section. cant seem to handle if we upload file! and also put everything into a table
-// in queue consultation page, fix the waitingTime as some are NaN
-// go through consulattions page
-// show correct alerts
-// why cant I add treatment plan for panadol, but others can
-// why cant i choose file in consulattions page
-// clean up all the null's showing on screen
-
-// NOW DOING
+// MISCELLANEOUS
+// show correct alerts and loading
+// go through all forms and check for error handling (all possible ways it can go wrong)
+// in registration page, the existing page is fucked... we fucked it up.. now for the newpatient section, we need to have existng patient button there, and once clicked, it'll open a form w reason only... but int he booking section, there is also a existning patient button, but when we click it, it opens up form with bookingdate and reason... also, when we click set appointment when we're in new patient or booking patient, it doesnt go through... then once we click setappointment it should go to ori state, depending if it is new or existing... also same w cancel next to set appointment
 
 // STYLING
 // 1. style invoice and MC. and general styling, layout, icons, dropdown menu etc
@@ -81,9 +74,18 @@ export async function load({ fetch }) {
 
 // BIG PROBLEMS
 // 1. reactivity
+// go through all reactivity!
 // UNABLE TO REACTIVELY SHOW changes between components
 // register and show in appointments in /+page.svelte, and register then show in queue
-// once doctor calls in, should be removed from waiting, and once doctor ends, it should be in dispensary startight away
+// once doctor calls in, should be removed from waiting, and once doctor ends, it should be in dispensary startight away, and removed from queue
 // when booking appointment arrives, needs to show in waiting
 // when you delete medicine, it should show that its deleted immideately
 // when doctor clicks end consultation and sees queueu, queue should be auto updated
+
+// q's to ask
+// what do you want as inputs in forms?
+// do you need the meds count and shit? reason is if they didnt update system when restock, it'll stop you being able to add treatment plan
+
+// NOW DOING
+// comment away doctor from all forms
+// do gender thingy for all forms

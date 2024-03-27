@@ -547,7 +547,7 @@
 										class=" bg-pink-200"
 										on:click={() => clickCancel(dispensary.id, 'dispensary')}>CANCEL</button
 									>
-									{#if dispensary.mcDetails != null}
+									{#if dispensary.mcDetails != null && dispensary.letterDetails !== 'null'}
 										<button class="bg-green-200" on:click={() => generateMC(dispensary.id)}
 											>Generate MC</button
 										>

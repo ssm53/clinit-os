@@ -44,9 +44,9 @@
 		goto('/consultations');
 	}
 
-	function clickMedicine() {
-		goto('/medicine');
-	}
+	// function clickMedicine() {
+	// 	goto('/medicine');
+	// }
 
 	function clickAppointments() {
 		goto('/');
@@ -95,12 +95,12 @@
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
 						Edit
 					</button>
-					<button
+					<!-- <button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}
 					>
 						Medicine
-					</button>
+					</button> -->
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickLogOut}
@@ -129,12 +129,12 @@
 					>
 						Consultations
 					</button>
-					<button
+					<!-- <button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}
 					>
 						Medicine
-					</button>
+					</button> -->
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickLogOut}

@@ -100,6 +100,9 @@
 		// Construct FormData object
 		const formData = new FormData();
 
+		console.log(parseInt(evt.target['amount'].value));
+		console.log(typeof parseInt(evt.target['amount'].value));
+
 		apptToEdit = appointment;
 		const ID = apptToEdit.id;
 		formData.append('file-upload', file);
@@ -107,34 +110,36 @@
 		formData.append('reason', evt.target['reason'].value); // Append the file
 		formData.append('notes', evt.target['notes'].value); // Append the caption
 		formData.append('amount', parseInt(evt.target['amount'].value)); // Append the file
-		formData.append('med-name1', evt.target['med-name1'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity1'].value); // Append the file
+		formData.append('medName1', evt.target['med-name1'].value); // Append the caption
+		formData.append('quantity1', parseInt(evt.target['quantity1'].value)); // Append the file
 		formData.append('notes1', evt.target['notes1'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name2'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity2'].value); // Append the file
-		formData.append('notes1', evt.target['notes2'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name3'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity3'].value); // Append the file
-		formData.append('notes1', evt.target['notes3'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name4'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity4'].value); // Append the file
-		formData.append('notes1', evt.target['notes4'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name5'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity5'].value); // Append the file
-		formData.append('notes1', evt.target['notes5'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name6'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity6'].value); // Append the file
-		formData.append('notes1', evt.target['notes6'].value); // Append the caption
-		formData.append('med-name1', evt.target['med-name7'].value); // Append the caption
-		formData.append('quantity1', evt.target['quantity7'].value); // Append the file
-		formData.append('notes1', evt.target['notes7'].value); // Append the caption
+		formData.append('medName2', evt.target['med-name2'].value); // Append the caption
+		formData.append('quantity2', parseInt(evt.target['quantity2'].value)); // Append the file
+		formData.append('notes2', evt.target['notes2'].value); // Append the caption
+		formData.append('medName3', evt.target['med-name3'].value); // Append the caption
+		formData.append('quantity3', parseInt(evt.target['quantity3'].value)); // Append the file
+		formData.append('notes3', evt.target['notes3'].value); // Append the caption
+		formData.append('medName4', evt.target['med-name4'].value); // Append the caption
+		formData.append('quantity4', parseInt(evt.target['quantity4'].value)); // Append the file
+		formData.append('notes4', evt.target['notes4'].value); // Append the caption
+		formData.append('medName5', evt.target['med-name5'].value); // Append the caption
+		formData.append('quantity5', parseInt(evt.target['quantity5'].value)); // Append the file
+		formData.append('notes5', evt.target['notes5'].value); // Append the caption
+		formData.append('medName6', evt.target['med-name6'].value); // Append the caption
+		formData.append('quantity6', parseInt(evt.target['quantity6'].value)); // Append the file
+		formData.append('notes6', evt.target['notes6'].value); // Append the caption
+		formData.append('medName7', evt.target['med-name7'].value); // Append the caption
+		formData.append('quantity7', parseInt(evt.target['quantity7'].value)); // Append the file
+		formData.append('notes7', evt.target['notes7'].value); // Append the caption
 		formData.append('doctor', evt.target['doctor'].value); // Append the caption
 		formData.append('IC', apptToEdit.patientDetails.IC);
+
+		console.log(formData);
 		// reason, doctor, notes, documents, medName1, medName2, quantity1, quantity2, notes1, notes2, amount
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/edit-completed-appointment/${ID}`, {
 			method: 'PATCH',
 			mode: 'cors',
-			body: JSON.stringify(formData)
+			body: formData
 		});
 
 		const res = await resp.json();
@@ -361,14 +366,13 @@
 
 			<div class="mb-6">
 				<label for="file-upload"> Upload Document </label>
-				<input type="file" id="file-upload" name="file-upload" accept="*" required />
+				<input type="file" id="file-upload" name="file-upload" accept="*" />
 				<input
 					type="text"
 					id="caption"
 					name="caption"
 					placeholder="Enter caption"
 					class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					required
 				/>
 				<!-- {#if 'documents' in formErrors}
 				<p class="text-red-500 text-xs mt-1">{formErrors.documents}</p>

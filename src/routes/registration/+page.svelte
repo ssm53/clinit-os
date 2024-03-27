@@ -105,13 +105,19 @@
 	export async function closeEditDetailsModal() {
 		let modalToHide = document.querySelector('.edit-details');
 		modalToHide.classList.add('hidden');
-		let modalToShow = document.querySelector('.existing-patient');
+		let modalToHide2 = document.querySelector('.existing-patient');
+		modalToHide2.classList.add('hidden');
+		let modalToShow = document.querySelector('.new-patient');
 		modalToShow.classList.remove('hidden');
+
+		walkIn.set(true);
 	}
 
 	export async function openAppointmentModal() {
 		let modalToShow = document.querySelector('.create-existing-appointment');
 		modalToShow.classList.remove('hidden');
+		let modalToHide = document.querySelector('.existing-patient');
+		modalToHide.classList.add('hidden');
 	}
 
 	export async function closeAppointmentModal() {
@@ -144,12 +150,6 @@
 		} else {
 			race = evt.target['race'].value;
 		}
-		let doctor;
-		if (evt.target['doctor'].value == '') {
-			doctor = 'null';
-		} else {
-			doctor = evt.target['doctor'].value;
-		}
 
 		const newPatientData = {
 			name: evt.target['name'].value.toLowerCase(),
@@ -159,8 +159,7 @@
 			email: email,
 			contact: evt.target['contact'].value,
 			race: race,
-			reason: evt.target['reason'].value.toLowerCase(),
-			doctor: doctor
+			reason: evt.target['reason'].value.toLowerCase()
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/new-patient-appointment', {
@@ -213,12 +212,7 @@
 		} else {
 			race = evt.target['race'].value;
 		}
-		let doctor;
-		if (evt.target['doctor'].value == '') {
-			doctor = 'null';
-		} else {
-			doctor = evt.target['doctor'].value;
-		}
+
 		const newPatientData = {
 			name: evt.target['name'].value.toLowerCase(),
 			IC: evt.target['IC'].value,
@@ -228,8 +222,7 @@
 			age: age,
 			gender: gender,
 			email: email,
-			race: race,
-			doctor: doctor
+			race: race
 		};
 
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/new-patient-appointment-booking', {
@@ -256,17 +249,9 @@
 	}
 
 	export async function existingPatient(evt) {
-		let doctor;
-		if (evt.target['doctor'].value == '') {
-			doctor = 'null';
-		} else {
-			doctor = evt.target['doctor'].value;
-		}
-
 		const appointmentDetails = {
 			reason: evt.target['reason'].value,
-			patientIC: patientIC,
-			doctor: doctor
+			patientIC: patientIC
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment`, {
 			method: 'POST',
@@ -283,23 +268,17 @@
 			modalToHide.classList.add('hidden');
 			goto('/');
 		} else {
-			console.log('hello2');
+			if (res.error) {
+				formErrors = res.error; // Update formErrors with validation errors
+			}
 		}
 	}
 
 	export async function existingPatientBooking(evt) {
-		let doctor;
-		if (evt.target['doctor'].value == '') {
-			doctor = 'null';
-		} else {
-			doctor = evt.target['doctor'].value;
-		}
-
 		const appointmentDetails = {
 			date: DateTime.fromISO(evt.target['date'].value).toISO(),
 			reason: evt.target['reason'].value,
-			patientIC: patientIC,
-			doctor: doctor
+			patientIC: patientIC
 		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/existing-patient-appointment-booking`, {
 			method: 'POST',
@@ -405,6 +384,11 @@
 			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
 			>Bookings</button
 		>
+		<button
+			on:click={openExistingPatient}
+			class=" border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			>Existing Patient</button
+		>
 	</div>
 </div>
 
@@ -417,13 +401,13 @@
 				</h1>
 			</div>
 		</header>
-
+		<!-- 
 		<button
 			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 			on:click={openExistingPatient}
 		>
 			Existing Patient
-		</button>
+		</button> -->
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
@@ -540,19 +524,6 @@
 						{/if}
 					</div>
 
-					<div class="mb-6">
-						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2">Doctor</label>
-						<input
-							type="text"
-							name="doctor"
-							placeholder="Enter consultation doctor"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						/>
-						{#if 'doctor' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
-						{/if}
-					</div>
-
 					<div class="flex justify-end">
 						<button
 							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
@@ -582,14 +553,18 @@
 							required
 						/>
 
-						<div class="flex justify-end">
-							<button
-								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-								type="submit"
-							>
-								Find Patient
-							</button>
-						</div>
+						{#if 'IC' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+						{/if}
+					</div>
+
+					<div class="flex justify-end">
+						<button
+							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							type="submit"
+						>
+							Find Patient
+						</button>
 					</div>
 				</form>
 				<div>
@@ -630,17 +605,6 @@
 							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
 						{/if}
 
-						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
-						<input
-							type="text"
-							name="doctor"
-							placeholder="Enter doctor in charge"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						/>
-						{#if 'doctor' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
-						{/if}
-
 						<div class="flex justify-end">
 							<button
 								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
@@ -656,7 +620,6 @@
 
 			<!-- MODAL 3 -->
 			<div class=" w-screen flex-col hidden edit-details bg-white">
-				<button on:click={closeEditDetailsModal}>Close Modal</button>
 				<form
 					on:submit|preventDefault={editPatientDetails}
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
@@ -771,6 +734,10 @@
 						>
 							Complete Edit Details
 						</button>
+						<button
+							class="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							on:click={closeEditDetailsModal}>Cancel</button
+						>
 					</div>
 				</form>
 			</div>
@@ -927,19 +894,6 @@
 						{/if}
 					</div>
 
-					<div class="mb-6">
-						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2">Doctor</label>
-						<input
-							type="text"
-							name="doctor"
-							placeholder="Enter consultation doctor"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						/>
-						{#if 'doctor' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
-						{/if}
-					</div>
-
 					<div class="flex justify-end">
 						<button
 							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
@@ -1030,14 +984,6 @@
 							required
 						/>
 
-						<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
-						<input
-							type="text"
-							name="doctor"
-							placeholder="Enter doctor in charge"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						/>
-
 						<div class="flex justify-end">
 							<button
 								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
@@ -1053,7 +999,6 @@
 
 			<!-- MODAL 3 -->
 			<div class=" w-screen flex-col hidden edit-details bg-white">
-				<button on:click={closeEditDetailsModal}>Close Modal</button>
 				<form
 					on:submit|preventDefault={editPatientDetails}
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
@@ -1093,7 +1038,7 @@
 							Contact Number *
 						</label>
 						<input
-							type="number"
+							type="text"
 							name="contact"
 							placeholder="Enter contact number"
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
@@ -1168,6 +1113,10 @@
 						>
 							Complete Edit Details
 						</button>
+						<button
+							class="bg-blue-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+							on:click={() => closeEditDetailsModal}>Cancel</button
+						>
 					</div>
 				</form>
 			</div>

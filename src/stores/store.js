@@ -29,3 +29,9 @@ export const appointmentsDispensary = writable([]); // for reactivity when click
 export const appointmentsToday = writable([]); // for reactivity when click cancel in waiting
 
 export const appointmentsBooking = writable([]); // for reactivity when click cancel in waiting
+
+export const seePersonalInfo = writable(true);
+
+export const seePastAppointments = writable(false);
+
+export const seeDocuments = writable(false);
