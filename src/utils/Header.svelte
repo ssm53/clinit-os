@@ -44,6 +44,10 @@
 		goto('/consultations');
 	}
 
+	function clickData() {
+		goto('/data');
+	}
+
 	// function clickMedicine() {
 	// 	goto('/medicine');
 	// }
@@ -95,6 +99,10 @@
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
 						Edit
 					</button>
+					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
+						Data
+					</button>
+
 					<!-- <button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}
@@ -120,15 +128,19 @@
 					>
 						Registration
 					</button>
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
-						Edit
-					</button>
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickConsultations}
 					>
 						Consultations
 					</button>
+					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
+						Edit
+					</button>
+					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
+						Data
+					</button>
+
 					<!-- <button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickMedicine}

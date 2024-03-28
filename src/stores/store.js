@@ -35,3 +35,5 @@ export const seePersonalInfo = writable(true);
 export const seePastAppointments = writable(false);
 
 export const seeDocuments = writable(false);
+
+export const paymentMethod = writable('cash');

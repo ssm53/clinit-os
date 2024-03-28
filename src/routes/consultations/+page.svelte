@@ -497,7 +497,7 @@
 						<th>Gender</th>
 						<th>IC</th>
 						<th>Reason</th>
-						<th>Doctor</th>
+
 						<th>Arrival Time</th>
 						<th>Waiting Time</th>
 						<th>Status</th>
@@ -512,7 +512,7 @@
 							<td>{appointment.patientDetails.gender}</td>
 							<td>{appointment.patientIC}</td>
 							<td>{appointment.reason}</td>
-							<td>{appointment.doctor}</td>
+
 							<td>{formatDateTime(appointment.arrivalTime)}</td>
 							<td>{calculateWaitingTime(appointment.arrivalTime)}</td>
 							<td>{appointment.status}</td>
@@ -888,10 +888,7 @@
 										<td>Amount:</td>
 										<td>RM{history.amount}</td>
 									</tr>
-									<tr>
-										<td>Doctor:</td>
-										<td>{history.doctor}</td>
-									</tr>
+
 									{#each [1, 2, 3, 4, 5, 6, 7] as i}
 										{#if history[`medName${i}`]}
 											<tr>

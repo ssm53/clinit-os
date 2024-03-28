@@ -16,7 +16,8 @@
 		appointmentsWaiting,
 		appointmentsDispensary,
 		appointmentsToday,
-		appointmentsBooking
+		appointmentsBooking,
+		paymentMethod
 	} from '../stores/store';
 	import { writable } from 'svelte/store';
 
@@ -206,25 +207,68 @@
 		}
 	}
 
-	export async function clickPaid(appointmentID) {
+	function selectPaymentMethod(evt) {
+		const method = evt.target.value;
+		paymentMethod.set(method);
+	}
+
+	async function clickPaid(appointmentID) {
+		let tempPaymentMethod;
+
+		// Subscribe to the currentPatientIC store to get its value
+		paymentMethod.subscribe((value) => (tempPaymentMethod = value));
+		const formData = {
+			paymentMethod: tempPaymentMethod
+		};
 		const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/click-paid/${appointmentID}`, {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json'
-			}
+			},
+			body: JSON.stringify(formData)
 		});
 
-		if (resp.status == 200) {
+		if (resp.status === 200) {
 			console.log('success');
 			appointmentsDispensary.update((appointments) =>
 				appointments.filter((appointment) => appointment.id !== appointmentID)
 			);
+			paymentMethod.set('cash');
 		} else {
-			// do some error handling here
+			// Handle errors here
 			console.log('oh nooo');
+			paymentMethod.set('cash');
 		}
 	}
+
+	// export async function clickPaid(appointmentID) {
+	// 	let tempPaymentMethod;
+
+	// 	// Subscribe to the currentPatientIC store to get its value
+	// 	paymentMethod.subscribe((value) => (tempPaymentMethod = value));
+	// 	let formData = {
+	// 		paymentMethod: tempPaymentMethod
+	// 	};
+	// 	const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `/click-paid/${appointmentID}`, {
+	// 		method: 'POST',
+	// 		mode: 'cors',
+	// 		headers: {
+	// 			'Content-Type': 'application/json'
+	// 		},
+	// 		body: JSON.stringify(formData)
+	// 	});
+
+	// 	if (resp.status == 200) {
+	// 		console.log('success');
+	// 		appointmentsDispensary.update((appointments) =>
+	// 			appointments.filter((appointment) => appointment.id !== appointmentID)
+	// 		);
+	// 	} else {
+	// 		// do some error handling here
+	// 		console.log('oh nooo');
+	// 	}
+	// }
 
 	export async function getPatientInfo(ic) {
 		// Set loading to true while fetching data
@@ -432,7 +476,7 @@
 							<th class="border border-gray-400 px-4 py-2">Age</th>
 							<th class="border border-gray-400 px-4 py-2">Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 						</tr>
@@ -465,7 +509,7 @@
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.age}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.reason}</td>
-								<td class="border border-gray-400 px-4 py-2">{waiting.doctor}</td>
+
 								<td class="border border-gray-400 px-4 py-2"
 									>{formatDateTime(waiting.arrivalTime)}</td
 								>
@@ -497,7 +541,7 @@
 							<th class="border border-gray-400 px-4 py-2">Age</th>
 							<th class="border border-gray-400 px-4 py-2">Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
@@ -531,18 +575,29 @@
 								<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.age}</td>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.reason}</td>
-								<td class="border border-gray-400 px-4 py-2">{dispensary.doctor}</td>
+
 								<td class="border border-gray-400 px-4 py-2"
 									>{formatDateTime(dispensary.arrivalTime)}</td
 								>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
 									<button class=" bg-blue-200" on:click={() => displayInvoice(dispensary.id)}
-										>DISPENSE AND BILLING</button
+										>Invoice</button
 									>
+									<select
+										id="paymentMethodSelect"
+										class="bg-blue-200"
+										on:change={(evt) => selectPaymentMethod(evt)}
+									>
+										<option value="cash">Cash</option>
+										<option value="card/transfer">Card/Transfer</option>
+										<option value="panel">Panel</option>
+									</select>
 									<button class=" bg-blue-200" on:click={() => clickPaid(dispensary.id)}
 										>PAID</button
 									>
+									<!-- // i have this button, but instead of just showing paid, i need to have three options - cash, card/transfer and panel.. if either one of those is clicked, it updaes the paymentMethod store to either cash, card/transfer or panel -->
+
 									<button
 										class=" bg-pink-200"
 										on:click={() => clickCancel(dispensary.id, 'dispensary')}>CANCEL</button
@@ -577,7 +632,7 @@
 							<th class="border border-gray-400 px-4 py-2">Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+
 							<th class="border border-gray-400 px-4 py-2">Date</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 						</tr>
@@ -600,7 +655,7 @@
 								<td class="border border-gray-400 px-4 py-2">{all.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.patientIC}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.reason}</td>
-								<td class="border border-gray-400 px-4 py-2">{all.doctor}</td>
+
 								<td class="border border-gray-400 px-4 py-2">{formatDateTime(all.arrivalTime)}</td>
 								<td class="border border-gray-400 px-4 py-2">{all.status}</td>
 							</tr>
@@ -622,7 +677,7 @@
 							<th class="border border-gray-400 px-4 py-2">Age</th>
 							<th class="border border-gray-400 px-4 py-2">Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
@@ -654,7 +709,7 @@
 								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.age}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{today.reason}</td>
-								<td class="border border-gray-400 px-4 py-2">{today.doctor}</td>
+
 								<td class="border border-gray-400 px-4 py-2">{formatDateTime(today.arrivalTime)}</td
 								>
 								<td class="border border-gray-400 px-4 py-2">{today.status}</td>
@@ -686,7 +741,7 @@
 							<th class="border border-gray-400 px-4 py-2">Patient Age</th>
 							<th class="border border-gray-400 px-4 py-2">Patient Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-							<th class="border border-gray-400 px-4 py-2">Doctor</th>
+
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
 					</thead>
@@ -699,7 +754,7 @@
 								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.age}</td>
 								<td class="border border-gray-400 px-4 py-2">{booking.patientDetails.gender}</td>
 								<td class="border border-gray-400 px-4 py-2">{booking.reason}</td>
-								<td class="border border-gray-400 px-4 py-2">{booking.doctor}</td>
+
 								<td class="border border-gray-400 px-4 py-2">
 									<button class=" bg-blue-200" on:click={() => clickCancel(booking.id, 'booking')}
 										>CANCEL</button

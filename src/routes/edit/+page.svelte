@@ -131,7 +131,6 @@
 		formData.append('medName7', evt.target['med-name7'].value); // Append the caption
 		formData.append('quantity7', parseInt(evt.target['quantity7'].value)); // Append the file
 		formData.append('notes7', evt.target['notes7'].value); // Append the caption
-		formData.append('doctor', evt.target['doctor'].value); // Append the caption
 		formData.append('IC', apptToEdit.patientDetails.IC);
 
 		console.log(formData);
@@ -251,7 +250,6 @@
 				<p>Date: {formatDateTime(seeMore.date)}</p>
 				<p>Consult Start Time: {formatDateTime(seeMore.consultStartTime)}</p>
 				<p>Reason: {seeMore.reason}</p>
-				<p>Doctor: {seeMore.doctor}</p>
 				<p>Notes: {seeMore.notes}</p>
 				{#if seeMoreDocuments.length > 0}
 					{#each seeMoreDocuments as SD}
@@ -338,20 +336,6 @@
 				/>
 				<!-- {#if 'amount' in formErrors}
 				<p class="text-red-500 text-xs mt-1">{formErrors.amount}</p>
-			{/if} -->
-			</div>
-
-			<div class="mb-6">
-				<label for="doctor" class="block text-gray-700 text-sm font-bold mb-2"> Doctor </label>
-				<input
-					type="text"
-					name="doctor"
-					placeholder="Enter doctor"
-					class="block w-full rounded-md py-2 px-3 border border-gray-300"
-					bind:value={apptToEdit.doctor}
-				/>
-				<!-- {#if 'doctor' in formErrors}
-				<p class="text-red-500 text-xs mt-1">{formErrors.doctor}</p>
 			{/if} -->
 			</div>
 			{#if editDocuments.length > 0}

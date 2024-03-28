@@ -61,7 +61,14 @@
 		const res = await resp.json();
 		if (resp.status == 200) {
 			filteredPatients.set(res.filteredPatients);
-		} else {
+			formErrors = {};
+		} else if (resp.status == 404) {
+			if (res.error) {
+				formErrors = res.error;
+				console.log(formErrors);
+			}
+		}
+		{
 			if (res.error) {
 				formErrors = res.error;
 				console.log(formErrors);
@@ -123,6 +130,9 @@
 	export async function closeAppointmentModal() {
 		let modalToHide = document.querySelector('.create-existing-appointment');
 		modalToHide.classList.add('hidden');
+		let modalToShow = document.querySelector('.new-patient');
+		modalToShow.classList.remove('hidden');
+		walkIn.set(true);
 	}
 
 	export async function newPatient(evt) {
@@ -179,6 +189,7 @@
 			// appointmentsWaiting.update((waitingAppointments) => [...waitingAppointments, newPatientData]);
 			// appendAppointmentWaiting.set(newPatientData);
 			postRegisterPatient();
+			formErrors = {};
 		} else {
 			if (res.error) {
 				formErrors = res.error;
@@ -266,6 +277,9 @@
 		if (resp.status == 200) {
 			let modalToHide = document.querySelector('.create-existing-appointment');
 			modalToHide.classList.add('hidden');
+			let modalToShow = document.querySelector('.new-patient');
+			modalToShow.classList.remove('hidden');
+			walkIn.set(true);
 			goto('/');
 		} else {
 			if (res.error) {
@@ -384,11 +398,6 @@
 			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
 			>Bookings</button
 		>
-		<button
-			on:click={openExistingPatient}
-			class=" border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
-			>Existing Patient</button
-		>
 	</div>
 </div>
 
@@ -401,13 +410,13 @@
 				</h1>
 			</div>
 		</header>
-		<!-- 
+
 		<button
 			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 			on:click={openExistingPatient}
 		>
 			Existing Patient
-		</button> -->
+		</button>
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
@@ -687,13 +696,27 @@
 
 					<div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<input
-							type="text"
-							name="gender"
-							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							value={patientDetails.gender}
-						/>
+						{#if patientDetails.gender !== null && patientDetails.gender !== 'null'}
+							<select
+								name="gender"
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								bind:value={patientDetails.gender}
+							>
+								<option value="">Select Gender</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+							</select>
+						{:else}
+							<select
+								name="gender"
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								bind:value={patientDetails.gender}
+							>
+								<option value="">Select Gender</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+							</select>
+						{/if}
 						{#if 'gender' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
 						{/if}
@@ -857,12 +880,11 @@
 
 					<div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<input
-							type="text"
-							name="gender"
-							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-						/>
+						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+							<option value="">Select Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</select>
 						{#if 'gender' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
 						{/if}
@@ -1066,6 +1088,34 @@
 
 					<div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						{#if patientDetails.gender !== null && patientDetails.gender !== 'null'}
+							<select
+								name="gender"
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								bind:value={patientDetails.gender}
+							>
+								<option value="">Select Gender</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+							</select>
+						{:else}
+							<select
+								name="gender"
+								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								bind:value={patientDetails.gender}
+							>
+								<option value="">Select Gender</option>
+								<option value="male">Male</option>
+								<option value="female">Female</option>
+							</select>
+						{/if}
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div>
+
+					<!-- <div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
 						<input
 							type="text"
 							name="gender"
@@ -1073,10 +1123,22 @@
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.gender}
 						/>
-						<!-- {#if 'gender' in formErrors}
+						{#if 'gender' in formErrors}
 					<p class="text-red-500 text-xs mt-1">{formErrors['gender']}</p>
-				{/if} -->
-					</div>
+				{/if}
+					</div> -->
+
+					<!-- <div class="mb-6">
+						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
+						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+							<option value="">Select Gender</option>
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+						</select>
+						{#if 'gender' in formErrors}
+							<p class="text-red-500 text-xs mt-1">{formErrors.gender}</p>
+						{/if}
+					</div> -->
 
 					<div class="mb-6">
 						<label for="email" class="block text-gray-700 text-sm font-bold mb-2"> Email </label>

@@ -47,25 +47,14 @@ export async function load({ fetch }) {
 // 2. Send automated normal message
 // inside the message, is link to google review
 
-// 3, Payments
-
 // 4. Panel patients
 // - figure out what needs to be known for panel patients
 // - might need to alter database here
 
-// 5. analytics
-// - get sales, purchase and other analytics data
-// - must display them properly in a systematic way where you can filter them out easily
-
-// 6. Create records
-// not like analytics, but just pure tables for sales and purchases.
-
-// 7. database expansion
-
 // MISCELLANEOUS
 // show correct alerts and loading
-// go through all forms and check for error handling (all possible ways it can go wrong)
-// in registration page, the existing page is fucked... we fucked it up.. now for the newpatient section, we need to have existng patient button there, and once clicked, it'll open a form w reason only... but int he booking section, there is also a existning patient button, but when we click it, it opens up form with bookingdate and reason... also, when we click set appointment when we're in new patient or booking patient, it doesnt go through... then once we click setappointment it should go to ori state, depending if it is new or existing... also same w cancel next to set appointment
+// need to see what that docs are in the backend 13,17,18 and all and make sure they're not stored here anymore or delete them straight away
+// should do better with data sales page.. should filter using dates and shit
 
 // STYLING
 // 1. style invoice and MC. and general styling, layout, icons, dropdown menu etc
@@ -76,16 +65,19 @@ export async function load({ fetch }) {
 // 1. reactivity
 // go through all reactivity!
 // UNABLE TO REACTIVELY SHOW changes between components
-// register and show in appointments in /+page.svelte, and register then show in queue
-// once doctor calls in, should be removed from waiting, and once doctor ends, it should be in dispensary startight away, and removed from queue
+// when patients register for walkin appointment in registration, it needs to show immideately in home page, and queue
+// once doctor calls in, should be removed from waiting and queue, and once doctor ends, it should be in dispensary startight away, and removed from queue
 // when booking appointment arrives, needs to show in waiting
 // when you delete medicine, it should show that its deleted immideately
 // when doctor clicks end consultation and sees queueu, queue should be auto updated
+// need errors to be reactive - e.g. when i submit form and got error, it should go away after I do another input! e.g. put IC with -, then ahve invalid IC error, but then I input again but input ic which is not registered for get patient, and it should show new error. not the all error
+// once paid by cash and okay ady or error, the select and input needs to be changed straight away to cash
+// once doc calls patient, shoudlnt be in queue and waiting appointments anymore
 
 // q's to ask
 // what do you want as inputs in forms?
 // do you need the meds count and shit? reason is if they didnt update system when restock, it'll stop you being able to add treatment plan
+// whats your consultation fee?
+// do you want meds and doctor fields data?
 
 // NOW DOING
-// comment away doctor from all forms
-// do gender thingy for all forms
