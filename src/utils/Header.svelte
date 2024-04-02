@@ -11,6 +11,7 @@
 	import { goto } from '$app/navigation';
 	import { io } from '../socket/webSocketConnection.js';
 	import { onMount } from 'svelte';
+	import { appointmentsWaiting } from '../stores/store';
 
 	onMount(() => {
 		io.on('connect_error', (error) => {
@@ -19,6 +20,10 @@
 
 		io.on('connected', (name) => {
 			console.log(`socket connected ${name}`);
+		});
+
+		io.on('new_patient_appointment', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => [...appointments, appointment]);
 		});
 	});
 
