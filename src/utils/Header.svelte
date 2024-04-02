@@ -9,6 +9,18 @@
 		getUserTokenFromLocalStorage
 	} from './auth';
 	import { goto } from '$app/navigation';
+	import { io } from '../socket/webSocketConnection.js';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		io.on('connect_error', (error) => {
+			console.error('Connection error:', error);
+		});
+
+		io.on('connected', (name) => {
+			console.log(`socket connected ${name}`);
+		});
+	});
 
 	let logIO;
 	userLoggedIn.subscribe((value) => {
