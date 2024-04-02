@@ -8,12 +8,7 @@
 	import { DateTime, Interval } from 'luxon';
 	import { writable } from 'svelte/store';
 	import { formatDateTime } from '../../utils/date';
-	import {
-		seeDocuments,
-		seePastAppointments,
-		seePersonalInfo,
-		appointmentsWaiting
-	} from '../../stores/store';
+	import { seeDocuments, seePastAppointments, seePersonalInfo } from '../../stores/store';
 
 	export let data;
 
@@ -33,13 +28,11 @@
 	let nameFilter = '';
 	let icFilter = '';
 
-	// $: filteredAppointments = data.waitingAppointments.filter(
-	// 	(appointment) =>
-	// 		appointment.patientDetails.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
-	// 		appointment.patientIC.toLowerCase().includes(icFilter.toLowerCase())
-	// );
-
-	appointmentsWaiting.set(data.waitingAppointments);
+	$: filteredAppointments = data.waitingAppointments.filter(
+		(appointment) =>
+			appointment.patientDetails.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+			appointment.patientIC.toLowerCase().includes(icFilter.toLowerCase())
+	);
 
 	// ADDING MORE MEDICINES
 	// START
@@ -512,7 +505,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each $appointmentsWaiting as appointment}
+					{#each filteredAppointments as appointment}
 						<tr>
 							<td>{appointment.patientDetails.name}</td>
 							<td>{appointment.patientDetails.age}</td>

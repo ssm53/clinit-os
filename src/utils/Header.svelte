@@ -9,6 +9,25 @@
 		getUserTokenFromLocalStorage
 	} from './auth';
 	import { goto } from '$app/navigation';
+	import { io } from '../socket/webSocketConnection';
+	import { onMount } from 'svelte';
+	import { appointmentsWaiting } from '../stores/store';
+
+	onMount(() => {
+		io.on('connect_error', (error) => {
+			console.error('Connection error:', error);
+		});
+
+		io.on('connected', (name) => {
+			console.log(`socket connected ${name}`);
+		});
+
+		io.on('new-patient-appointment', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				[...appointments, appointment];
+			});
+		});
+	});
 
 	let logIO;
 	userLoggedIn.subscribe((value) => {
@@ -122,12 +141,14 @@
 					>
 						Appointments
 					</button>
+
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickPatientRegistration}
 					>
 						Registration
 					</button>
+
 					<button
 						class="text-white hover:text-indigo-600 focus:outline-none"
 						on:click={clickConsultations}

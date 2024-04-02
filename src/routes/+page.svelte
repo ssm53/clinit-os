@@ -431,7 +431,7 @@
 </script>
 
 <div
-	class="top-container flex flex-col justify-center items-center border-b-2 border-black bg-white h-44"
+	class=" top-container flex flex-col justify-center items-center border-b-2 border-black bg-white h-44"
 >
 	<div>
 		<span class="font-bold text-3xl text-pink-700">Appointments</span>

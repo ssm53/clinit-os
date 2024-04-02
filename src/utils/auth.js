@@ -12,10 +12,11 @@ const userEmptyAuth = {
 };
 export function userLogOut() {
 	localStorage.setItem('auth', JSON.stringify(userEmptyAuth));
-	//SHAUNS CODE
-	userLoggedIn.update((value) => {
-		return false;
-	});
+	// //SHAUNS CODE
+	// userLoggedIn.update((value) => {
+	// 	return false;
+	// });
+	userLoggedIn.set(false);
 	goto('/');
 
 	return true;
@@ -25,11 +26,12 @@ const doctorEmptyAuth = {
 	doctor: ''
 };
 export function doctorLogOut() {
-	localStorage.setItem('auth', JSON.stringify(userEmptyAuth));
-	//SHAUNS CODE
-	doctorLoggedIn.update((value) => {
-		return false;
-	});
+	localStorage.setItem('auth', JSON.stringify(doctorEmptyAuth));
+	// //SHAUNS CODE
+	// doctorLoggedIn.update((value) => {
+	// 	return false;
+	// });
+	doctorLoggedIn.set(false);
 	goto('/');
 
 	return true;
@@ -61,10 +63,11 @@ export async function authenticateUser(email, password) {
 				user: res.userId
 			})
 		);
-		//shauns code
-		userLoggedIn.update((value) => {
-			return true;
-		});
+		// //shauns code
+		// userLoggedIn.update((value) => {
+		// 	return true;
+		// });
+		userLoggedIn.set(true);
 		goto('/');
 		// shaun's code
 		return {
@@ -105,10 +108,11 @@ export async function authenticateDoctor(email, password) {
 				doctor: res.doctorId
 			})
 		);
-		//shauns code
-		doctorLoggedIn.update((value) => {
-			return true;
-		});
+		// //shauns code
+		// doctorLoggedIn.update((value) => {
+		// 	return true;
+		// });
+		doctorLoggedIn.set(true);
 		goto('/');
 		// shaun's code
 		return {

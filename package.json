@@ -12,6 +12,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@tailwindcss/typography": "^0.5.12",
 		"@types/luxon": "^3.4.2",
 		"autoprefixer": "^10.4.16",
 		"daisyui": "^3.9.4",
@@ -27,6 +28,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"luxon": "^3.4.4"
+		"luxon": "^3.4.4",
+		"socket.io-client": "^4.7.5"
 	}
 }
