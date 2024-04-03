@@ -65,13 +65,13 @@ export async function load({ fetch }) {
 // 1. reactivity
 // go through all reactivity!
 
-// 1. when patients register for walkin appointment(new or existing) in registration, it needs to show immideately in home page,
-// 2. same as above but show in quque also
-// 3. once doctor calls in, should be removed from waiting in home page
-// 4. once doctor calls in, should remove from  queue in consultations
-// 5. once doctor ends it should be in dispensary startight away
-// 6. once doctor ends it should be removed from queue
-// 7. when booking appointment click arrives, needs to show in waiting appointment tab
+// 1. when patients register for walkin appointment(new or existing) in registration, it needs to show immideately in home page - DONE
+// 2. same as above but show in quque also - DONE
+// 3. once doctor calls in, should be removed from waiting in home page - done
+// 4. once doctor calls in, should remove from  queue in consultations - done
+// 5. once doctor ends it should be in dispensary startight away - done
+// 6. once doctor ends it should be removed from queue - done
+// 7. when booking appointment click arrives, needs to show in waiting appointment tab - done
 // 8. need errors to be reactive - e.g. when i submit form and got error, it should go away after I do another input! e.g. put IC with -, then ahve invalid IC error, but then I input again but input ic which is not registered for get patient, and it should show new error. not the all error
 
 // q's to ask

@@ -1,7 +1,7 @@
 <script>
 	// point to note - shaun to do logout function
 
-	import { doctorLoggedIn, userLoggedIn } from '../stores/store';
+	import { appointmentsBooking, doctorLoggedIn, userLoggedIn } from '../stores/store';
 	import {
 		userLogOut,
 		doctorLogOut,
@@ -11,7 +11,7 @@
 	import { goto } from '$app/navigation';
 	import { io } from '../socket/webSocketConnection';
 	import { onMount } from 'svelte';
-	import { appointmentsWaiting } from '../stores/store';
+	import { appointmentsWaiting, appointmentsDispensary } from '../stores/store';
 
 	onMount(() => {
 		io.on('connect_error', (error) => {
@@ -27,6 +27,44 @@
 				[...appointments, appointment];
 			});
 		});
+
+		io.on('existing-patient-appointment', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				[...appointments, appointment];
+			});
+		});
+
+		io.on('queue', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				[...appointments, appointment];
+			});
+		});
+
+		io.on('start-consultation', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				return appointments.filter((apt) => apt.id !== appointment.id);
+			});
+		});
+
+		io.on('end-consultation', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				return appointments.filter((apt) => apt.id !== appointment.id);
+			});
+			appointmentsDispensary.update((appointments) => {
+				[...appointments, appointment];
+			});
+		});
+
+		io.on('click-arrived', ({ appointment }) => {
+			appointmentsWaiting.update((appointments) => {
+				[...appointments, appointment];
+			});
+			appointmentsBooking.update((appointments) => {
+				return appointments.filter((apt) => apt.id !== appointment.id);
+			});
+		});
+
+		
 	});
 
 	let logIO;
