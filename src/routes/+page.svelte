@@ -55,7 +55,7 @@
 	function handlePatientICSearchToday() {
 		// Filter the appointments based on the user's input for Patient IC
 		filteredTodayAppointments = appointmentsToday.filter((appointment) =>
-			appointment.patientIC.toLowerCase().includes(patientICSearch.toLowerCase())
+			appointment.patientIC.toLowerCase().includes(patientICSearchToday.toLowerCase())
 		);
 	}
 

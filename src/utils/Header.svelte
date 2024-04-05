@@ -22,49 +22,47 @@
 			console.log(`socket connected ${name}`);
 		});
 
-		io.on('new-patient-appointment', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				[...appointments, appointment];
-			});
-		});
+		// io.on('new-patient-appointment', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		[...appointments, appointment];
+		// 	});
+		// });
 
-		io.on('existing-patient-appointment', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				[...appointments, appointment];
-			});
-		});
+		// io.on('existing-patient-appointment', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		[...appointments, appointment];
+		// 	});
+		// });
 
-		io.on('queue', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				[...appointments, appointment];
-			});
-		});
+		// io.on('queue', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		[...appointments, appointment];
+		// 	});
+		// });
 
-		io.on('start-consultation', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				return appointments.filter((apt) => apt.id !== appointment.id);
-			});
-		});
+		// io.on('start-consultation', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		return appointments.filter((apt) => apt.id !== appointment.id);
+		// 	});
+		// });
 
-		io.on('end-consultation', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				return appointments.filter((apt) => apt.id !== appointment.id);
-			});
-			appointmentsDispensary.update((appointments) => {
-				[...appointments, appointment];
-			});
-		});
+		// io.on('end-consultation', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		return appointments.filter((apt) => apt.id !== appointment.id);
+		// 	});
+		// 	appointmentsDispensary.update((appointments) => {
+		// 		[...appointments, appointment];
+		// 	});
+		// });
 
-		io.on('click-arrived', ({ appointment }) => {
-			appointmentsWaiting.update((appointments) => {
-				[...appointments, appointment];
-			});
-			appointmentsBooking.update((appointments) => {
-				return appointments.filter((apt) => apt.id !== appointment.id);
-			});
-		});
-
-		
+		// io.on('click-arrived', ({ appointment }) => {
+		// 	appointmentsWaiting.update((appointments) => {
+		// 		[...appointments, appointment];
+		// 	});
+		// 	appointmentsBooking.update((appointments) => {
+		// 		return appointments.filter((apt) => apt.id !== appointment.id);
+		// 	});
+		// });
 	});
 
 	let logIO;
