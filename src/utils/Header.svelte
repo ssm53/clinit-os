@@ -113,9 +113,7 @@
 					>
 						Registration
 					</button>
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
-						Edit
-					</button>
+
 					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
 						Data
 					</button>

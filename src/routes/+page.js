@@ -80,4 +80,6 @@ export async function load({ fetch }) {
 // whats your consultation fee?
 // do you want meds and doctor fields data?
 
-// NOW DOING
+// UPDATED
+// all ok when nurses see it.
+// let's see for doctors!
