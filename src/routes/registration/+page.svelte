@@ -14,13 +14,17 @@
 	export let patientIC;
 	export let patientDetails = [];
 	let today = DateTime.local().toISODate();
+	let activeTab = 'walk-in';
+
 
 	export function clickWalkIn() {
+		activeTab = 'walk-in';
 		booking.set(false);
 		walkIn.set(true);
 	}
 
 	export function clickBooking() {
+		activeTab = 'booking';
 		walkIn.set(false);
 		booking.set(true);
 	}
@@ -390,12 +394,16 @@
 	<div class="flex flex-row justify-between mt-5">
 		<button
 			on:click={clickWalkIn}
-			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"
+			class:border-b-indigo-600={activeTab === 'walk-in'}
+			class:border-b-white={activeTab !== 'walk-in'}
 			>Walk-In</button
 		>
 		<button
 			on:click={clickBooking}
-			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"
+			class:border-b-indigo-600={activeTab === 'booking'}
+			class:border-b-white={activeTab !== 'booking'}
 			>Bookings</button
 		>
 	</div>
@@ -403,20 +411,22 @@
 
 {#if $walkIn}
 	<div class="bg-white min-h-screen">
-		<header class="bg-gray-100 shadow">
-			<div class="container mx-auto py-4">
-				<h1 class="text-2xl font-semibold text-gray-900">
-					Register Patient and Create Appointment
-				</h1>
-			</div>
-		</header>
-
-		<button
-			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-			on:click={openExistingPatient}
-		>
-			Existing Patient
-		</button>
+		<div class="bg-gray-100 shadow flex items-center justify-between px-5">
+			<header>
+				<div class="container mx-auto py-4">
+					<h1 class="text-2xl font-semibold text-gray-900">
+						Register Patient and Create Appointment
+					</h1>
+				</div>
+			</header>
+	
+			<button
+				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md "
+				on:click={openExistingPatient}
+			>
+				Existing Patient
+			</button>
+		</div>
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
@@ -768,20 +778,22 @@
 	</div>
 {:else}
 	<div class="bg-gray-700 min-h-screen">
-		<header class="bg-gray-100 shadow">
-			<div class="container mx-auto py-4">
-				<h1 class="text-2xl font-semibold text-gray-900">
-					Register Patient and Create Appointment
-				</h1>
-			</div>
-		</header>
-
-		<button
-			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-			on:click={openExistingPatient}
-		>
-			Existing Patient
-		</button>
+		<div class="bg-gray-100 shadow flex items-center justify-between px-5">
+			<header>
+				<div class="container mx-auto py-4">
+					<h1 class="text-2xl font-semibold text-gray-900">
+						Register Patient and Create Appointment
+					</h1>
+				</div>
+			</header>
+	
+			<button
+				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md "
+				on:click={openExistingPatient}
+			>
+				Existing Patient
+			</button>
+		</div>
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->

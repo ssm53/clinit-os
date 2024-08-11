@@ -70,7 +70,7 @@
 		<form class="mt-8 space-y-6" on:submit={handleUserSubmit}>
 			<input type="hidden" name="remember" value="true" />
 			<div class="rounded-md shadow-sm -space-y-px">
-				<div>
+				<div class="mb-3 bg-black border-2 rounded-md">
 					<label for="email-address" class="sr-only">Email address</label>
 					<input
 						id="email-address"
@@ -78,7 +78,7 @@
 						type="email"
 						autocomplete="email"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Email address"
 					/>
 					{#if 'email' in formErrors}
@@ -93,7 +93,7 @@
 						type="password"
 						autocomplete="current-password"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Password"
 					/>
 					{#if 'password' in formErrors}

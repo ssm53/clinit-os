@@ -52,7 +52,7 @@
 <div class="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
 	<!-- Changed the background color to white -->
 	<!-- <Spinner /> -->
-	<div class="max-w-md w-full space-y-8">
+	<div class="max-w-md w-full space-y-8 shadow-lg p-10 rounded-md">
 		<div>
 			<img
 				class="mx-auto h-12 w-auto"
@@ -65,8 +65,8 @@
 		</div>
 		<form class="mt-8 space-y-6" on:submit={handleDoctorSubmit}>
 			<input type="hidden" name="remember" value="true" />
-			<div class="rounded-md shadow-sm -space-y-px">
-				<div>
+			<div class="">
+				<div class="mb-3 bg-black border-2 rounded-md">
 					<label for="email-address" class="sr-only">Email address</label>
 					<input
 						id="email-address"
@@ -74,14 +74,14 @@
 						type="email"
 						autocomplete="email"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border placeholder-gray-500 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Email address"
 					/>
 					{#if 'email' in formErrors}
 						<p class="text-red-500 text-sm mt-1">{formErrors['email']}</p>
 					{/if}
 				</div>
-				<div>
+				<div class="rounded-md bg-black border-2">
 					<label for="password" class="sr-only">Password</label>
 					<input
 						id="password"
@@ -89,7 +89,7 @@
 						type="password"
 						autocomplete="current-password"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Password"
 					/>
 					{#if 'password' in formErrors}
@@ -119,12 +119,12 @@
 			<div>
 				<button
 					type="submit"
-					class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+					class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
 				>
 					<span class="absolute left-0 inset-y-0 flex items-center pl-3">
 						<!-- Heroicon name: solid/lock-closed -->
 						<svg
-							class="h-5 w-5 text-green-500 group-hover:text-green-400"
+							class="h-5 w-5 text-indigo-400 group-hover:text-indigo-500"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 20 20"
 							fill="currentColor"
