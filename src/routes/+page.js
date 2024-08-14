@@ -82,4 +82,5 @@ export async function load({ fetch }) {
 
 // UPDATED
 // all ok when nurses see it.
-// let's see for doctors!
+// for doctors all looks ok
+// need to delete the dockerfile in backend directory

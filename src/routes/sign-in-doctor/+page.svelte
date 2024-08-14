@@ -98,7 +98,7 @@
 				</div>
 			</div>
 
-			<div class="flex items-center justify-between">
+			<!-- <div class="flex items-center justify-between">
 				<div class="flex items-center">
 					<input
 						id="remember-me"
@@ -114,7 +114,7 @@
 						Forgot your password?
 					</a>
 				</div>
-			</div>
+			</div> -->
 
 			<div>
 				<button
