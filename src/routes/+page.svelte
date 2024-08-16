@@ -437,7 +437,7 @@
 </script>
 
 <div
-	class=" top-container flex justify-between items-center border-b-2  bg-white py-5 px-5"
+	class=" top-container flex justify-between items-center border-b-2  bg-white p-5"
 >
 	<div>
 		<span class="font-bold text-3xl text-pink-700">Appointments</span>
@@ -483,14 +483,14 @@
 <div>
 	{#if $waitingAppts}
 		{#if $appointmentsWaiting.length > 0}
-			<div class="">
+			<div>
 				<div class="flex items-center gap-5 pl-1 py-3 bg-gray-500">
 					<div class="px-4 py-2 w-[20%]">
 						<input
 							type="text"
 							placeholder="Search by Name"
 							bind:value={nameSearchWaiting}
-							class="block w-full rounded-md py-2 px-3"
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
 						/>
 					</div>
 					<div class="px-4 py-2 w-[20%]">
@@ -498,7 +498,7 @@
 							type="text"
 							placeholder="Search by Patient IC"
 							bind:value={patientICSearchWaiting}
-							class="block w-full rounded-md py-2 px-3"
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
 						/>
 					</div>
 				</div>
@@ -514,7 +514,6 @@
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
-					
 					</thead>
 					<tbody>
 						{#each $appointmentsWaiting.filter((waiting) => waiting.patientDetails.name
@@ -522,7 +521,7 @@
 									.includes(nameSearchWaiting.toLowerCase()) && waiting.patientIC
 									.toLowerCase()
 									.includes(patientICSearchWaiting.toLowerCase())) as waiting}
-							<tr class="hover:bg-gray-200 hover:text-black hover:cursor-auto ">
+							<tr class="hover:bg-gray-200 hover:text-black hover:cursor-auto">
 								<td class="border border-gray-400 px-4 py-2 capitalize">{waiting.patientDetails.name}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientIC}</td>
 								<td class="border border-gray-400 px-4 py-2">{waiting.patientDetails.age}</td>
@@ -537,7 +536,7 @@
 							> -->
 								<td class="border border-gray-400 px-4 py-2">{waiting.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
-									<button class=" bg-indigo-600 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(waiting.id, 'waiting')}
+									<button class=" bg-indigo-600 hover:bg-indigo-900 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(waiting.id, 'waiting')}
 										>CANCEL</button
 									>
 								</td>
@@ -552,35 +551,37 @@
 	{:else if $dispensaryAppts}
 		{#if $appointmentsDispensary.length > 0}
 			<div>
+				<div class="flex items-center gap-5 pl-1 py-3 bg-gray-500">
+					<div class="px-4 py-2 w-[20%]">
+						<input
+							type="text"
+							placeholder="Search by Name"
+							bind:value={nameSearchWaiting}
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+						/>
+					</div>
+					<div class="px-4 py-2 w-[20%]">
+						<input
+							type="text"
+							placeholder="Search by Patient IC"
+							bind:value={patientICSearchWaiting}
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+						/>
+					</div>
+				</div>
 				<table class="border-collapse w-full">
-					<thead>
+					<thead class="bg-gray-500 text-white">
 						<tr>
 							<th class="border border-gray-400 px-4 py-2 capitalize">Name</th>
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
 							<th class="border border-gray-400 px-4 py-2">Age</th>
 							<th class="border border-gray-400 px-4 py-2">Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-
 							<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
-						<th class="border border-gray-400 px-4 py-2">
-							<input
-								type="text"
-								placeholder="Search by Name"
-								bind:value={nameSearchDispensary}
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							/>
-						</th>
-						<th class="border border-gray-400 px-4 py-2">
-							<input
-								type="text"
-								placeholder="Search by Patient IC"
-								bind:value={patientICSearchDispensary}
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							/>
-						</th>
+						
 					</thead>
 					<tbody>
 						{#each $appointmentsDispensary.filter((dispensary) => dispensary.patientDetails.name
@@ -599,7 +600,7 @@
 								>
 								<td class="border border-gray-400 px-4 py-2">{dispensary.status}</td>
 								<td class="border border-gray-400 px-4 py-2">
-									<button class="bg-indigo-600 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => displayInvoice(dispensary.id)}
+									<button class="bg-indigo-600 hover:bg-indigo-900 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => displayInvoice(dispensary.id)}
 										>Invoice</button
 									>
 									<select
@@ -611,17 +612,17 @@
 										<option value="card/transfer">Card/Transfer</option>
 										<option value="panel">Panel</option>
 									</select>
-									<button class="bg-indigo-600 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickPaid(dispensary.id)}
+									<button class="bg-indigo-600 hover:bg-indigo-900 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickPaid(dispensary.id)}
 										>PAID</button
 									>
 									<!-- // i have this button, but instead of just showing paid, i need to have three options - cash, card/transfer and panel.. if either one of those is clicked, it updaes the paymentMethod store to either cash, card/transfer or panel -->
 
 									<button
-										class=" bg-red-500 text-white text-xs font-medium rounded-md px-2 py-1"
+										class=" bg-red-500 hover:bg-red-900 text-white text-xs font-medium rounded-md px-2 py-1"
 										on:click={() => clickCancel(dispensary.id, 'dispensary')}>CANCEL</button
 									>
 									{#if dispensary.mcDetails != null && dispensary.letterDetails !== 'null'}
-										<button class="bg-green-500 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => generateMC(dispensary.id)}
+										<button class="bg-green-500 hover:bg-green-900 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => generateMC(dispensary.id)}
 											>Generate MC</button
 										>
 									{/if}
@@ -642,8 +643,18 @@
 	{:else if $allAppts}
 		{#if data.allAppointments.length > 0}
 			<div>
+				<div class="flex items-center gap-5 pl-1 py-3 bg-gray-500">
+					<div class="px-4 py-2 w-[20%]">
+						<input
+							type="text"
+							placeholder="Search by Name or Patient IC"
+							bind:value={nameSearchAll}
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+						/>
+					</div>
+				</div>
 				<table class="border-collapse w-full">
-					<thead>
+					<thead class="bg-gray-500 text-white">
 						<tr>
 							<th class="border border-gray-400 px-4 py-2">Name</th>
 							<th class="border border-gray-400 px-4 py-2">Age</th>
@@ -654,14 +665,14 @@
 							<th class="border border-gray-400 px-4 py-2">Date</th>
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 						</tr>
-						<th class="border border-gray-400 px-4 py-2">
+						<!-- <th class="border border-gray-400 px-4 py-2">
 							<input
 								type="text"
 								placeholder="Search by Name or Patient IC"
 								bind:value={nameSearchAll}
 								class="block w-full rounded-md py-2 px-3 border border-gray-300"
 							/>
-						</th>
+						</th> -->
 					</thead>
 					<tbody>
 						{#each data.allAppointments.filter((all) => all.patientDetails.name
@@ -687,8 +698,26 @@
 	{:else if $todayAppts}
 		{#if $appointmentsToday.length > 0}
 			<div>
+				<div class="flex items-center gap-5 pl-1 py-3 bg-gray-500">
+					<div class="px-4 py-2 w-[20%]">
+						<input
+							type="text"
+							placeholder="Search by Name"
+							bind:value={nameSearchWaiting}
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+						/>
+					</div>
+					<div class="px-4 py-2 w-[20%]">
+						<input
+							type="text"
+							placeholder="Search by Patient IC"
+							bind:value={patientICSearchWaiting}
+							class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+						/>
+					</div>
+				</div>
 				<table class="border-collapse w-full">
-					<thead>
+					<thead class="bg-gray-500 text-white">
 						<tr>
 							<th class="border border-gray-400 px-4 py-2">Name</th>
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
@@ -700,24 +729,6 @@
 							<th class="border border-gray-400 px-4 py-2">Status</th>
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
-						<th class="border border-gray-400 px-4 py-2">
-							<input
-								type="text"
-								placeholder="Search by Name"
-								bind:value={nameSearchToday}
-								on:input={handleNameSearchToday}
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							/>
-						</th>
-						<th class="border border-gray-400 px-4 py-2">
-							<input
-								type="text"
-								placeholder="Search by Patient IC"
-								bind:value={patientICSearchToday}
-								on:input={handlePatientICSearchToday}
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							/>
-						</th>
 					</thead>
 					<tbody>
 						{#each filteredTodayAppointments.length > 0 ? filteredTodayAppointments : $appointmentsToday as today}
@@ -732,10 +743,10 @@
 								>
 								<td class="border border-gray-400 px-4 py-2">{today.status}</td>
 								<td class="border border-gray-400 px-4 py-2"
-									><button class=" bg-blue-500 w-[40%] text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickArrived(today.id)}
+									><button class=" bg-blue-500 hover:bg-blue-900 w-[40%] text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickArrived(today.id)}
 										>Arrived</button
 									>
-									<button class=" bg-green-500 w-[40%] text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(today.id, 'today')}
+									<button class=" bg-green-500 hover:bg-green-900 w-[40%] text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(today.id, 'today')}
 										>CANCEL</button
 									></td
 								>
@@ -752,14 +763,13 @@
 			<div>
 				<table class="border-collapse w-full">
 					<thead>
-						<tr>
+						<tr class="bg-gray-500 text-white">
 							<th class="border border-gray-400 px-4 py-2">Patient Name</th>
 							<th class="border border-gray-400 px-4 py-2">Patient IC</th>
 							<th class="border border-gray-400 px-4 py-2">Follow-Up Date</th>
 							<th class="border border-gray-400 px-4 py-2">Patient Age</th>
 							<th class="border border-gray-400 px-4 py-2">Patient Gender</th>
 							<th class="border border-gray-400 px-4 py-2">Reason</th>
-
 							<th class="border border-gray-400 px-4 py-2">Actions</th>
 						</tr>
 					</thead>
@@ -774,7 +784,7 @@
 								<td class="border border-gray-400 px-4 py-2">{booking.reason}</td>
 
 								<td class="border border-gray-400 px-4 py-2">
-									<button class="bg-blue-500 w-full text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(booking.id, 'booking')}
+									<button class="bg-blue-500 hover:bg-blue-900 w-full text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickCancel(booking.id, 'booking')}
 										>CANCEL</button
 									>
 								</td></tr
