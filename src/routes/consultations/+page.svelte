@@ -488,43 +488,60 @@
 	}
 </script>
 
-<div>
+<div class="h-screen flex flex-col ">
 	{#if $queue}
-		<p>Queue</p>
+		<!-- <div class="border-b-2  bg-white p-5">
+			<span class="font-bold text-3xl text-pink-700">Queue</span>
+		</div> -->
 		<!-- MODAL 1 -->
-		<div class="w-screen filter-box bg-white">
-			<input type="text" bind:value={nameFilter} placeholder="Filter by Name" />
-			<input type="text" bind:value={icFilter} placeholder="Filter by IC" />
+		<div class="w-screen filter-box">
 
-			<table>
+			<div class="flex items-center gap-5 pl-1 py-3 bg-gray-500">
+				<div class="px-4 py-2 w-[20%]">
+					<input 
+						type="text" 
+						bind:value={nameFilter} 
+						placeholder="Filter by Name"
+						class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+					/>
+				</div>
+				<div class="px-4 py-2 w-[20%]">
+					<input 
+						type="text" 
+						bind:value={icFilter} 
+						placeholder="Filter by IC"
+						class="block w-full rounded-md py-2 px-3 bg-white text-black outline-gray-400"
+					 />
+				</div>
+			</div>
+
+			<table class="border-collapse w-full">
 				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Age</th>
-						<th>Gender</th>
-						<th>IC</th>
-						<th>Reason</th>
-
-						<th>Arrival Time</th>
-						<th>Waiting Time</th>
-						<th>Status</th>
-						<th>Action</th>
+					<tr class="bg-gray-500 text-white">
+						<th class="border border-gray-400 px-4 py-2">Age</th>
+						<th class="border border-gray-400 px-4 py-2">Name</th>
+						<th class="border border-gray-400 px-4 py-2">Gender</th>
+						<th class="border border-gray-400 px-4 py-2">IC</th>
+						<th class="border border-gray-400 px-4 py-2">Reason</th>
+						<th class="border border-gray-400 px-4 py-2">Arrival Time</th>
+						<th class="border border-gray-400 px-4 py-2">Waiting Time</th>
+						<th class="border border-gray-400 px-4 py-2">Status</th>
+						<th class="border border-gray-400 px-4 py-2">Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each $appointmentsWaiting as appointment}
-						<tr>
-							<td>{appointment.patientDetails.name}</td>
-							<td>{appointment.patientDetails.age}</td>
-							<td>{appointment.patientDetails.gender}</td>
-							<td>{appointment.patientIC}</td>
-							<td>{appointment.reason}</td>
-
-							<td>{formatDateTime(appointment.arrivalTime)}</td>
-							<td>{calculateWaitingTime(appointment.arrivalTime)}</td>
-							<td>{appointment.status}</td>
-							<td>
-								<button on:click={() => viewAppointment(appointment.patientIC, appointment.id)}>
+						<tr class="hover:bg-gray-200 hover:text-black hover:cursor-auto">
+							<td class="border border-gray-400 px-4 py-2 capitalize">{appointment.patientDetails.name}</td>
+							<td class="border border-gray-400 px-4 py-2">{appointment.patientDetails.age}</td>
+							<td class="border border-gray-400 px-4 py-2 capitalize">{appointment.patientDetails.gender}</td>
+							<td class="border border-gray-400 px-4 py-2">{appointment.patientIC}</td>
+							<td class="border border-gray-400 px-4 py-2 capitalize">{appointment.reason}</td>
+							<td class="border border-gray-400 px-4 py-2">{formatDateTime(appointment.arrivalTime)}</td>
+							<td class="border border-gray-400 px-4 py-2">{calculateWaitingTime(appointment.arrivalTime)}</td>
+							<td class="border border-gray-400 px-4 py-2">{appointment.status}</td>
+							<td class="border border-gray-400 px-4 py-2">
+								<button class="bg-blue-500 hover:bg-blue-900 w-full text-white text-xs font-medium rounded-md py-2" on:click={() => viewAppointment(appointment.patientIC, appointment.id)}>
 									View Appointment
 								</button>
 							</td>
@@ -533,13 +550,15 @@
 				</tbody>
 			</table>
 		</div>
+
+		
 	{:else if $writeMc}
 		<!-- Modal 3 -->
-		<div class="write-MC">
-			<p>Write MC</p>
+		<div class="write-MC flex flex-col flex-grow items-center justify-center">
+			<p class="text-xl font-medium text-white uppercase mb-5">Write MC</p>
 			<form on:submit|preventDefault={writeMC} class="w-1/2 bg-white shadow-md rounded-lg p-8">
-				<div class="mb-6 flex justify-between">
-					<div class="w-1/3">
+				<div class="mb-6 flex flex-col gap-5">
+					<div class="">
 						<label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
 						<input
 							type="text"
@@ -548,7 +567,7 @@
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 						/>
 					</div>
-					<div class="w-1/3">
+					<div class="">
 						<label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Reason</label>
 						<input
 							type="text"
@@ -557,7 +576,7 @@
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 						/>
 					</div>
-					<div class="w-1/3">
+					<div class="">
 						<label for="mcStart" class="block text-gray-700 text-sm font-bold mb-2"
 							>Start Date</label
 						>
@@ -569,8 +588,8 @@
 						/>
 					</div>
 				</div>
-				<div class="mb-6 flex justify-between">
-					<div class="w-1/3">
+				<div class="mb-6 flex flex-col gap-5">
+					<div class="">
 						<label for="mcEnd" class="block text-gray-700 text-sm font-bold mb-2">End Date</label>
 						<input
 							type="date"
@@ -579,7 +598,7 @@
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 						/>
 					</div>
-					<div class="w-1/3">
+					<div class="">
 						<label for="employer" class="block text-gray-700 text-sm font-bold mb-2">Employer</label
 						>
 						<input
@@ -590,7 +609,7 @@
 						/>
 					</div>
 				</div>
-				<div class="flex justify-end">
+				<div class="flex justify-end gap-5">
 					<button
 						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 						type="submit"
@@ -609,11 +628,11 @@
 	{:else if $writeRefLetter}
 		<!-- Modal 3 -->
 		<div
-			class="write-letter fixed top-0 left-0 h-screen w-screen flex items-center justify-center bg-gray-500 bg-opacity-50"
+			class="write-letter flex flex-grow items-center justify-center"
 		>
 			<form on:submit|preventDefault={writeLetter} class="w-1/2 bg-white shadow-md rounded-lg p-8">
 				<div class="mb-6 flex flex-col">
-					<div class="w-1/3">
+					<div class="">
 						<label for="letter-date" class="block text-gray-700 text-sm font-bold mb-2"
 							>Letter Date</label
 						>
@@ -624,7 +643,7 @@
 							class="block w-full rounded-md py-2 px-3 border border-gray-300"
 						/>
 					</div>
-					<div class="w-2/3">
+					<div class="mt-6">
 						<label for="content" class="block text-gray-700 text-sm font-bold mb-2"
 							>Letter Content</label
 						>
@@ -635,7 +654,7 @@
 						/>
 					</div>
 				</div>
-				<div class="flex justify-end">
+				<div class="flex justify-end gap-5">
 					<button
 						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 						type="submit"
@@ -653,56 +672,75 @@
 		</div>
 	{:else}
 		<!-- MODAL 2 -->
-		<div class=" w-screen flex-col filter-box2 bg-white">
-			<button
-				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-				on:click={seeQueue}>See Queue</button
-			>
-			<div class="flex flex-row border-b-2">
+		<div class=" w-screen filter-box2 bg-white">
+			<div class="flex items-center justify-between py-4 px-5 ">
 				<button
-					class="bg-green-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-					on:click={startConsultation}>Call Patient In</button
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					on:click={seeQueue}>{"<"}</button
 				>
-				<button
-					class="bg-yellow-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-					on:click={endConsultation}>End consultation</button
-				>
-				<button
-					class="bg-orange-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-					on:click={openMC}>Write MC</button
-				>
-				<button
-					class="bg-purple-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-					on:click={openLetter}>Write Referral Letter</button
-				>
-				<div class="addDocsForm">
-					<form on:submit|preventDefault={addDocuments}>
-						<label for="file-upload">Select a file:</label>
-						<input type="file" id="file-upload" name="file-upload" accept="*" required />
-						<input class="border rounded-sm" type="text" id="caption" name="caption" required />
-						<button
-							class="bg-green-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-							type="submit">Upload</button
-						>
-					</form>
+				<div class="flex gap-2">
+					<button
+						class="border-2 border-indigo-600 hover:bg-gray-300 text-black font-bold py-1 px-4 rounded-md"
+						on:click={openMC}>Write MC</button
+					>
+					<button
+						class="border-2 border-indigo-600 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-md"
+						on:click={openLetter}>Write Referral Letter</button
+					>
+					<button
+						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+						on:click={startConsultation}>Call Patient In</button
+					>
+					<button
+						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+						on:click={endConsultation}>End consultation</button
+					>
 				</div>
 			</div>
-			<div class="containers flex flex-row">
-				<div class=" left-container flex flex-col">
-					<div class="notepad">
-						<form on:submit|preventDefault={addNotes} class=" bg-white shadow-md rounded-lg p-8">
+			<div class="w-full flex items-center justify-end pr-5">
+				<form class="flex items-center gap-2" on:submit|preventDefault={addDocuments}>
+					<div>
+						<!-- <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file-upload">Upload file</label> -->
+						<input 
+							id="file-upload" 
+							type="file"
+							name="file-upload"
+							accept="*"
+							required
+							class="block w-full py-2 px-3 text-sm text-gray-900 rounded-lg cursor-pointer bg-black dark:text-gray-400 focus:outline-none dark:bg-black dark:border-gray-600 dark:placeholder-gray-400" 
+						/>
+						<!-- <label for="file-upload">Select a file:</label>
+						<input type="file" id="file-upload" name="file-upload" accept="*" required /> -->
+					</div>
+					<div>
+						<input class="border rounded-md py-2 px-2" placeholder="Caption" type="text" id="caption" name="caption" required />
+					</div>			
+					<button
+						class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+						type="submit">Upload</button
+					>
+				</form>
+			</div>
+			<div class="flex justify-around mt-6 pb-10 ">
+				<div class="flex flex-col w-[55%]">
+					<div class="notepad border-2 shadow-lg border-dashed rounded-lg">
+						<form on:submit|preventDefault={addNotes} class=" bg-white px-5 py-3">
 							<div class="mb-6">
-								<label for="notes" class="block text-gray-700 text-sm font-bold mb-2">
+								<label for="notes" class="block text-pink-700 text-md font-bold mb-2">
 									Notes
 								</label>
-								<input
+								<textarea 
+									name="notes" 
+									placeholder="Enter something"
+									class="block w-full rounded-md py-2 px-3 h-64 border border-gray-300"
+								></textarea>
+								<!-- <input
 									type="text"
 									name="notes"
 									placeholder="Enter something"
-									class="block w-full rounded-md py-2 px-3 border border-gray-300"
-								/>
-
-								<div class="flex justify-end">
+									class="block w-full rounded-md py-2 px-3 h-20 border border-gray-300"
+								/> -->
+								<div class="flex justify-end mt-2">
 									<button
 										class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 										type="submit"
@@ -713,15 +751,16 @@
 							</div>
 						</form>
 					</div>
-					<div class="treatment-plan">
-						<p>Treatment Plan</p>
+					<div class="treatment-plan mt-6 border-2 shadow-lg border-dashed rounded-lg">
 						<form
 							on:submit|preventDefault={addTreatmentPlan}
-							class=" bg-white shadow-md rounded-lg p-8"
+							class=" bg-white p-8"
 						>
+						<p class="block text-pink-700 text-md font-bold mb-5">Treatment Plan</p>
+
 							{#each $medicineData as { meds, quantity, notes }, index (index)}
-								<div class="mb-6 flex justify-between">
-									<div class="w-1/3">
+								<div class="mb-6 flex  items-end gsp-2">
+									<div class="w-1/4">
 										<label
 											for={`meds${index + 1}`}
 											class="block text-gray-700 text-sm font-bold mb-2">Medicine *</label
@@ -735,7 +774,7 @@
 											required
 										/>
 									</div>
-									<div class="w-1/3">
+									<div class="w-1/4">
 										<label
 											for={`quantity${index + 1}`}
 											class="block text-gray-700 text-sm font-bold mb-2">Quantity *</label
@@ -749,7 +788,7 @@
 											required
 										/>
 									</div>
-									<div class="w-1/3">
+									<div class="w-1/4">
 										<label
 											for={`notes${index + 1}`}
 											class="block text-gray-700 text-sm font-bold mb-2">Notes</label
@@ -765,7 +804,7 @@
 									{#if index === $medicineData.length - 1}
 										<button
 											type="button"
-											class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
+											class="w-1/4 bg-red-600 h-10 it hover:bg-red-700 text-white text-sm font-bold rounded-md"
 											on:click={deleteMedicineRow}
 										>
 											Delete Row
@@ -773,32 +812,34 @@
 									{/if}
 								</div>
 							{/each}
-							{#if $medicineData.length < maxRows}
+							<div class="flex items-end gap-1 justify-end">
+								{#if $medicineData.length < maxRows}
+									<div class="flex justify-end">
+										<button
+											class=" bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-9 rounded-md"
+											type="button"
+											on:click={addMedicineRow}
+										>
+											Add More Meds
+										</button>
+									</div>
+								{/if}
 								<div class="flex justify-end">
 									<button
-										class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-										type="button"
-										on:click={addMedicineRow}
+										class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-md"
+										type="submit"
 									>
-										Add More Meds
+										Add Treatment Plan
 									</button>
 								</div>
-							{/if}
-							<div class="flex justify-end">
-								<button
-									class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-									type="submit"
-								>
-									Add Treatment Plan
-								</button>
 							</div>
 						</form>
 					</div>
-					<div class="follow-up">
-						<p>Follow Up</p>
+					<div class="follow-up mt-6 border-2 shadow-lg border-dashed rounded-lg">
 						<form on:submit|preventDefault={addFollowUp} class=" bg-white shadow-md rounded-lg p-8">
+							<p class="text-pink-700 text-md font-bold mb-5">Follow Up</p>
 							<div class="mb-6 flex justify-between">
-								<div class="w-1/3">
+								<div class="w-1/2">
 									<label for="follow-up-reason" class="block text-gray-700 text-sm font-bold mb-2"
 										>Follow Up Reason *</label
 									>
@@ -810,7 +851,7 @@
 										required
 									/>
 								</div>
-								<div class="w-1/3">
+								<div class="w-1/2">
 									<label for="date" class="block text-gray-700 text-sm font-bold mb-2">
 										Follow Up Date and Time *
 									</label>
@@ -833,16 +874,16 @@
 						</form>
 					</div>
 				</div>
-				<div class="right-container flex flex-col">
-					<p class="font-semibold text-2xl text-center">Patient Details</p>
-					<div class="patient-tabs flex flex-row justify-between">
+				<div class="flex flex-col w-[35%] mt-5">
+					<p class="font-semibold text-2xl text-center text-pink-700 mb-3">Patient Details</p>
+					<div class="patient-tabs flex items-center justify-center">
 						<button
 							on:click={() => {
 								seePastAppointments.set(false);
 								seeDocuments.set(false);
 								seePersonalInfo.set(true);
 							}}
-							class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+							class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"
 							>Personal Info</button
 						>
 						<button
@@ -851,7 +892,7 @@
 								seeDocuments.set(false);
 								seePastAppointments.set(true);
 							}}
-							class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+							class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"							
 							>Past Appointments</button
 						>
 						<button
@@ -860,54 +901,65 @@
 								seePastAppointments.set(false);
 								seeDocuments.set(true);
 							}}
-							class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+							class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"							
 							>Documents</button
 						>
 					</div>
 					{#if $seePersonalInfo}
-						<div class=" patient-personal-info border-2">
-							<div class="flex flex-col">
+						<div class=" patient-personal-info mt-3 rounded-lg shadow-lg p-3">
+							<div class="flex flex-col gap-3">
 								{#each partPatientInfo as personalInfo}
-									<p>Name: {personalInfo.name}</p>
-									<p>IC no: {personalInfo.IC}</p>
-									<p>Gender: {personalInfo.gender}</p>
-									<p>Age: {personalInfo.age}</p>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Name:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{personalInfo.name}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">IC number:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{personalInfo.IC}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Gender:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{personalInfo.gender}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Age:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{personalInfo.age}</p>
+									</div>
 								{/each}
 							</div>
 						</div>
 					{:else if $seePastAppointments}
-						<div class="patient-past-appointments">
-							<table>
+						<div class="patient-past-appointments mt-3 rounded-lg shadow-lg p-5">
+							<div class="flex flex-col gap-3">
 								{#each patientHistory as history}
-									<tr>
-										<td>Date:</td>
-										<td>{history.date}</td>
-									</tr>
-									<tr>
-										<td>Reason:</td>
-										<td>{history.reason}</td>
-									</tr>
-									<tr>
-										<td>Notes:</td>
-										<td>{history.notes}</td>
-									</tr>
-									<tr>
-										<td>Amount:</td>
-										<td>RM{history.amount}</td>
-									</tr>
-
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Date:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{history.date}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Reason:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{history.reason}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Notes:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{history.notes}</p>
+									</div>
+									<div class="flex gap-2 items-center">
+										<h3 class="font-bold text-sm text-pink-700">Amount:</h3>
+										<p class="text-sm font-medium text-gray-500 capitalize">{history.amount}</p>
+									</div>
 									{#each [1, 2, 3, 4, 5, 6, 7] as i}
 										{#if history[`medName${i}`]}
-											<tr>
-												<td>Medicine:</td>
-												<td>{history[`medName${i}`]}</td>
-												<td class="ml-10">Quantity:</td>
-												<td>{history[`quantity${i}`]}</td>
-											</tr>
+											<div class="flex gap-2 items-center">
+												<h3 class="font-bold text-sm text-pink-700">Medicine:</h3>
+												<p class="text-sm font-medium text-gray-500 capitalize">{history[`medName${i}`]}</p>,
+												<h3 class="font-bold text-sm text-pink-700">Quantity:</h3>
+												<p class="text-sm font-medium text-gray-500 capitalize">{history[`quantity${i}`]}</p>
+											</div>
 										{/if}
 									{/each}
 								{/each}
-							</table>
+							</div>
 						</div>
 					{:else}
 						{#each patientDocuments as docs}
@@ -919,7 +971,7 @@
 						{/each}
 					{/if}
 				</div>
-			</div>
+		</div>
 
 			<!-- should be before this  -->
 		</div>

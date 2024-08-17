@@ -14,13 +14,17 @@
 	export let patientIC;
 	export let patientDetails = [];
 	let today = DateTime.local().toISODate();
+	let activeTab = 'walk-in';
+
 
 	export function clickWalkIn() {
+		activeTab = 'walk-in';
 		booking.set(false);
 		walkIn.set(true);
 	}
 
 	export function clickBooking() {
+		activeTab = 'booking';
 		walkIn.set(false);
 		booking.set(true);
 	}
@@ -390,12 +394,16 @@
 	<div class="flex flex-row justify-between mt-5">
 		<button
 			on:click={clickWalkIn}
-			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"
+			class:border-b-indigo-600={activeTab === 'walk-in'}
+			class:border-b-white={activeTab !== 'walk-in'}
 			>Walk-In</button
 		>
 		<button
 			on:click={clickBooking}
-			class="border-r-2 border-r-black border-b-2 border-b-white text-xl px-4 hover:border-b-2 hover:border-indigo-600"
+			class="border-b-2 border-transparent leading-tight uppercase text-[0.9rem] font-medium py-2 px-4 hover:bg-gray-100"
+			class:border-b-indigo-600={activeTab === 'booking'}
+			class:border-b-white={activeTab !== 'booking'}
 			>Bookings</button
 		>
 	</div>
@@ -403,20 +411,22 @@
 
 {#if $walkIn}
 	<div class="bg-white min-h-screen">
-		<header class="bg-gray-100 shadow">
-			<div class="container mx-auto py-4">
-				<h1 class="text-2xl font-semibold text-gray-900">
-					Register Patient and Create Appointment
-				</h1>
-			</div>
-		</header>
-
-		<button
-			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-			on:click={openExistingPatient}
-		>
-			Existing Patient
-		</button>
+		<div class="bg-gray-100 shadow flex items-center justify-between px-5">
+			<header>
+				<div class="container mx-auto py-4">
+					<h1 class="text-2xl font-semibold text-gray-900">
+						Register Patient and Create Appointment
+					</h1>
+				</div>
+			</header>
+	
+			<button
+				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md "
+				on:click={openExistingPatient}
+			>
+				Existing Patient
+			</button>
+		</div>
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
@@ -428,7 +438,7 @@
 							type="text"
 							name="name"
 							placeholder="Enter name"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'name' in formErrors}
@@ -442,7 +452,7 @@
 							type="text"
 							name="IC"
 							placeholder="Enter IC number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'IC' in formErrors}
@@ -458,7 +468,7 @@
 							type="text"
 							name="contact"
 							placeholder="Enter contact number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'contact' in formErrors}
@@ -474,7 +484,7 @@
 							type="text"
 							name="reason"
 							placeholder="Enter reason"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'reason' in formErrors}
@@ -488,7 +498,7 @@
 							type="number"
 							name="age"
 							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'age' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
@@ -497,7 +507,7 @@
 
 					<div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+						<select name="gender" class="block w-full text-white rounded-md py-2 px-3 border border-gray-300">
 							<option value="">Select Gender</option>
 							<option value="male">Male</option>
 							<option value="female">Female</option>
@@ -513,7 +523,7 @@
 							type="text"
 							name="email"
 							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'email' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
@@ -526,7 +536,7 @@
 							type="text"
 							name="race"
 							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'race' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
@@ -546,55 +556,87 @@
 			<!-- MODAL 1 -->
 			<div class=" w-screen flex-col hidden bg-white existing-patient">
 				<button
-					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md ml-6"
 					on:click={closeExistingPatient}
 				>
 					Go Back
 				</button>
-				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
-					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
-						<input
-							type="text"
-							name="IC"
-							placeholder="Enter IC"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-
-						{#if 'IC' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
-						{/if}
-					</div>
-
-					<div class="flex justify-end">
-						<button
-							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-							type="submit"
-						>
-							Find Patient
-						</button>
-					</div>
-				</form>
-				<div>
-					{#each $filteredPatients as fPatient}
-						<div class=" flex flex-row">
-							<p class="mr-5">{fPatient.name}</p>
-							<p class="mr-5">{fPatient.IC}</p>
-							<p class="mr-5">{fPatient.age}</p>
-							<p class="mr-5">{fPatient.gender}</p>
-							<p class="mr-5">{fPatient.email}</p>
-							<p class="mr-5">{fPatient.contact}</p>
-							<p>{fPatient.race}</p>
-							<button on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
-							<button class="bg-pink-700" on:click={openAppointmentModal}>Create Appointment</button
-							>
+				<div class="flex items-baseline justify-between py-5 px-8">
+					<form on:submit|preventDefault={getPatient} class="w-[30%] bg-white shadow-xl rounded-lg p-8">
+						<div class="mb-6">
+							<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
+							<input
+								type="text"
+								name="IC"
+								placeholder="Enter IC"
+								class="block w-full text-white bg-gray-700 focus:bg-gray-700 rounded-md py-2 px-3 border border-gray-300"
+								required
+							/>
+							{#if 'IC' in formErrors}
+								<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+							{/if}
 						</div>
-					{/each}
+	
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Find Patient
+							</button>
+						</div>
+					</form>
+					<div class="w-[65%] shadow-xl">
+						{#each $filteredPatients as fPatient}
+							<table class="w-full rounded-xl">
+								<thead class="bg-gray-700 text-white">
+									<tr class="">
+										<th class="p-2">Name</th>
+										<th class="p-2">Patient IC</th>
+										<th class="p-2">Age</th>
+										<th class="p-2">Gender</th>
+										<th class="p-2">Email</th>
+										<th class="p-2">Contact</th>
+										<th class="p-2">Race</th>
+										<th class="p-2">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="text-black">
+										<td class="px-2 my-2 capitalize whitespace-nowrap text-ellipsis max-w-[200px] border-r border-gray-200 text-center">
+											{fPatient.name}
+										</td>
+										<td class="px-2 py-2 whitespace-nowrap text-ellipsis max-w-[200px] border-r border-gray-200 text-center">
+											{fPatient.IC}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.age}
+										</td>
+										<td class="px-2 py-2 capitalize border-r border-gray-200 text-center">
+											{fPatient.gender}
+										</td>
+										<td class="px-2 py-2 capitalize whitespace-nowrap text-ellipsis text-center max-w-[200px] border-r border-gray-200">
+											{fPatient.email}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.contact}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.race}
+										</td>
+										<td class="px-4 py-2 flex items-center gap-3 ">
+											<button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
+											<button class="bg-pink-500 hover:bg-pink-700 text-white text-xs font-medium rounded-md px-2 py-1" on:click={openAppointmentModal}>Create Appointment</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						{/each}
+					</div>
 				</div>
 			</div>
 			<!-- Appointment Modal -->
-			<div class=" w-screen flex-col hidden create-existing-appointment bg-white">
+			<div class=" w-screen flex-col hidden create-existing-appointment bg-white ml-3">
 				<form
 					on:submit|preventDefault={existingPatient}
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
@@ -607,14 +649,14 @@
 							type="text"
 							name="reason"
 							placeholder="Enter reason"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'reason' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.reason}</p>
 						{/if}
 
-						<div class="flex justify-end">
+						<div class="flex justify-end gap-3 mt-3">
 							<button
 								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 								type="submit"
@@ -628,7 +670,7 @@
 			</div>
 
 			<!-- MODAL 3 -->
-			<div class=" w-screen flex-col hidden edit-details bg-white">
+			<div class=" w-screen flex-col hidden edit-details bg-white ml-3">
 				<form
 					on:submit|preventDefault={editPatientDetails}
 					class="w-1/2 bg-white shadow-md rounded-lg p-8"
@@ -639,7 +681,7 @@
 							type="text"
 							name="name"
 							placeholder="Enter name"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.name}
 							required
 						/>
@@ -654,7 +696,7 @@
 							type="text"
 							name="IC"
 							placeholder="Enter IC number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.IC}
 							required
 						/>
@@ -671,7 +713,7 @@
 							type="text"
 							name="contact"
 							placeholder="Enter contact number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.contact}
 							required
 						/>
@@ -686,7 +728,7 @@
 							type="number"
 							name="age"
 							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.age}
 						/>
 						{#if 'age' in formErrors}
@@ -699,7 +741,7 @@
 						{#if patientDetails.gender !== null && patientDetails.gender !== 'null'}
 							<select
 								name="gender"
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 								bind:value={patientDetails.gender}
 							>
 								<option value="">Select Gender</option>
@@ -709,7 +751,7 @@
 						{:else}
 							<select
 								name="gender"
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 								bind:value={patientDetails.gender}
 							>
 								<option value="">Select Gender</option>
@@ -728,7 +770,7 @@
 							type="text"
 							name="email"
 							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.email}
 						/>
 						{#if 'email' in formErrors}
@@ -742,7 +784,7 @@
 							type="text"
 							name="race"
 							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.race}
 						/>
 						{#if 'race' in formErrors}
@@ -750,7 +792,7 @@
 						{/if}
 					</div>
 
-					<div class="flex justify-end">
+					<div class="flex justify-end gap-3">
 						<button
 							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
 							type="submit"
@@ -767,21 +809,23 @@
 		</main>
 	</div>
 {:else}
-	<div class="bg-gray-700 min-h-screen">
-		<header class="bg-gray-100 shadow">
-			<div class="container mx-auto py-4">
-				<h1 class="text-2xl font-semibold text-gray-900">
-					Register Patient and Create Appointment
-				</h1>
-			</div>
-		</header>
-
-		<button
-			class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-			on:click={openExistingPatient}
-		>
-			Existing Patient
-		</button>
+	<div class="bg-white min-h-screen">
+		<div class="bg-gray-100 shadow flex items-center justify-between px-5">
+			<header>
+				<div class="container mx-auto py-4">
+					<h1 class="text-2xl font-semibold text-gray-900">
+						Register Patient and Create Appointment
+					</h1>
+				</div>
+			</header>
+	
+			<button
+				class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md "
+				on:click={openExistingPatient}
+			>
+				Existing Patient
+			</button>
+		</div>
 
 		<main class="container mx-auto py-8">
 			<!-- <Spinner /> -->
@@ -796,7 +840,7 @@
 							type="text"
 							name="name"
 							placeholder="Enter name"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'name' in formErrors}
@@ -810,7 +854,7 @@
 							type="text"
 							name="IC"
 							placeholder="Enter IC number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'IC' in formErrors}
@@ -825,7 +869,7 @@
 						<input
 							type="datetime-local"
 							name="date"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'date' in formErrors}
@@ -841,7 +885,7 @@
 							type="text"
 							name="contact"
 							placeholder="Enter contact number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'contact' in formErrors}
@@ -857,7 +901,7 @@
 							type="text"
 							name="reason"
 							placeholder="Enter reason"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'reason' in formErrors}
@@ -871,7 +915,7 @@
 							type="number"
 							name="age"
 							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'age' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.age}</p>
@@ -880,7 +924,7 @@
 
 					<div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+						<select name="gender" class="block w-full text-white rounded-md py-2 px-3 border border-gray-300">
 							<option value="">Select Gender</option>
 							<option value="male">Male</option>
 							<option value="female">Female</option>
@@ -896,7 +940,7 @@
 							type="text"
 							name="email"
 							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'email' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.email}</p>
@@ -909,7 +953,7 @@
 							type="text"
 							name="race"
 							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 						/>
 						{#if 'race' in formErrors}
 							<p class="text-red-500 text-xs mt-1">{formErrors.race}</p>
@@ -927,52 +971,85 @@
 				</form>
 			</div>
 			<!-- MODAL 1 -->
-			<div class=" w-screen flex-col hidden bg-white existing-patient">
+			<div class=" w-screen flex-col hidden existing-patient py-2">
 				<button
-					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+					class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md ml-6"
 					on:click={closeExistingPatient}
 				>
 					Go Back
 				</button>
-				<form on:submit|preventDefault={getPatient} class="w-1/2 bg-white shadow-md rounded-lg p-8">
-					<div class="mb-6">
-						<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
-						<input
-							type="text"
-							name="IC"
-							placeholder="Enter IC"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
-							required
-						/>
-						{#if 'IC' in formErrors}
-							<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
-						{/if}
-					</div>
-
-					<div class="flex justify-end">
-						<button
-							class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
-							type="submit"
-						>
-							Find Patient
-						</button>
-					</div>
-				</form>
-				<div>
-					{#each $filteredPatients as fPatient}
-						<div class=" flex flex-row">
-							<p class="mr-5">{fPatient.name}</p>
-							<p class="mr-5">{fPatient.IC}</p>
-							<p class="mr-5">{fPatient.age}</p>
-							<p class="mr-5">{fPatient.gender}</p>
-							<p class="mr-5">{fPatient.email}</p>
-							<p class="mr-5">{fPatient.contact}</p>
-							<p>{fPatient.race}</p>
-							<button on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
-							<button class="bg-pink-700" on:click={openAppointmentModal}>Create Appointment</button
-							>
+				<div class="flex items-baseline justify-between py-5 px-8">
+					<form on:submit|preventDefault={getPatient} class="w-[30%] bg-white shadow-xl rounded-lg p-8">
+						<div class="mb-6">
+							<label for="IC" class="block text-gray-700 text-sm font-bold mb-2"> IC * </label>
+							<input
+								type="text"
+								name="IC"
+								placeholder="Enter IC"
+								class="block w-full text-white bg-gray-700 focus:bg-gray-700 rounded-md py-2 px-3 border border-gray-300"
+								required
+							/>
+							{#if 'IC' in formErrors}
+								<p class="text-red-500 text-xs mt-1">{formErrors.IC}</p>
+							{/if}
 						</div>
-					{/each}
+	
+						<div class="flex justify-end">
+							<button
+								class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md"
+								type="submit"
+							>
+								Find Patient
+							</button>
+						</div>
+					</form>
+					<div class="w-[65%] shadow-xl">
+						{#each $filteredPatients as fPatient}
+							<table class="w-full rounded-xl">
+								<thead class="bg-gray-700 text-white">
+									<tr class="">
+										<th class="p-2">Name</th>
+										<th class="p-2">Patient IC</th>
+										<th class="p-2">Age</th>
+										<th class="p-2">Gender</th>
+										<th class="p-2">Email</th>
+										<th class="p-2">Contact</th>
+										<th class="p-2">Race</th>
+										<th class="p-2">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="text-black">
+										<td class="px-2 my-2 capitalize whitespace-nowrap text-ellipsis max-w-[200px] border-r border-gray-200 text-center">
+											{fPatient.name}
+										</td>
+										<td class="px-2 py-2 whitespace-nowrap text-ellipsis max-w-[200px] border-r border-gray-200 text-center">
+											{fPatient.IC}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.age}
+										</td>
+										<td class="px-2 py-2 capitalize border-r border-gray-200 text-center">
+											{fPatient.gender}
+										</td>
+										<td class="px-2 py-2 capitalize whitespace-nowrap text-ellipsis text-center max-w-[200px] border-r border-gray-200">
+											{fPatient.email}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.contact}
+										</td>
+										<td class="px-2 py-2 border-r border-gray-200 text-center">
+											{fPatient.race}
+										</td>
+										<td class="px-4 py-2 flex items-center gap-3 ">
+											<button class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-medium rounded-md px-2 py-1" on:click={() => clickEditDetails(fPatient.IC)}>Edit Details</button>
+											<button class="bg-pink-500 hover:bg-pink-700 text-white text-xs font-medium rounded-md px-2 py-1" on:click={openAppointmentModal}>Create Appointment</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						{/each}
+					</div>
 				</div>
 			</div>
 			<!-- Appointment Modal -->
@@ -988,7 +1065,7 @@
 						<input
 							type="datetime-local"
 							name="date"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 						{#if 'date' in formErrors}
@@ -1002,7 +1079,7 @@
 							type="text"
 							name="reason"
 							placeholder="Enter reason"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							required
 						/>
 
@@ -1031,7 +1108,7 @@
 							type="text"
 							name="name"
 							placeholder="Enter name"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.name}
 							required
 						/>
@@ -1046,7 +1123,7 @@
 							type="text"
 							name="IC"
 							placeholder="Enter IC number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.IC}
 							required
 						/>
@@ -1063,7 +1140,7 @@
 							type="text"
 							name="contact"
 							placeholder="Enter contact number"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.contact}
 							required
 						/>
@@ -1078,7 +1155,7 @@
 							type="number"
 							name="age"
 							placeholder="Enter age"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.age}
 						/>
 						<!-- {#if 'age' in formErrors}
@@ -1091,7 +1168,7 @@
 						{#if patientDetails.gender !== null && patientDetails.gender !== 'null'}
 							<select
 								name="gender"
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 								bind:value={patientDetails.gender}
 							>
 								<option value="">Select Gender</option>
@@ -1101,7 +1178,7 @@
 						{:else}
 							<select
 								name="gender"
-								class="block w-full rounded-md py-2 px-3 border border-gray-300"
+								class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 								bind:value={patientDetails.gender}
 							>
 								<option value="">Select Gender</option>
@@ -1120,7 +1197,7 @@
 							type="text"
 							name="gender"
 							placeholder="Enter gender"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.gender}
 						/>
 						{#if 'gender' in formErrors}
@@ -1130,7 +1207,7 @@
 
 					<!-- <div class="mb-6">
 						<label for="gender" class="block text-gray-700 text-sm font-bold mb-2"> Gender </label>
-						<select name="gender" class="block w-full rounded-md py-2 px-3 border border-gray-300">
+						<select name="gender" class="block w-full text-white rounded-md py-2 px-3 border border-gray-300">
 							<option value="">Select Gender</option>
 							<option value="male">Male</option>
 							<option value="female">Female</option>
@@ -1146,7 +1223,7 @@
 							type="text"
 							name="email"
 							placeholder="Enter email"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.email}
 						/>
 						<!-- {#if 'email' in formErrors}
@@ -1160,7 +1237,7 @@
 							type="text"
 							name="race"
 							placeholder="Enter race"
-							class="block w-full rounded-md py-2 px-3 border border-gray-300"
+							class="block w-full text-white rounded-md py-2 px-3 border border-gray-300"
 							value={patientDetails.race}
 						/>
 						<!-- {#if 'race' in formErrors}

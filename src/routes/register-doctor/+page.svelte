@@ -65,21 +65,21 @@
 <div class="bg-white min-h-screen">
 	<header class="bg-gray-100 shadow">
 		<div class="container mx-auto py-4">
-			<h1 class="text-2xl font-semibold text-gray-900">Owner Sign Up</h1>
+			<h1 class="text-2xl font-semibold text-gray-900 ml-4">Owner Sign Up</h1>
 		</div>
 	</header>
 
 	<main class="container mx-auto py-8">
 		<!-- <Spinner /> -->
 		<div class="flex justify-center items-center">
-			<form on:submit={createDoctor} class="w-1/2 bg-white shadow-md rounded-lg p-8">
+			<form on:submit={createDoctor} class="w-1/2 bg-white shadow-lg rounded-lg p-8">
 				<div class="mb-6">
 					<label for="name" class="block text-gray-700 text-sm font-bold mb-2"> Name </label>
 					<input
 						type="text"
 						name="name"
 						placeholder="Enter your name"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						class="block w-full rounded-md py-2 px-3 border border-gray-300 bg-black text-white"
 					/>
 					{#if 'name' in formErrors}
 						<p class="text-red-500 text-xs mt-1">{formErrors['name']}</p>
@@ -92,7 +92,7 @@
 						type="email"
 						name="email"
 						placeholder="Enter your email"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						class="block w-full rounded-md py-2 px-3 border border-gray-300 bg-black text-white"
 						required
 					/>
 					{#if 'email' in formErrors}
@@ -108,7 +108,7 @@
 						type="password"
 						name="password"
 						placeholder="Enter your password"
-						class="block w-full rounded-md py-2 px-3 border border-gray-300"
+						class="block w-full rounded-md py-2 px-3 border border-gray-300 bg-black text-white"
 						required
 					/>
 					{#if 'password' in formErrors}

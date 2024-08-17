@@ -98,74 +98,80 @@
 					class="w-8 h-7"
 				/>
 			</button>
-			<div class="flex space-x-4">
+			<div class="flex space-x-4 justify-between"
+				class:w-[65%]={logIO || logDoctorIO} 
+				class:w-[8%]={!(logIO || logDoctorIO)}>
 				{#if logIO === true}
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickAppointments}
-					>
-						Appointments
-					</button>
+					<div class="flex items-center gap-10">
+						<button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickAppointments}
+						>
+							Appointments
+						</button>
 
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickPatientRegistration}
-					>
-						Registration
-					</button>
+						<button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickPatientRegistration}
+						>
+							Registration
+						</button>
 
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
-						Data
-					</button>
+						<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
+							Data
+						</button>
 
-					<!-- <button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickMedicine}
-					>
-						Medicine
-					</button> -->
+						<!-- <button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickMedicine}
+						>
+							Medicine
+						</button> -->
+					</div>
 					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
+						class="text-white hover:text-red-600 focus:outline-none"
 						on:click={clickLogOut}
 					>
 						Log Out
 					</button>
 				{:else if logDoctorIO == true}
+					<div class="flex items-center gap-10">
+						<button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickAppointments}
+						>
+							Appointments
+						</button>
+	
+						<button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickPatientRegistration}
+						>
+							Registration
+						</button>
+	
+						<button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickConsultations}
+						>
+							Consultations
+						</button>
+						<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
+							Edit
+						</button>
+						<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
+							Data
+						</button>
+	
+						<!-- <button
+							class="text-white hover:text-indigo-600 focus:outline-none"
+							on:click={clickMedicine}
+						>
+							Medicine
+						</button> -->
+					</div>
 					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickAppointments}
-					>
-						Appointments
-					</button>
-
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickPatientRegistration}
-					>
-						Registration
-					</button>
-
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickConsultations}
-					>
-						Consultations
-					</button>
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickEdit}>
-						Edit
-					</button>
-					<button class="text-white hover:text-indigo-600 focus:outline-none" on:click={clickData}>
-						Data
-					</button>
-
-					<!-- <button
-						class="text-white hover:text-indigo-600 focus:outline-none"
-						on:click={clickMedicine}
-					>
-						Medicine
-					</button> -->
-					<button
-						class="text-white hover:text-indigo-600 focus:outline-none"
+						class="text-white hover:text-red-600 focus:outline-none"
 						on:click={clickLogOut}
 					>
 						Log Out

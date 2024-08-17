@@ -70,7 +70,7 @@
 		<form class="mt-8 space-y-6" on:submit={handleUserSubmit}>
 			<input type="hidden" name="remember" value="true" />
 			<div class="rounded-md shadow-sm -space-y-px">
-				<div>
+				<div class="mb-3 bg-black border-2 rounded-md">
 					<label for="email-address" class="sr-only">Email address</label>
 					<input
 						id="email-address"
@@ -78,7 +78,7 @@
 						type="email"
 						autocomplete="email"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Email address"
 					/>
 					{#if 'email' in formErrors}
@@ -93,7 +93,7 @@
 						type="password"
 						autocomplete="current-password"
 						required
-						class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+						class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
 						placeholder="Password"
 					/>
 					{#if 'password' in formErrors}
@@ -123,12 +123,12 @@
 			<div>
 				<button
 					type="submit"
-					class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+					class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
 				>
 					<span class="absolute left-0 inset-y-0 flex items-center pl-3">
 						<!-- Heroicon name: solid/lock-closed -->
 						<svg
-							class="h-5 w-5 text-green-500 group-hover:text-green-400"
+							class="h-5 w-5 text-indigo-300 group-hover:text-indigo-200"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 20 20"
 							fill="currentColor"
@@ -146,7 +146,7 @@
 			</div>
 		</form>
 		<button
-			class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+			class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
 			on:click={clickDoctor}>You a Doctor?</button
 		>
 	</div>
