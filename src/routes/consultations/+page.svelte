@@ -732,7 +732,7 @@
 								<textarea 
 									name="notes" 
 									placeholder="Enter something"
-									class="block w-full rounded-md py-2 px-3 h-20 border border-gray-300"
+									class="block w-full rounded-md py-2 px-3 h-64 border border-gray-300"
 								></textarea>
 								<!-- <input
 									type="text"
